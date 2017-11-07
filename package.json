@@ -1,8 +1,8 @@
 {
-  "name": "y",
+  "name": "vue-tes",
   "version": "1.0.0",
-  "description": "y",
-  "author": "daocers",
+  "description": "A Vue.js project",
+  "author": "leiyang <lei890627>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -14,7 +14,10 @@
   },
   "dependencies": {
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "element-ui/packages/col/src/col": "latest",
+    "element-ui/packages/row/src/row": "latest",
+    "element-ui": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
