@@ -19,8 +19,8 @@ export default [
     name: 'scene index',
     component: Scene,
     children:[
-      {path: '', component: SceneSetting},
-      {path: 'paper', component: ScenePaper},
+      {path: '', component: SceneSetting, props: {scene: true}},
+      {path: 'paper', component: ScenePaper, props: {scene: true}},
       {path: 'user', component: SceneUser},
       {path: 'review', component: SceneReview}
     ]

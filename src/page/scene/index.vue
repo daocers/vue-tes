@@ -8,7 +8,7 @@
         <el-step title="预览" icon="el-icon-view"></el-step>
       </el-steps>
     </div>
-    <router-view class="view"></router-view>
+    <router-view class="view" :scene="scene"></router-view>
 
     <div class="btn-group">
       <div>
@@ -29,6 +29,24 @@
 
   export default {
     name:'activePublic',
+    props:{
+      scene:{
+        name: '12',
+        region: '12',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
+        beginTime: new Date(),
+        endTime: '',
+        duration: '',
+        delay: '',
+        paperType: 'test'
+      }
+    },
+//    props: ['scene'],
     data: function () {
       return {
         isRouter: false,
@@ -36,7 +54,22 @@
         preStep: false,
         nextStep: true,
         publish: false,
-        step: 1
+        step: 1,
+        scene:{
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: '',
+          beginTime: new Date(),
+          endTime: '',
+          duration: '',
+          delay: '',
+          paperType: 'test'
+        }
       }
     },
     methods: {

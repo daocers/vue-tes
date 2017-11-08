@@ -94,7 +94,7 @@
     },
     data() {
       return {
-        scene: {
+        scene1: {
           name: '',
           region: '',
           date1: '',
@@ -113,12 +113,13 @@
           /*
           * 禁用时间
           * */
-          disabledDate(time){
+          disabledDate(time) {
             return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
           }
         }
       }
     },
+    props: ['scene'],
     methods: {
       onSubmit() {
         console.log('submit!');

@@ -10,6 +10,9 @@
     <!--</el-form>-->
   <!--</div>-->
   <div>
+    <el-form-item label="试卷类型">
+      <el-input v-model="scene.paperType"></el-input>
+    </el-form-item>
     <el-button>默认按钮</el-button>
     <el-button type="primary">主要按钮</el-button>
     <el-button type="success">成功按钮</el-button>
@@ -22,7 +25,7 @@
 <script type="text/javascript">
   export default {
     data: function () {
-
+      scene: this.$parent.$scene
     }
   }
 </script>
