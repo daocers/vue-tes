@@ -5,6 +5,10 @@ import SceneSetting from '../page/scene/scene_setting.vue'
 import ScenePaper from '../page/scene/scene_generatePaper.vue'
 import SceneUser from '../page/scene/scene_choiceUser.vue'
 import SceneReview from '../page/scene/scene_review.vue'
+import Step from '../page/steps/index.vue'
+import Step1 from '../page/steps/first.vue'
+import Step2 from '../page/steps/second.vue'
+import Step3 from '../page/steps/third.vue'
 
 
 export default [
@@ -16,7 +20,6 @@ export default [
   },
   {
     path: '/scene',
-    name: 'scene index',
     component: Scene,
     children:[
       {path: '', component: SceneSetting, props: {scene: true}},
@@ -25,6 +28,17 @@ export default [
       {path: 'review', component: SceneReview}
     ]
   },
+
+  {
+    path: '/step',
+    component: Step,
+    children:[
+      {path: '', component: Step1},
+      {path: 'step2', component: Step2},
+      {path: 'step3', component: Step3}
+    ]
+
+  }
 
   // {path: '/scene/setting', component: sceneSetting}
 ]

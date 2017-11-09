@@ -55,15 +55,15 @@
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>场次管理</span>
+              <span>测试</span>
             </template>
             <el-menu-item-group>
               <template slot="title">分组一</template>
-              <el-menu-item index="/scene">场次管理</el-menu-item>
+              <el-menu-item index="/scene">步骤</el-menu-item>
               <el-menu-item index="/scene/setting">参数设置</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
+              <el-menu-item index="/step">步骤demo</el-menu-item>
             </el-menu-item-group>
             <el-submenu index="1-4">
               <template slot="title">选项4</template>
