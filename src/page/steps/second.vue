@@ -7,6 +7,9 @@
           <el-option label="区域二" value="2"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="age">
+        <el-input v-model="record.obj.age"></el-input>
+      </el-form-item>
     </el-form>
   </div>
 </template>
