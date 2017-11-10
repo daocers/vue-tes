@@ -62,6 +62,8 @@
     },
     methods: {
       next: function () {
+        this.step = this.step + 1;
+        if()
         console.log("下一步。。。");
       },
       prev: function () {

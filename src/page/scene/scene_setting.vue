@@ -16,27 +16,43 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="考试时长" prop="duration">
-          <el-input type="number" v-model="scene.duration"></el-input>
+        <el-form-item label="结束时间">
+          <el-date-picker
+            v-model="getEndTime"
+            type="datetime"
+            :disabled=true
+            placeholder="选择日期时间">
+          </el-date-picker>
         </el-form-item>
+
       </el-col>
     </el-form-item>
 
-    <!--<el-form-item label="结束时间">-->
-      <!--<el-date-picker-->
-        <!--v-model="getEndTime"-->
-        <!--type="datetime"-->
-        <!--:disabled=true-->
-        <!--placeholder="选择日期时间">-->
-      <!--</el-date-picker>-->
-    <!--</el-form-item>-->
+    <el-form-item label="考试时长" prop="duration">
+      <el-input type="number" v-model="scene.duration"></el-input>
+    </el-form-item>
 
-    <!--<el-form-item label="顺延时间">-->
-      <!--<el-select v-model="scene.delay" placeholder="最晚进场时间">-->
-        <!--<el-option label="15分钟" value="15"></el-option>-->
-        <!--<el-option label="30分钟" value="30"></el-option>-->
-      <!--</el-select>-->
-    <!--</el-form-item>-->
+    <el-form-item label="顺延时间">
+      <el-select v-model="scene.delay" placeholder="最晚进场时间">
+        <el-option label="15分钟" value="15"></el-option>
+        <el-option label="30分钟" value="30"></el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="作答时间">
+      <el-input type="number" v-model="scene.duration" placeholder="作答时间"></el-input>
+    </el-form-item>
+
+    <el-form-item label="允许换卷">
+    <el-switch v-model="scene.changePaper"></el-switch>
+    </el-form-item>
+
+    <el-form-item label="试卷类型">
+      <el-select v-model="scene.paperGenerateType" placeholder="">
+        <el-option label="随机生成" value="1"></el-option>
+        <el-option label="统一试卷" value="2"></el-option>
+      </el-select>
+    </el-form-item>
 
 
     <!--<el-form-item label="活动区域">-->
@@ -84,28 +100,12 @@
 </template>
 
 <script>
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElCol from "element-ui/packages/col/src/col";
-
   export default {
-    components: {
-      ElCol,
-      ElRow
-    },
     data() {
       return {
-//        scene: $router.$props.scene,
         scene: {
+
         },
-        now: new Date(),
-        pickerOptions: {
-          /*
-          * 禁用时间
-          * */
-          disabledDate(time) {
-            return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
-          }
-        }
       }
     },
     created: function () {
@@ -118,13 +118,25 @@
        * */
       getEndTime: function () {
         console.log(this.scene.beginTime)
-        let beginTime = this.scene.beginTime.getTime();
+
+        let beginTime;
+        if(this.scene.beginTime){
+          beginTime = this.scene.beginTime.getTime();
+        }
         let duration = this.scene.duration;
         if (beginTime && duration) {
           beginTime = beginTime + duration * 60 * 1000;
           return new Date(beginTime)
         }
       },
+      pickerOptions: {
+        /*
+        * 禁用时间
+        * */
+        disabledDate(time) {
+          return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
+        }
+      }
 
     }
   }
