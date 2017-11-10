@@ -17,6 +17,7 @@
       }
     },
     created: function () {
+      console.log(this.$parent.$data.record)
       this.record = this.$parent.$data.record;
       console.log("created...")
       console.log("router： {}", this.$router)

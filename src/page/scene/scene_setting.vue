@@ -1,14 +1,14 @@
 <template>
-  <el-form ref="scene" :model="scene1" label-width="80px">
+  <el-form ref="scene" :model="scene" label-width="80px">
     <el-form-item label="场次名称">
-      <el-input v-model="scene1.name"></el-input>
+      <el-input v-model="scene.name"></el-input>
     </el-form-item>
 
     <el-form-item label="开始时间" required>
       <el-col :span="12">
         <el-form-item prop="beginTime">
           <el-date-picker
-            v-model="scene1.beginTime"
+            v-model="scene.beginTime"
             type="datetime"
             :picker-options="pickerOptions"
             placeholder="选择日期时间">
@@ -17,7 +17,7 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="考试时长" prop="duration">
-          <el-input type="number" v-model="scene1.duration"></el-input>
+          <el-input type="number" v-model="scene.duration"></el-input>
         </el-form-item>
       </el-col>
     </el-form-item>
@@ -88,7 +88,6 @@
   import ElCol from "element-ui/packages/col/src/col";
 
   export default {
-    props: ["scene"],
     components: {
       ElCol,
       ElRow
@@ -96,19 +95,7 @@
     data() {
       return {
 //        scene: $router.$props.scene,
-        scene1: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
-          beginTime: new Date(),
-          endTime: '',
-          duration: '',
-          delay: '',
+        scene: {
         },
         now: new Date(),
         pickerOptions: {
@@ -121,15 +108,9 @@
         }
       }
     },
-    create: function () {
-      console.log("创建了")
-      console.log("创建时候路由：{}", $router)
-    },
-    methods: {
-      onSubmit() {
-        console.log('submit!');
-        console.log("data: {}", this.scene)
-      }
+    created: function () {
+      console.log("created...")
+      this.scene = this.$parent.$data.scene;
     },
     computed: {
       /**

@@ -47,7 +47,7 @@
         record: {
           name: 'allen',
           user: 'daocers',
-          region: ["1"],
+          region: '1',
           obj:{
             age: 1,
             num: 2

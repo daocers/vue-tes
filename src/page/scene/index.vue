@@ -2,22 +2,21 @@
   <div id="">
     <div class="steps">
       <el-steps :active="step" simple>
-        <el-step title="第一步" icon="el-icon-setting"></el-step>
-        <el-step title="第二步" class="paper" icon="el-icon-document"></el-step>
-        <el-step title="第三步" class="user" icon="el-icon-picture"></el-step>
-        <el-step title="预览" icon="el-icon-view"></el-step>
+        <el-step title="信息设置" icon="el-icon-setting"></el-step>
+        <el-step title="试卷生成" class="paper" icon="el-icon-document"></el-step>
+        <el-step title="选择考生" class="user" icon="el-icon-picture"></el-step>
+        <el-step title="场次预览" icon="el-icon-view"></el-step>
       </el-steps>
     </div>
+
     <router-view class="view" :scene="scene"></router-view>
 
     <div class="btn-group">
       <div>
-        <el-button @click="choicePaper()">下一步</el-button>
-        <!--<el-button type="primary">主要按钮</el-button>-->
-        <!--<el-button type="success">成功按钮</el-button>-->
-        <!--<el-button type="info">信息按钮</el-button>-->
-        <!--<el-button type="warning">警告按钮</el-button>-->
-        <!--<el-button type="danger">危险按钮</el-button>-->
+        <el-button type="primary" @click="next()" v-show="nextStep">下一步</el-button>
+        <el-button @click="prev()" v-show="preview">上一步</el-button>
+        <el-button type="primary" @click="save()" v-show="commit">保存</el-button>
+        <el-button type="info" @click="overview()" v-show="preview">预览</el-button>
       </div>
     </div>
   </div>
@@ -29,53 +28,50 @@
 
   export default {
     name:'sceneIndex',
-    props: ['scene'],
-//    props:{
-//      scene1:{
-//        name: '12',
-//        region: '12',
-//        date1: '',
-//        date2: '',
-//        delivery: false,
-//        type: [],
-//        resource: '',
-//        desc: '',
-//        beginTime: new Date(),
-//        endTime: '',
-//        duration: '',
-//        delay: '',
-//        paperType: 'test'
-//      }
-//    },
-//    props: ['scene'],
     data: function () {
       return {
-        isRouter: false,
         preview: true,
         preStep: false,
         nextStep: true,
-        publish: false,
-        step: 1,
+        commit: false,
+        preview: false,
+        step: 1,//步骤
         scene:{
-          name: '12',
-          region: '12',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
-          beginTime: new Date(),
-          endTime: '',
-          duration: '',
-          delay: '',
-          paperType: 'test'
+          id: null,
+          code: '',
+          name: '',
+          ownerType: null,
+          ownerId: null,
+          authCode: '',
+          changePaper: false,
+          delayTime: null,
+          duration: null,
+          paperPolicyId: null,
+          cancelReson: '',
+          paperGenerateType: null,
+          remark: '',
+          questionBankId: null,
+          userChoiceType: null,
+          totalScore: null,
+          percentable: null,
+          metaScoreInfo: '',
+          openTime: '',
+          closeTime: ''
         }
       }
     },
     methods: {
-      handlePreview: function () {
-        console.log('预览');
+      next: function () {
+        console.log("下一步。。。");
+      },
+      prev: function () {
+        console.log("上一步。。。");
+      },
+      save: function () {
+        console.log("保存。。。");
+      },
+      overview: function(){
+        console.log("预览。。。");
       },
       handlePreStep: function () {
         this.$router.go(-1);

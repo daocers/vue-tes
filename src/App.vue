@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <el-row :gutter="5" class="header">
-      <el-col :span="4">
+    <el-row :gutter=5 class="header">
+      <el-col :span=4>
         <!--logo-->
         logo
       </el-col>
-      <el-col :span="10">
+      <el-col :span=10>
         学员|教师|管理员
         <!--顶部导航-->
         <!--<el-menu default-active="5" class="el-menu-demo" mode="horizontal" @select="">-->
@@ -14,7 +14,7 @@
           <!--<el-menu-item index="3">我是管理员</el-menu-item>-->
         <!--</el-menu>-->
       </el-col>
-      <el-col :span="4" offset="6">
+      <el-col :span=4 :offset=6>
         <div style="text-align: right; font-size: 15px; vertical-align: middle; margin-right: 10px;">
           <el-dropdown>
             <i class="el-icon-menu" style="margin-right: 15px; color: white"></i>
@@ -28,21 +28,8 @@
         </div>
       </el-col>
     </el-row>
-    <!--<el-row>-->
-    <!--<el-col span="4">-->
-    <!--<div class="logo">-->
-    <!--<img src="./assets/logo.png">-->
-    <!--</div>-->
-    <!--</el-col>-->
-    <!--<el-col span="10">-->
-
-    <!--</el-col>-->
-    <!--<el-col span="4">-->
-
-    <!--</el-col>-->
-    <!--</el-row>-->
-    <el-row gutter="5">
-      <el-col span="4" style=" min-height: 600px;">
+    <el-row :gutter=5>
+      <el-col :span=4 style=" min-height: 600px;">
         <el-menu
           :router="true"
           default-active="2"
@@ -201,6 +188,9 @@
     background-color: #545C64;
     text-color: "#fff";
     height: 50px;
+  }
+  .view{
+    margin: 10px;
   }
 </style>
 

@@ -22,8 +22,8 @@ export default [
     path: '/scene',
     component: Scene,
     children:[
-      {path: '', component: SceneSetting, props: {scene: true}},
-      {path: 'paper', component: ScenePaper, props: {scene: true}},
+      {path: '', component: SceneSetting},
+      {path: 'paper', component: ScenePaper},
       {path: 'user', component: SceneUser},
       {path: 'review', component: SceneReview}
     ]
