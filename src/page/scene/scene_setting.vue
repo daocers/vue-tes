@@ -1,14 +1,15 @@
 <template>
-  <el-form ref="scene" :model="scene" label-width="80px">
-    <el-form-item label="场次名称">
+  <el-form ref="sceneForm" :model="scene" :rules="rules" label-width="80px">
+    <el-form-item label="场次名称" prop="name" placeholder="3到16位">
       <el-input v-model="scene.name"></el-input>
     </el-form-item>
 
-    <el-form-item label="开始时间" required>
+    <el-row>
       <el-col :span="12">
-        <el-form-item prop="beginTime">
+        <el-form-item label="开始时间" prop="beginTime">
           <el-date-picker
             v-model="scene.beginTime"
+            format="yyyy-MM-dd HH:mm:00"
             type="datetime"
             :picker-options="pickerOptions"
             placeholder="选择日期时间">
@@ -26,91 +27,112 @@
         </el-form-item>
 
       </el-col>
-    </el-form-item>
+    </el-row>
 
-    <el-form-item label="考试时长" prop="duration">
+    <el-form-item label="作答时间" prop="duration" placeholder="作答时间">
       <el-input type="number" v-model="scene.duration"></el-input>
     </el-form-item>
 
-    <el-form-item label="顺延时间">
+    <el-form-item label="顺延时间" prop="delay">
       <el-select v-model="scene.delay" placeholder="最晚进场时间">
         <el-option label="15分钟" value="15"></el-option>
         <el-option label="30分钟" value="30"></el-option>
       </el-select>
     </el-form-item>
 
-    <el-form-item label="作答时间">
-      <el-input type="number" v-model="scene.duration" placeholder="作答时间"></el-input>
+    <el-form-item label="允许换卷" prop="changePaper">
+      <el-switch v-model="scene.changePaper"></el-switch>
     </el-form-item>
 
-    <el-form-item label="允许换卷">
-    <el-switch v-model="scene.changePaper"></el-switch>
-    </el-form-item>
-
-    <el-form-item label="试卷类型">
+    <el-form-item label="试卷类型" prop="paperGenerateType">
       <el-select v-model="scene.paperGenerateType" placeholder="">
         <el-option label="随机生成" value="1"></el-option>
         <el-option label="统一试卷" value="2"></el-option>
       </el-select>
     </el-form-item>
 
-
-    <!--<el-form-item label="活动区域">-->
-      <!--<el-select v-model="scene.region" placeholder="请选择活动区域">-->
-        <!--<el-option label="区域一" value="shanghai"></el-option>-->
-        <!--<el-option label="区域二" value="beijing"></el-option>-->
-      <!--</el-select>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="活动时间">-->
-      <!--<el-col :span="11">-->
-        <!--<el-date-picker type="date" placeholder="选择日期" v-model="scene.date1" style="width: 100%;"></el-date-picker>-->
-      <!--</el-col>-->
-      <!--<el-col class="line" :span="2">-</el-col>-->
-      <!--<el-col :span="11">-->
-        <!--<el-time-picker type="fixed-time" placeholder="选择时间" v-model="scene.date2"-->
-                        <!--style="width: 100%;"></el-time-picker>-->
-      <!--</el-col>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="即时配送">-->
-      <!--<el-switch v-model="scene.delivery"></el-switch>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="活动性质">-->
-      <!--<el-checkbox-group v-model="scene.type">-->
-        <!--<el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>-->
-        <!--<el-checkbox label="地推活动" name="type"></el-checkbox>-->
-        <!--<el-checkbox label="线下主题活动" name="type"></el-checkbox>-->
-        <!--<el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>-->
-      <!--</el-checkbox-group>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="特殊资源">-->
-      <!--<el-radio-group v-model="scene.resource">-->
-        <!--<el-radio label="线上品牌商赞助"></el-radio>-->
-        <!--<el-radio label="线下场地免费"></el-radio>-->
-      <!--</el-radio-group>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="活动形式">-->
-      <!--<el-input type="textarea" v-model="scene.desc"></el-input>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item>-->
-      <!--<el-button type="primary" @click="onSubmit">立即创建</el-button>-->
-      <!--<el-button>取消</el-button>-->
-    <!--</el-form-item>-->
+    <el-form-item label="识别码" prop="authCode">
+      <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
+    </el-form-item>
   </el-form>
 
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        scene: {
+  import ElRow from "element-ui/packages/row/src/row";
 
+  export default {
+
+    components: {ElRow},
+    data() {
+      var checkDuration = (rule, value, callback) => {
+        console.log("duration: ", value)
+        if (!value || value == undefined) {
+          callback(new Error("请输入考试时长"));
+        } else if (value < 1) {
+          callback(new Error("考试时间必须大于0"));
+        } else if (value > 999) {
+          callback(new Error("考试时间不能超过1000分钟"));
+        } else {
+          callback();
+        }
+      };
+      var checkAuthcode = (rule, value, callback) =>{
+        if(!value || value == '' || value == undefined){
+          callback(new Error("请输入10位场次识别码"));
+        }else {
+          let reg = /^[0-9a-zA-Z]{10}$/;
+          if(!reg.test(value)){
+            value = '';
+            callback(new Error("非法字符，请输入十位字母或数字"));
+          }else{
+            callback();
+          }
+        }
+      };
+      return {
+
+        pickerOptions: {
+          /*
+          * 禁用时间
+          * */
+          disabledDate(time) {
+            return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
+          }
         },
+        scene: {},
+        rules: {
+          name: [
+            {required: true, message: '请输入场次名称', trigger: 'blur'},
+            {min: 3, max: 16, message: '场次名称在3到10个字之间', trigger: 'blur'}
+          ],
+          beginTime: [
+            {type: 'date', required: true, message: '请设置开场时间', trigger: 'change'}
+          ],
+          duration: [
+            {validator: checkDuration, required: true, trigger: 'change'}
+          ],
+          delay: [
+            {required: true, message: '请选择顺延时间', trigger: 'change'}
+          ],
+          changePaper: [
+            {type: 'boolean', required: true, message: "请设置是否允许换卷", trigger: 'change'}
+          ],
+          paperGenerateType: [
+            {required: true, message: '请选择试卷生成方式', trigger: 'change'}
+          ],
+          authCode:[
+            {required: true, message: '请输入场次识别码', trigger: 'blur'},
+            {validator: checkAuthcode, required: true, trigger: 'blur'},
+          ]
+
+        }
       }
     },
     created: function () {
       console.log("created...")
       this.scene = this.$parent.$data.scene;
+      console.log("settings scene: ", JSON.stringify(this.scene))
     },
     computed: {
       /**
@@ -120,7 +142,7 @@
         console.log(this.scene.beginTime)
 
         let beginTime;
-        if(this.scene.beginTime){
+        if (this.scene.beginTime) {
           beginTime = this.scene.beginTime.getTime();
         }
         let duration = this.scene.duration;
@@ -129,14 +151,7 @@
           return new Date(beginTime)
         }
       },
-      pickerOptions: {
-        /*
-        * 禁用时间
-        * */
-        disabledDate(time) {
-          return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
-        }
-      }
+
 
     }
   }

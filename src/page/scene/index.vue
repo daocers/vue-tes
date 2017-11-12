@@ -9,14 +9,14 @@
       </el-steps>
     </div>
 
-    <router-view class="view" :scene="scene"></router-view>
+    <router-view class="view" :scene="scene" ref="view"></router-view>
 
     <div class="btn-group">
       <div>
         <el-button type="primary" @click="next()" v-show="nextStep">下一步</el-button>
-        <el-button @click="prev()" v-show="preview">上一步</el-button>
+        <el-button @click="prev()" v-show="preStep">上一步</el-button>
         <el-button type="primary" @click="save()" v-show="commit">保存</el-button>
-        <el-button type="info" @click="overview()" v-show="preview">预览</el-button>
+        <!--<el-button type="info" @click="overview()" v-show="preview">预览</el-button>-->
       </div>
     </div>
   </div>
@@ -30,11 +30,10 @@
     name:'sceneIndex',
     data: function () {
       return {
-        preview: true,
         preStep: false,
         nextStep: true,
         commit: false,
-        preview: false,
+//        preview: false,
         step: 1,//步骤
         scene:{
           id: null,
@@ -43,11 +42,11 @@
           ownerType: null,
           ownerId: null,
           authCode: '',
-          changePaper: false,
+          changePaper: 1,
           delayTime: null,
           duration: null,
           paperPolicyId: null,
-          cancelReson: '',
+          cancelReason: '',
           paperGenerateType: null,
           remark: '',
           questionBankId: null,
@@ -62,12 +61,36 @@
     },
     methods: {
       next: function () {
-        this.step = this.step + 1;
-        if()
-        console.log("下一步。。。");
+        console.log("scene： ", JSON.stringify(this.scene))
+
+        this.$refs.view.$refs['sceneForm'].validate((valid) => {
+          if (valid) {
+            alert('submit! OK');
+            this.step = this.step + 1;
+            console.log("下一步。。。");
+            if(this.step > 1){
+              this.preStep = true;
+            }
+            if(this.step == 2){
+              this.$router.push({path: '/scene/paper'});
+            }else if(this.step == 3){
+              this.$router.push({path: '/scene/user'});
+            }else if(this.step == 4){
+              this.$router.push(({path: '/scene/review'}))
+            }else {
+              console.log("步骤紊乱了。。。")
+            }
+          } else {
+            console.log('error submit!!');
+
+            return false;
+          }
+        });
+
       },
       prev: function () {
         console.log("上一步。。。");
+        this.$router.go(-1);
       },
       save: function () {
         console.log("保存。。。");
