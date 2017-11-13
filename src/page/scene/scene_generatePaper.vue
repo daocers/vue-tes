@@ -25,7 +25,6 @@
       </el-form-item>
 
       <el-button type="default" @click="getPaperPolicy('policyForm')">查询</el-button>
-      </el-form-item>
     </el-form>
 
     <!--查询出来的试卷策略-->
@@ -169,7 +168,17 @@
       * */
       getPaperPolicy: function (formName) {
         console.log("查询表单");
-        console.log("queryData: ", JSON.stringify(this.paperPolicy))
+        console.log("queryData: ", JSON.stringify(this.paperPolicy));
+        this.$ajax({
+          headers: {"Content-Type": 'text/json'},
+          method: 'post',
+          url: this.host + '/paperPolicy/findByCondition.do',
+          data: JSON.stringify(this.paperPolicy),
+        }).then(function (res) {
+          console.log("res: ", res);
+          let data = eval(res);
+          console.log("data: ", res);
+        })
 
       },
 

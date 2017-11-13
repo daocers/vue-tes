@@ -7,9 +7,11 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueRouter from 'vue-router'
 import routeConfig from './router/router-config'  //引入router-config.js文件
+import axios from 'axios'
 
 Vue.config.productionTip = false
-
+Vue.prototype.$ajax = axios
+Vue.prototype.host = "http://localhost:8090/";
 //加载路由中间件
 Vue.use(VueRouter)
 
