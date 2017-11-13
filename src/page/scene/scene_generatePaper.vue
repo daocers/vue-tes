@@ -169,16 +169,17 @@
       getPaperPolicy: function (formName) {
         console.log("查询表单");
         console.log("queryData: ", JSON.stringify(this.paperPolicy));
-        this.$ajax({
-          headers: {"Content-Type": 'text/json'},
-          method: 'post',
-          url: this.host + '/paperPolicy/findByCondition.do',
-          data: JSON.stringify(this.paperPolicy),
-        }).then(function (res) {
-          console.log("res: ", res);
-          let data = eval(res);
-          console.log("data: ", res);
-        })
+        this.http("/paperPolicy/api/findByCondition.do?pageNum=1&pageSize=10", this.paperPolicy)
+//        this.$ajax({
+//          headers: {"Content-Type": 'text/json'},
+//          method: 'post',
+//          url: this.host + '/paperPolicy/findByCondition.do',
+//          data: JSON.stringify(this.paperPolicy),
+//        }).then(function (res) {
+//          console.log("res: ", res);
+//          let data = eval(res);
+//          console.log("data: ", res);
+//        })
 
       },
 
