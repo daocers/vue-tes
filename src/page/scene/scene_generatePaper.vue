@@ -141,12 +141,14 @@
         /**
          * 策略查询参数
          * */
-        paperPolicy:{
+        paperPolicyQuery:{
           questionSelectType: null,
           ownerType: '',
           minCount: 0,
           maxCount: null,
-          name: ''
+          name: '',
+          pageNum: 1,
+          pageSize: 1,
         },
         /**
          * 查询出来的所有策略
@@ -169,7 +171,8 @@
       getPaperPolicy: function (formName) {
         console.log("查询表单");
         console.log("queryData: ", JSON.stringify(this.paperPolicy));
-        this.http("/paperPolicy/api/findByCondition.do?pageNum=1&pageSize=10", this.paperPolicy)
+        this.http("/paperPolicy/api/findByCondition.do?pageNum=" +
+          this.paperPolicyQuery.pageNum + "&pageSize=" + this.paperPolicyQuery.pageNum, this.paperPolicyQuery)
 //        this.$ajax({
 //          headers: {"Content-Type": 'text/json'},
 //          method: 'post',

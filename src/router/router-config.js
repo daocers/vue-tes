@@ -9,6 +9,8 @@ import Step from '../page/steps/index.vue'
 import Step1 from '../page/steps/first.vue'
 import Step2 from '../page/steps/second.vue'
 import Step3 from '../page/steps/third.vue'
+import QuestionPolicyEdit from '../page/questionPolicy/edit.vue'
+import QuestionPolicyIndex from '../page/questionPolicy/list.vue'
 
 
 export default [
@@ -26,6 +28,14 @@ export default [
       {path: 'paper', component: ScenePaper},
       {path: 'user', component: SceneUser},
       {path: 'review', component: SceneReview}
+    ]
+  },
+  {
+    path: '/questionPolicy',
+    component: QuestionPolicyIndex,
+    children:[
+      {path: '', component: QuestionPolicyIndex},
+      {path: '/edit', component: QuestionPolicyEdit},
     ]
   },
 
