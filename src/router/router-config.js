@@ -11,6 +11,7 @@ import Step2 from '../page/steps/second.vue'
 import Step3 from '../page/steps/third.vue'
 import QuestionPolicyEdit from '../page/questionPolicy/edit.vue'
 import QuestionPolicyIndex from '../page/questionPolicy/list.vue'
+import RoleIndex from '../page/role/list.vue'
 
 
 export default [
@@ -19,6 +20,9 @@ export default [
     //   path: '/activePublic', component: activePublic
     path: '/leftMenu', component: leftMenu,
     // path: '/scene/setting', component: sceneSetting
+  },
+  {
+    path: '/role', component:RoleIndex,
   },
   {
     path: '/scene',

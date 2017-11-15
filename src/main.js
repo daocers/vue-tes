@@ -13,8 +13,8 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 Vue.prototype.host = "http://localhost:8090/";
 
-Vue.prototype.http = function (url, queryData) {
-  axios({
+Vue.prototype.http = async function (url, queryData) {
+  await axios({
     /**
      * 此处必须使用application/json，不能使用text/json
      * */
@@ -22,13 +22,13 @@ Vue.prototype.http = function (url, queryData) {
     method: 'post',
     url: "http://localhost:8090" + url,
     data: JSON.stringify(queryData),
-  }).then(function (response) {
-    console.log("res: ", response);
-    let data = eval(res);
-    console.log("data: ", res);
+  })
+    .then(function (response) {
+    console.log("response: ", response);
+    return response;
   }).catch(function (error) {
     console.log("请求失败：", error);
-
+    return null;
   })
 }
 //加载路由中间件
