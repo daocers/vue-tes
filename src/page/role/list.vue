@@ -125,9 +125,7 @@
       updateData: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit)
-        var res = await this.http('/role/api/update.do', this.dataForEdit).then(function (data) {
-          console.log("data: ", data);
-        });
+        var res = await this.http('/role/api/update.do', this.dataForEdit, 1000);
 
         console.log("res: ", res);
         if (res) {
