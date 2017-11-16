@@ -127,7 +127,7 @@
         console.log("dataForEdit:", this.dataForEdit)
         var res = await this.http('/role/api/update.do', this.dataForEdit, 1000);
 
-        console.log("res: ", res);
+//        console.log("res: ", res);
         if (res) {
 
 //        用Vue.set使数据处于监控之下
@@ -135,12 +135,12 @@
 
 //        以下代码变动无法触发页面渲染
 //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-          console.log(this.tableData)
-        } else if (!res) {
-          console.log("提交失败，后续不再执行")
+//          console.log(this.tableData)
+        } else if (res == false) {
+          console.log("请求成功，处理失败");
+        } else if (res == null) {
+          console.error("请求失败")
         }
-
-
 //        关闭对话框
         this.dialogShow = false;
 
