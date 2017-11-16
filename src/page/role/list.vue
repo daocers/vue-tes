@@ -155,8 +155,9 @@
     /**
      * 页面初始化时候执行
      **/
-    create: function () {
-      let data = this.http("/role/api/findByCondition.do", null);
+    create: async function () {
+      let data = await this.http("/role/api/findByCondition.do", null);
+      this.tableData = data;
       console.log("data: ", data);
     }
   }
