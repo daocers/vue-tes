@@ -89,7 +89,9 @@
         /**
          * 查询参数
          **/
-        queryForm: {},
+        queryForm: {
+          name: null,
+        },
 
         /**
          * 修改对话框是否显示
@@ -155,9 +157,11 @@
     /**
      * 页面初始化时候执行
      **/
-    create: async function () {
-      let data = await this.http("/role/api/findByCondition.do", null);
-      this.tableData = data;
+    created: async function () {
+      console.log("created....")
+      let data = await this.http("/role/api/findByCondition.do?pageNum=1&pageSize=10", this.queryForm);
+      console.log("data: ", data);
+      this.tableData = data.list;
       console.log("data: ", data);
     }
   }
