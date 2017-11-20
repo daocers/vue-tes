@@ -1,10 +1,15 @@
 <template>
   <div class="table">
-    <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules">
+    <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-button type="default" @click="findByCondition()">查询</el-button>
+      <el-form-item>
+        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
+      </el-form-item>
+      <el-form-item style="float: right">
+        <el-button type="primary" @click="toAdd()">添加</el-button>
+      </el-form-item>
     </el-form>
 
     <el-table
@@ -39,7 +44,7 @@
     </el-table>
 
 
-    <el-dialog title="修改角色信息" :visible.sync="dialogShow">
+    <el-dialog title="修改角色信息" :visible.sync="editDialogShow">
       <el-form :model="dataForEdit">
         <el-form-item label="名称" prop="name">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
@@ -51,8 +56,25 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShow = false">取 消</el-button>
+        <el-button @click="editDialogShow = false">取 消</el-button>
         <el-button type="primary" @click="updateData()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="添加角色信息" :visible.sync="addDialogShow">
+      <el-form :model="dataForAdd">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+        </el-form-item>
+
+        <el-form-item label="编码" prop="code">
+          <el-input v-model="dataForAdd.code" placeholder="请输入" :disabled="true"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addDialogShow = false">取 消</el-button>
+        <el-button type="primary" @click="addData()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -62,6 +84,7 @@
 
 <script>
   import Vue from 'vue'
+
 
   export default {
     data() {
@@ -91,17 +114,29 @@
          **/
         queryForm: {
           name: null,
+          pageSize: 10,
+          pageNum: 1,
         },
 
         /**
          * 修改对话框是否显示
          */
-        dialogShow: false,
+        editDialogShow: false,
 
         /**
          * 修改对话框数据
          */
         dataForEdit: {},
+
+        /**
+         * 新增对话框是否显示
+         */
+        addDialogShow: false,
+
+        /**
+         *  新增对话框数据
+         */
+        dataForAdd: {},
 
         /**
          * 修改对话框数据索引值
@@ -110,9 +145,13 @@
 
       }
     },
+
+
     methods: {
-      findByCondition() {
-        this.http("/questionPolicy/api/list.do", this.queryForm);
+      async findByCondition() {
+        let data = await this.http("/role/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        console.log("data: ", data);
+        this.tableData = data.list;
       },
 
       getDetail(row) {
@@ -122,19 +161,19 @@
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.dataForEditIndex = idx;
-        this.dialogShow = true;
+        this.editDialogShow = true;
+      },
+      toAdd(){
+        console.log("准备跳转到添加页面")
+        this.$router.push("/role/add");
       },
       updateData: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit)
         var res = await this.http('/role/api/update.do', this.dataForEdit, 1000);
-
-//        console.log("res: ", res);
         if (res) {
-
 //        用Vue.set使数据处于监控之下
           Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-
 //        以下代码变动无法触发页面渲染
 //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
 //          console.log(this.tableData)
@@ -144,9 +183,47 @@
           console.error("请求失败")
         }
 //        关闭对话框
-        this.dialogShow = false;
-
+        this.editDialogShow = false;
       },
+
+      /**
+       * 新增数据
+       */
+      addData: async function () {
+        console.log("新增数据");
+        console.log("dataForEdit:", this.dataForAdd)
+        var res = await this.http('/role/api/save.do', this.dataForAdd, 1000);
+        if (res) {
+          this.$confirm('继续添加?查看列表?', '提示', {
+            confirmButtonText: '继续添加',
+            cancelButtonText: '查看列表',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+//        用Vue.set使数据处于监控之下
+          Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+//        以下代码变动无法触发页面渲染
+//        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
+//          console.log(this.tableData)
+        } else if (res == false) {
+          console.log("请求成功，处理失败");
+        } else if (res == null) {
+          console.error("请求失败")
+        }
+//        关闭对话框
+        this.editDialogShow = false;
+      },
+
       toRemove(idx, row) {
         console.log("删除：", idx, row)
         this.tableData.splice(idx, 1);
@@ -159,7 +236,7 @@
      **/
     created: async function () {
       console.log("created....")
-      let data = await this.http("/role/api/findByCondition.do?pageNum=1&pageSize=10", this.queryForm);
+      let data = await this.http("/role/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
       console.log("data: ", data);
       this.tableData = data.list;
       console.log("data: ", data);

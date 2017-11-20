@@ -12,9 +12,13 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 var host = "http://localhost:8090/";
 
-Vue.prototype.http = async function (url, queryData) {
+Vue.prototype.http = async function (url, queryData, timeout) {
   let response, res;
   try{
+    //如果timeout无效，设置为1000ms
+    if(null == timeout || timeout == undefined || isNaN(timeout)){
+      timeout = 3000;
+    }
     response = await axios({
         /**
          * 此处必须使用application/json，不能使用text/json
@@ -23,6 +27,7 @@ Vue.prototype.http = async function (url, queryData) {
         method: 'post',
         url: host + url,
         data: JSON.stringify(queryData),
+        timeout: timeout
       });
 
     console.log("data: ", response.data);
@@ -37,15 +42,27 @@ Vue.prototype.http = async function (url, queryData) {
         res = data.data;
       }else{
         console.log("请求成功，数据处理失败");
+        this.$notify.error({
+          title: '错误',
+          message: '服务处理失败'
+        });
         res = null;
       }
     }else{
       console.info("请求处理失败");
+      this.$notify.error({
+        title: '错误',
+        message: '请求处理失败'
+      });
       res = null;
     }
   }catch(e){
     console.error("请求处理异常")
     console.error("error: ", e)
+    this.$notify.error({
+      title: '错误',
+      message: '请求服务器异常'
+    });
   }
   return res;
 }
