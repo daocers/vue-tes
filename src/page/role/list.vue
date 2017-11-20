@@ -6,6 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
         <el-button type="primary" @click="toAdd()">添加</el-button>
@@ -92,19 +93,7 @@
         /**
          * 表格数据
          **/
-        tableData: [{
-          id: 1,
-          name: '超级管理员',
-          code: 'admin'
-        }, {
-          id: 2,
-          name: '教师',
-          code: 'teacher'
-        }, {
-          id: 3,
-          name: '学员',
-          code: 'student'
-        }],
+        tableData: [],
         /**
          * 查询参数校验规则
          **/
@@ -152,6 +141,10 @@
         let data = await this.http("/role/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
+      },
+
+      reset(){
+        this.$refs["queryForm"].resetFields();
       },
 
       getDetail(row) {

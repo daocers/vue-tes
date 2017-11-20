@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="18">
 
-        <el-form :model="role" :rules="rules" :ref="addForm" label-width="80px">
+        <el-form :model="role" :rules="rules" ref="addForm" label-width="80px">
           <el-form-item label="名称" prop="name">
             <el-input v-model="role.name" placeholder="请输入"></el-input>
           </el-form-item>
@@ -43,36 +43,27 @@
       }
     },
     methods: {
-      async add() {
-        this.$refs['addForm'].validate((valid) => {
-          if(!valid){
+      add() {
+        this.$refs['addForm'].validate(async (valid) => {
+          if (!valid) {
             console.log("参数校验不通过，请处理");
             return false;
-          }
-          let res = await this.http("/role/api/save.do", this.role);
-          if (res == true) {
-            this.$confirm('继续添加?查看列表?', '提示', {
-              confirmButtonText: '继续添加',
-              cancelButtonText: '查看列表',
-              type: 'warning',
-              center: true
-            }).then(() => {
-//            this.$message({
-//              type: 'success',
-//              message: '删除成功!'
-//            });
-              this.$router.push("/role/add");
-            }).catch(() => {
-//            this.$message({
-//              type: 'info',
-//              message: '已取消删除'
-//            });
-              this.$router.push("/role/")
-            });
+          } else {
+            let res = await this.http("/role/api/save.do", this.role);
+            if (res == true) {
+              this.$confirm('继续添加?查看列表?', '提示', {
+                confirmButtonText: '继续添加',
+                cancelButtonText: '查看列表',
+                type: 'warning',
+                center: true
+              }).then(() => {
+                this.$router.push("/role/add");
+              }).catch(() => {
+                this.$router.push("/role/")
+              });
+            }
           }
         });
-
-
       }
     }
   }
