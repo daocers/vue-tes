@@ -32,44 +32,40 @@
             </el-table-column>
 
                         <el-table-column
-                      prop="title"
-                      label="title">
+                      prop="code"
+                      label="code">
               </el-table-column>
                         <el-table-column
-                      prop="answer"
-                      label="answer">
+                      prop="answerFlag"
+                      label="answerFlag">
               </el-table-column>
                         <el-table-column
-                      prop="content"
-                      label="content">
+                      prop="beginTime"
+                      label="beginTime">
               </el-table-column>
                         <el-table-column
-                      prop="extraInfo"
-                      label="extraInfo">
+                      prop="endTime"
+                      label="endTime">
               </el-table-column>
                         <el-table-column
-                      prop="questionTypeId"
-                      label="questionTypeId">
+                      prop="originalScore"
+                      label="originalScore">
               </el-table-column>
                         <el-table-column
-                      prop="questionBankId"
-                      label="questionBankId">
+                      prop="score"
+                      label="score">
               </el-table-column>
                         <el-table-column
-                      prop="propertyItemInfo"
-                      label="propertyItemInfo">
+                      prop="sceneId"
+                      label="sceneId">
               </el-table-column>
                         <el-table-column
-                      prop="ownerType"
-                      label="ownerType">
+                      prop="userId"
+                      label="userId">
               </el-table-column>
                         <el-table-column
-                      prop="ownerId"
-                      label="ownerId">
-              </el-table-column>
-                        <el-table-column
-                      prop="privaryType"
-                      label="privaryType">
+                      prop="questionTypeInfo"
+                      label="questionTypeInfo">
               </el-table-column>
                         <el-table-column
                       prop="status"
@@ -80,20 +76,20 @@
                       label="isDel">
               </el-table-column>
                         <el-table-column
-                      prop="createUserId"
-                      label="createUserId">
-              </el-table-column>
-                        <el-table-column
                       prop="createTime"
                       label="createTime">
               </el-table-column>
                         <el-table-column
-                      prop="updateUserId"
-                      label="updateUserId">
+                      prop="createUserId"
+                      label="createUserId">
               </el-table-column>
                         <el-table-column
                       prop="updateTime"
                       label="updateTime">
+              </el-table-column>
+                        <el-table-column
+                      prop="updateUserId"
+                      label="updateUserId">
               </el-table-column>
                     
             <el-table-column
@@ -119,35 +115,32 @@
 
         <el-dialog title="修改信息" :visible.sync="editDialogShow">
             <el-form :model="dataForEdit">
-                                <el-form-item label="title" prop="title">
-                      <el-input v-model="dataForEdit.title" placeholder="请输入"></el-input>
+                                <el-form-item label="code" prop="code">
+                      <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="answer" prop="answer">
-                      <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
+                                <el-form-item label="answerFlag" prop="answerFlag">
+                      <el-input v-model="dataForEdit.answerFlag" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="content" prop="content">
-                      <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
+                                <el-form-item label="beginTime" prop="beginTime">
+                      <el-input v-model="dataForEdit.beginTime" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="extraInfo" prop="extraInfo">
-                      <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
+                                <el-form-item label="endTime" prop="endTime">
+                      <el-input v-model="dataForEdit.endTime" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="questionTypeId" prop="questionTypeId">
-                      <el-input v-model="dataForEdit.questionTypeId" placeholder="请输入"></el-input>
+                                <el-form-item label="originalScore" prop="originalScore">
+                      <el-input v-model="dataForEdit.originalScore" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="questionBankId" prop="questionBankId">
-                      <el-input v-model="dataForEdit.questionBankId" placeholder="请输入"></el-input>
+                                <el-form-item label="score" prop="score">
+                      <el-input v-model="dataForEdit.score" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="propertyItemInfo" prop="propertyItemInfo">
-                      <el-input v-model="dataForEdit.propertyItemInfo" placeholder="请输入"></el-input>
+                                <el-form-item label="sceneId" prop="sceneId">
+                      <el-input v-model="dataForEdit.sceneId" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="ownerType" prop="ownerType">
-                      <el-input v-model="dataForEdit.ownerType" placeholder="请输入"></el-input>
+                                <el-form-item label="userId" prop="userId">
+                      <el-input v-model="dataForEdit.userId" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="ownerId" prop="ownerId">
-                      <el-input v-model="dataForEdit.ownerId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="privaryType" prop="privaryType">
-                      <el-input v-model="dataForEdit.privaryType" placeholder="请输入"></el-input>
+                                <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
+                      <el-input v-model="dataForEdit.questionTypeInfo" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="status" prop="status">
                       <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
@@ -155,17 +148,17 @@
                                 <el-form-item label="isDel" prop="isDel">
                       <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="createUserId" prop="createUserId">
-                      <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
-                  </el-form-item>
                                 <el-form-item label="createTime" prop="createTime">
                       <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="updateUserId" prop="updateUserId">
-                      <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
+                                <el-form-item label="createUserId" prop="createUserId">
+                      <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="updateTime" prop="updateTime">
                       <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="updateUserId" prop="updateUserId">
+                      <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
                   </el-form-item>
                           </el-form>
 
@@ -230,7 +223,7 @@
              * 查询
              */
             findByCondition : async function() {
-                let data = await this.http("/commonQuestion/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+                let data = await this.http("/paper/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
                 console.log("data: ", data);
                 this.tableData = data.list;
                 this.totalCount = data.total;//总记录数目
@@ -251,7 +244,7 @@
              */
             toAdd(){
                 console.log("准备跳转到添加页面")
-                this.$router.push("/commonQuestion/add");
+                this.$router.push("/paper/add");
             },
             /**
              * 唤起编辑对话框
@@ -268,7 +261,7 @@
             updateData: async function () {
                 console.log("更新数据");
                 console.log("dataForEdit:", this.dataForEdit)
-                var res = await this.http('/commonQuestion/api/update.do', this.dataForEdit, 1000);
+                var res = await this.http('/paper/api/update.do', this.dataForEdit, 1000);
                 if (res) {
 //        用Vue.set使数据处于监控之下
                     Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
@@ -289,7 +282,7 @@
              */
             async toRemove(idx, row) {
                 console.log("删除：", idx, row)
-                let data  = await this.http("/commonQuestion/api/delete.do?id=" + row.id);
+                let data  = await this.http("/paper/api/delete.do?id=" + row.id);
                 if(data == true){
                     this.tableData.splice(idx, 1);
                     this.tableData = this.tableData;

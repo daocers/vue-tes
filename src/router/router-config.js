@@ -15,6 +15,8 @@ import RoleIndex from '../page/role/list.vue'
 import RoleAdd from '../page/role/add.vue'
 import CommonQuestionIndex from '../page/commonQuestion/list.vue'
 import CommonQuestionAdd from '../page/commonQuestion/add.vue'
+import DepartmentIndex from '../page/department/list.vue'
+import DepartmentAdd from '../page/department/add.vue'
 
 
 export default [
@@ -29,6 +31,8 @@ export default [
   },
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },
+  {path:'/department', component: DepartmentIndex},
+  {path:'/department/add', component: DepartmentAdd},
   {path:'/commonQuestion', component: CommonQuestionIndex},
   {path:'/commonQuestion/add', component: CommonQuestionAdd},
   {

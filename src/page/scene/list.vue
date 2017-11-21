@@ -32,32 +32,12 @@
             </el-table-column>
 
                         <el-table-column
-                      prop="title"
-                      label="title">
+                      prop="code"
+                      label="code">
               </el-table-column>
                         <el-table-column
-                      prop="answer"
-                      label="answer">
-              </el-table-column>
-                        <el-table-column
-                      prop="content"
-                      label="content">
-              </el-table-column>
-                        <el-table-column
-                      prop="extraInfo"
-                      label="extraInfo">
-              </el-table-column>
-                        <el-table-column
-                      prop="questionTypeId"
-                      label="questionTypeId">
-              </el-table-column>
-                        <el-table-column
-                      prop="questionBankId"
-                      label="questionBankId">
-              </el-table-column>
-                        <el-table-column
-                      prop="propertyItemInfo"
-                      label="propertyItemInfo">
+                      prop="name"
+                      label="name">
               </el-table-column>
                         <el-table-column
                       prop="ownerType"
@@ -68,32 +48,88 @@
                       label="ownerId">
               </el-table-column>
                         <el-table-column
-                      prop="privaryType"
-                      label="privaryType">
+                      prop="authCode"
+                      label="authCode">
+              </el-table-column>
+                        <el-table-column
+                      prop="changePaper"
+                      label="changePaper">
+              </el-table-column>
+                        <el-table-column
+                      prop="delayTime"
+                      label="delayTime">
+              </el-table-column>
+                        <el-table-column
+                      prop="duration"
+                      label="duration">
+              </el-table-column>
+                        <el-table-column
+                      prop="paperPolicyId"
+                      label="paperPolicyId">
+              </el-table-column>
+                        <el-table-column
+                      prop="cancelReason"
+                      label="cancelReason">
+              </el-table-column>
+                        <el-table-column
+                      prop="paperGenerateType"
+                      label="paperGenerateType">
+              </el-table-column>
+                        <el-table-column
+                      prop="remark"
+                      label="remark">
+              </el-table-column>
+                        <el-table-column
+                      prop="questionBankId"
+                      label="questionBankId">
+              </el-table-column>
+                        <el-table-column
+                      prop="userChoiceType"
+                      label="userChoiceType">
+              </el-table-column>
+                        <el-table-column
+                      prop="totalScore"
+                      label="totalScore">
+              </el-table-column>
+                        <el-table-column
+                      prop="percentable"
+                      label="percentable">
+              </el-table-column>
+                        <el-table-column
+                      prop="metaScoreInfo"
+                      label="metaScoreInfo">
               </el-table-column>
                         <el-table-column
                       prop="status"
                       label="status">
               </el-table-column>
                         <el-table-column
-                      prop="isDel"
-                      label="isDel">
+                      prop="openTime"
+                      label="openTime">
               </el-table-column>
                         <el-table-column
-                      prop="createUserId"
-                      label="createUserId">
+                      prop="closeTime"
+                      label="closeTime">
+              </el-table-column>
+                        <el-table-column
+                      prop="isDel"
+                      label="isDel">
               </el-table-column>
                         <el-table-column
                       prop="createTime"
                       label="createTime">
               </el-table-column>
                         <el-table-column
-                      prop="updateUserId"
-                      label="updateUserId">
+                      prop="createUserId"
+                      label="createUserId">
               </el-table-column>
                         <el-table-column
                       prop="updateTime"
                       label="updateTime">
+              </el-table-column>
+                        <el-table-column
+                      prop="updateUserId"
+                      label="updateUserId">
               </el-table-column>
                     
             <el-table-column
@@ -119,26 +155,11 @@
 
         <el-dialog title="修改信息" :visible.sync="editDialogShow">
             <el-form :model="dataForEdit">
-                                <el-form-item label="title" prop="title">
-                      <el-input v-model="dataForEdit.title" placeholder="请输入"></el-input>
+                                <el-form-item label="code" prop="code">
+                      <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="answer" prop="answer">
-                      <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="content" prop="content">
-                      <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="extraInfo" prop="extraInfo">
-                      <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionTypeId" prop="questionTypeId">
-                      <el-input v-model="dataForEdit.questionTypeId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionBankId" prop="questionBankId">
-                      <el-input v-model="dataForEdit.questionBankId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="propertyItemInfo" prop="propertyItemInfo">
-                      <el-input v-model="dataForEdit.propertyItemInfo" placeholder="请输入"></el-input>
+                                <el-form-item label="name" prop="name">
+                      <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="ownerType" prop="ownerType">
                       <el-input v-model="dataForEdit.ownerType" placeholder="请输入"></el-input>
@@ -146,26 +167,68 @@
                                 <el-form-item label="ownerId" prop="ownerId">
                       <el-input v-model="dataForEdit.ownerId" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="privaryType" prop="privaryType">
-                      <el-input v-model="dataForEdit.privaryType" placeholder="请输入"></el-input>
+                                <el-form-item label="authCode" prop="authCode">
+                      <el-input v-model="dataForEdit.authCode" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="changePaper" prop="changePaper">
+                      <el-input v-model="dataForEdit.changePaper" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="delayTime" prop="delayTime">
+                      <el-input v-model="dataForEdit.delayTime" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="duration" prop="duration">
+                      <el-input v-model="dataForEdit.duration" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="paperPolicyId" prop="paperPolicyId">
+                      <el-input v-model="dataForEdit.paperPolicyId" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="cancelReason" prop="cancelReason">
+                      <el-input v-model="dataForEdit.cancelReason" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="paperGenerateType" prop="paperGenerateType">
+                      <el-input v-model="dataForEdit.paperGenerateType" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="remark" prop="remark">
+                      <el-input v-model="dataForEdit.remark" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="questionBankId" prop="questionBankId">
+                      <el-input v-model="dataForEdit.questionBankId" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="userChoiceType" prop="userChoiceType">
+                      <el-input v-model="dataForEdit.userChoiceType" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="totalScore" prop="totalScore">
+                      <el-input v-model="dataForEdit.totalScore" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="percentable" prop="percentable">
+                      <el-input v-model="dataForEdit.percentable" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="metaScoreInfo" prop="metaScoreInfo">
+                      <el-input v-model="dataForEdit.metaScoreInfo" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="status" prop="status">
                       <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
                   </el-form-item>
+                                <el-form-item label="openTime" prop="openTime">
+                      <el-input v-model="dataForEdit.openTime" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="closeTime" prop="closeTime">
+                      <el-input v-model="dataForEdit.closeTime" placeholder="请输入"></el-input>
+                  </el-form-item>
                                 <el-form-item label="isDel" prop="isDel">
                       <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="createUserId" prop="createUserId">
-                      <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="createTime" prop="createTime">
                       <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
                   </el-form-item>
-                                <el-form-item label="updateUserId" prop="updateUserId">
-                      <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
+                                <el-form-item label="createUserId" prop="createUserId">
+                      <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
                   </el-form-item>
                                 <el-form-item label="updateTime" prop="updateTime">
                       <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
+                  </el-form-item>
+                                <el-form-item label="updateUserId" prop="updateUserId">
+                      <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
                   </el-form-item>
                           </el-form>
 
@@ -230,7 +293,7 @@
              * 查询
              */
             findByCondition : async function() {
-                let data = await this.http("/commonQuestion/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+                let data = await this.http("/scene/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
                 console.log("data: ", data);
                 this.tableData = data.list;
                 this.totalCount = data.total;//总记录数目
@@ -251,7 +314,7 @@
              */
             toAdd(){
                 console.log("准备跳转到添加页面")
-                this.$router.push("/commonQuestion/add");
+                this.$router.push("/scene/add");
             },
             /**
              * 唤起编辑对话框
@@ -268,7 +331,7 @@
             updateData: async function () {
                 console.log("更新数据");
                 console.log("dataForEdit:", this.dataForEdit)
-                var res = await this.http('/commonQuestion/api/update.do', this.dataForEdit, 1000);
+                var res = await this.http('/scene/api/update.do', this.dataForEdit, 1000);
                 if (res) {
 //        用Vue.set使数据处于监控之下
                     Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
@@ -289,7 +352,7 @@
              */
             async toRemove(idx, row) {
                 console.log("删除：", idx, row)
-                let data  = await this.http("/commonQuestion/api/delete.do?id=" + row.id);
+                let data  = await this.http("/scene/api/delete.do?id=" + row.id);
                 if(data == true){
                     this.tableData.splice(idx, 1);
                     this.tableData = this.tableData;
