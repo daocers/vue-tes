@@ -54,10 +54,11 @@
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
                 cancelButtonText: '查看列表',
-                type: 'warning',
+                type: 'success',
                 center: true
               }).then(() => {
-                this.$router.push("/role/add");
+//                this.$router.push("/role/add");
+                this.$refs['addForm'].resetFields();
               }).catch(() => {
                 this.$router.push("/role/")
               });

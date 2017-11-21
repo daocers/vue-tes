@@ -13,6 +13,8 @@ import QuestionPolicyEdit from '../page/questionPolicy/edit.vue'
 import QuestionPolicyIndex from '../page/questionPolicy/list.vue'
 import RoleIndex from '../page/role/list.vue'
 import RoleAdd from '../page/role/add.vue'
+import CommonQuestionIndex from '../page/commonQuestion/list.vue'
+import CommonQuestionAdd from '../page/commonQuestion/add.vue'
 
 
 export default [
@@ -26,6 +28,9 @@ export default [
     path: '/role', component:RoleIndex,
   },
   {path: '/role/add', component: RoleAdd},
+  // {path:'', component: },
+  {path:'/commonQuestion', component: CommonQuestionIndex},
+  {path:'/commonQuestion/add', component: CommonQuestionAdd},
   {
     path: '/scene',
     component: Scene,
