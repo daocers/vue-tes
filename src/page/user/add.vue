@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="18">
 
-                <el-form :model="user" :rules="rules" ref="addForm" label-width="80px">
+                <el-form label-position="left" :model="user" :rules="rules" ref="addForm" label-width="80px">
                                             <el-form-item label="username" prop="username">
                             <el-input v-model="user.username" placeholder="请输入"></el-input>
                         </el-form-item>

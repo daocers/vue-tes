@@ -110,7 +110,7 @@
 
 
         <el-dialog title="修改信息" :visible.sync="editDialogShow">
-            <el-form :model="dataForEdit">
+            <el-form label-position="left" :model="dataForEdit">
                                 <el-form-item label="username" prop="username">
                       <el-input v-model="dataForEdit.username" placeholder="请输入"></el-input>
                   </el-form-item>

@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="18">
 
-                <el-form :model="propertyItem" :rules="rules" ref="addForm" label-width="80px">
+                <el-form label-position="left" :model="propertyItem" :rules="rules" ref="addForm" label-width="80px">
                                             <el-form-item label="propertyId" prop="propertyId">
                             <el-input v-model="propertyItem.propertyId" placeholder="请输入"></el-input>
                         </el-form-item>

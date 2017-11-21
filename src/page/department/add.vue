@@ -3,15 +3,22 @@
     <el-row>
       <el-col :span="18">
 
-        <el-form :model="department" :rules="rules" ref="addForm" label-width="80px">
-          <el-form-item label="name" prop="name">
+        <el-form label-position="right" :model="department" :rules="rules" ref="addForm" label-width="80px">
+          <el-form-item label="部门名称" prop="name">
             <el-input v-model="department.name" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="code" prop="code">
-            <el-input v-model="department.code" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="superiorId" prop="superiorId">
-            <el-input v-model="department.superiorId" placeholder="请输入"></el-input>
+          <!--<el-form-item label="部门编码" prop="code">-->
+            <!--<el-input :disabled="true" v-model="department.code" placeholder="请输入"></el-input>-->
+          <!--</el-form-item>-->
+          <el-form-item label="上级部门" prop="superiorId">
+            <el-select v-model="department.superiorId" placeholder="请选择上级部门">
+              <el-option
+                v-for="item in departmentList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
           <!--<el-form-item label="isDel" prop="isDel">-->
             <!--<el-input v-model="department.isDel" placeholder="请输入"></el-input>-->
@@ -49,53 +56,54 @@
   export default {
     data() {
       return {
+        departmentList:{},
         department: {},
         rules: {
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入部门名称', trigger: 'blur'},
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          superiorId:
-            [
-              {required: true, message: '请输入superiorId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          isDel:
-            [
-              {required: true, message: '请输入isDel', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          status:
-            [
-              {required: true, message: '请输入status', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createTime:
-            [
-              {required: true, message: '请输入createTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createUserId:
-            [
-              {required: true, message: '请输入createUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateTime:
-            [
-              {required: true, message: '请输入updateTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateUserId:
-            [
-              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
+//          code:
+//            [
+//              {required: true, message: '请输入', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          superiorId:
+//            [
+//              {required: true, message: '请输入superiorId', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          isDel:
+//            [
+//              {required: true, message: '请输入isDel', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          status:
+//            [
+//              {required: true, message: '请输入status', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          createTime:
+//            [
+//              {required: true, message: '请输入createTime', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          createUserId:
+//            [
+//              {required: true, message: '请输入createUserId', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          updateTime:
+//            [
+//              {required: true, message: '请输入updateTime', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
+//          updateUserId:
+//            [
+//              {required: true, message: '请输入updateUserId', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
         }
       }
     },
@@ -113,8 +121,10 @@
                 cancelButtonText: '查看列表',
                 type: 'success',
                 center: true
-              }).then(() => {
+              }).then(async () => {
                 this.$refs['addForm'].resetFields();
+                let departmentList = await this.http("/department/api/findAll.do", null);
+                this.departmentList = departmentList;
               }).catch(() => {
                 this.$router.push("/department/")
               });
@@ -127,8 +137,9 @@
       }
 
     },
-    created: function () {
-
+    created: async function () {
+      let departmentList = await this.http("/department/api/findAll.do", null);
+      this.departmentList = departmentList;
     }
   }
 </script>
