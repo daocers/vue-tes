@@ -17,6 +17,13 @@ import CommonQuestionIndex from '../page/commonQuestion/list.vue'
 import CommonQuestionAdd from '../page/commonQuestion/add.vue'
 import DepartmentIndex from '../page/department/list.vue'
 import DepartmentAdd from '../page/department/add.vue'
+import StationIndex from '../page/station/list.vue'
+import PropertyIndex from '../page/property/list.vue'
+// import  from '../page/station/list.vue'
+// import Station from '../page/station/list.vue'
+// import Station from '../page/station/list.vue'
+// import Station from '../page/station/list.vue'
+// import Station from '../page/station/list.vue'
 
 
 export default [
@@ -26,9 +33,9 @@ export default [
     path: '/leftMenu', component: leftMenu,
     // path: '/scene/setting', component: sceneSetting
   },
-  {
-    path: '/role', component:RoleIndex,
-  },
+  {path: '/role', component:RoleIndex},
+  {path: '/station', component:StationIndex},
+  {path: '/property', component:PropertyIndex},
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },
   {path:'/department', component: DepartmentIndex},
