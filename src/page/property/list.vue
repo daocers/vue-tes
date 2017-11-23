@@ -107,18 +107,6 @@
         <el-form-item label="删除标志" prop="isDel">
           <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
         </el-form-item>
-        <!--<el-form-item label="createUserId" prop="createUserId">-->
-        <!--<el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="createTime" prop="createTime">-->
-        <!--<el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateUserId" prop="updateUserId">-->
-        <!--<el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateTime" prop="updateTime">-->
-        <!--<el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -142,28 +130,40 @@
           <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
-          <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
+        <el-form-item label="属性信息" required>
+          <el-table :data="dataForAdd.itemList"
+                    border
+                    style="width: 100%">
+            <el-table-column prop="no" label="编号" width="80px">
+              <template slot-scope="scope">
+                <span>{{scope.$index + 1}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" label="名称" width="80px">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.name" size="small"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="value" label="值">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.value" size="small"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="90">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click="removeLine(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button type="primary" plain @click="addItem()" icon="el-icon-plus" size="mini">添加</el-button>
         </el-form-item>
-        <el-form-item label="删除标志" prop="isDel">
-          <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <!--<el-form-item label="创建人" prop="createUserId">-->
-        <!--<el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="创建时间" prop="createTime">-->
-        <!--<el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateUserId" prop="updateUserId">-->
-        <!--<el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateTime" prop="updateTime">-->
-        <!--<el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addDialogShow = false">取 消</el-button>
+        <el-button @click="cancelAdd()">取 消</el-button>
         <el-button type="primary" @click="addData()">确 定</el-button>
       </div>
     </el-dialog>
@@ -202,8 +202,16 @@
         /**
          * 添加对话框数据
          */
-        dataForAdd: {},
+        dataForAdd: {
+          itemList: [
+//            {id: 1, name: '困难'}
+          ],
+        },
 
+        /**
+         * 属性条目编号
+         */
+        itemIndex: 1,
         /**
          * 添加对话框是否显示
          */
@@ -368,8 +376,6 @@
                 center: true
               }).then(() => {
                 this.$refs['addForm'].resetFields();
-//        关闭对话框
-                this.addDialogShow = false;
               }).catch(() => {
                 this.findByCondition();
 //        关闭对话框
@@ -378,6 +384,15 @@
             }
           }
         });
+      },
+
+
+      /**
+       * 取消添加
+       */
+      cancelAdd: async function () {
+        this.findByCondition();
+        this.addDialogShow = false;
       },
 
       /**
@@ -399,6 +414,19 @@
         }
       },
 
+      /**
+       * 添加属性明细
+       */
+      addItem: function () {
+        this.dataForAdd.itemList.push({no: this.itemIndex});
+      },
+      /**
+       * 删除明细
+       */
+      removeLine: function (idx, row) {
+        this.dataForAdd.itemList.splice(idx, 1);
+      },
+
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         console.log(`每页 ${val} 条`);
@@ -416,6 +444,16 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+    },
+    computed:{
+      /**
+       * 获取属性明细的编号
+       */
+      getItemNo:function (index) {
+        if(index){
+          return index + 1;
+        }
+      }
     }
   }
 </script>
@@ -435,4 +473,21 @@
   button.btn-prev {
     border-left: 1px solid gainsboro;
   }
+
+
+  /*
+  * 以下用于修改form中表格中输入框的样式
+  */
+  form .el-table td{
+    padding: 0px;
+  }
+  form .el-table td:last-child{
+    padding-left: 10px;
+  }
+  form .el-table .cell{
+    padding: 0px;
+  }
+  /*.el-table--border  td:first-child .cell{*/
+    /*padding-left: 0px;*/
+  /*}*/
 </style>

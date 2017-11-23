@@ -24,150 +24,150 @@
                     width="10">
             </el-table-column>
 
-                        <el-table-column
-                      prop="code"
-                      label="code">
-              </el-table-column>
-                        <el-table-column
-                      prop="name"
-                      label="name">
-              </el-table-column>
-                        <el-table-column
-                      prop="questionTypeInfo"
-                      label="questionTypeInfo">
-              </el-table-column>
-                        <el-table-column
-                      prop="content"
-                      label="content">
-              </el-table-column>
-                        <el-table-column
-                      prop="count"
-                      label="count">
-              </el-table-column>
-                        <el-table-column
-                      prop="score"
-                      label="score">
-              </el-table-column>
-                        <el-table-column
-                      prop="percentable"
-                      label="percentable">
-              </el-table-column>
-                        <el-table-column
-                      prop="ownerId"
-                      label="ownerId">
-              </el-table-column>
-                        <el-table-column
-                      prop="ownerType"
-                      label="ownerType">
-              </el-table-column>
-                        <el-table-column
-                      prop="questionSelectType"
-                      label="questionSelectType">
-              </el-table-column>
-                        <el-table-column
-                      prop="privaryType"
-                      label="privaryType">
-              </el-table-column>
-                        <el-table-column
-                      prop="isDel"
-                      label="isDel">
-              </el-table-column>
-                        <el-table-column
-                      prop="status"
-                      label="status">
-              </el-table-column>
-                        <el-table-column
-                      prop="createUserId"
-                      label="createUserId">
-              </el-table-column>
-                        <el-table-column
-                      prop="updateTime"
-                      label="updateTime">
-              </el-table-column>
-                        <el-table-column
-                      prop="createTime"
-                      label="createTime">
-              </el-table-column>
-                        <el-table-column
-                      prop="updateUserId"
-                      label="updateUserId">
-              </el-table-column>
-                    
+                            <el-table-column
+                        prop="code"
+                        label="code">
+                </el-table-column>
+                            <el-table-column
+                        prop="name"
+                        label="name">
+                </el-table-column>
+                            <el-table-column
+                        prop="questionTypeInfo"
+                        label="questionTypeInfo">
+                </el-table-column>
+                            <el-table-column
+                        prop="content"
+                        label="content">
+                </el-table-column>
+                            <el-table-column
+                        prop="count"
+                        label="count">
+                </el-table-column>
+                            <el-table-column
+                        prop="score"
+                        label="score">
+                </el-table-column>
+                            <el-table-column
+                        prop="percentable"
+                        label="percentable">
+                </el-table-column>
+                            <el-table-column
+                        prop="ownerId"
+                        label="ownerId">
+                </el-table-column>
+                            <el-table-column
+                        prop="ownerType"
+                        label="ownerType">
+                </el-table-column>
+                            <el-table-column
+                        prop="questionSelectType"
+                        label="questionSelectType">
+                </el-table-column>
+                            <el-table-column
+                        prop="privaryType"
+                        label="privaryType">
+                </el-table-column>
+                            <el-table-column
+                        prop="isDel"
+                        label="isDel">
+                </el-table-column>
+                            <el-table-column
+                        prop="status"
+                        label="status">
+                </el-table-column>
+                            <el-table-column
+                        prop="createUserId"
+                        label="createUserId">
+                </el-table-column>
+                            <el-table-column
+                        prop="updateTime"
+                        label="updateTime">
+                </el-table-column>
+                            <el-table-column
+                        prop="createTime"
+                        label="createTime">
+                </el-table-column>
+                            <el-table-column
+                        prop="updateUserId"
+                        label="updateUserId">
+                </el-table-column>
+            
             <el-table-column
                     fixed="right"
                     label="操作"
                     width="90">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
+                                    <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination  style="float: right; margin-top: 10px;"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="queryForm.pageNum"
-                        :page-sizes="[10, 20, 50, 100]"
-                        :page-size="queryForm.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="totalCount">
+        <el-pagination style="float: right; margin-top: 10px;"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="queryForm.pageNum"
+                       :page-sizes="[10, 20, 50, 100]"
+                       :page-size="queryForm.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="totalCount">
         </el-pagination>
 
 
         <el-dialog title="编辑" :visible.sync="editDialogShow">
             <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-                                <el-form-item label="code" prop="code">
-                      <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="name" prop="name">
-                      <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-                      <el-input v-model="dataForEdit.questionTypeInfo" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="content" prop="content">
-                      <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="count" prop="count">
-                      <el-input v-model="dataForEdit.count" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="score" prop="score">
-                      <el-input v-model="dataForEdit.score" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="percentable" prop="percentable">
-                      <el-input v-model="dataForEdit.percentable" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="ownerId" prop="ownerId">
-                      <el-input v-model="dataForEdit.ownerId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="ownerType" prop="ownerType">
-                      <el-input v-model="dataForEdit.ownerType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionSelectType" prop="questionSelectType">
-                      <el-input v-model="dataForEdit.questionSelectType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="privaryType" prop="privaryType">
-                      <el-input v-model="dataForEdit.privaryType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="isDel" prop="isDel">
-                      <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="status" prop="status">
-                      <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="createUserId" prop="createUserId">
-                      <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="updateTime" prop="updateTime">
-                      <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="createTime" prop="createTime">
-                      <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="updateUserId" prop="updateUserId">
-                      <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                          </el-form>
+                                    <el-form-item label="code" prop="code">
+                        <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="name" prop="name">
+                        <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
+                        <el-input v-model="dataForEdit.questionTypeInfo" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="content" prop="content">
+                        <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="count" prop="count">
+                        <el-input v-model="dataForEdit.count" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="score" prop="score">
+                        <el-input v-model="dataForEdit.score" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="percentable" prop="percentable">
+                        <el-input v-model="dataForEdit.percentable" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="ownerId" prop="ownerId">
+                        <el-input v-model="dataForEdit.ownerId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="ownerType" prop="ownerType">
+                        <el-input v-model="dataForEdit.ownerType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="questionSelectType" prop="questionSelectType">
+                        <el-input v-model="dataForEdit.questionSelectType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="privaryType" prop="privaryType">
+                        <el-input v-model="dataForEdit.privaryType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="isDel" prop="isDel">
+                        <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="status" prop="status">
+                        <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="createUserId" prop="createUserId">
+                        <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="updateTime" prop="updateTime">
+                        <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="createTime" prop="createTime">
+                        <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="updateUserId" prop="updateUserId">
+                        <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                            </el-form>
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="editDialogShow = false">取 消</el-button>
@@ -176,62 +176,62 @@
         </el-dialog>
 
         <el-dialog title="添加" :visible.sync="addDialogShow">
-            <el-form ref="addForm"  :rules="rules" label-position="left" :model="dataForAdd">
-                                <el-form-item label="code" prop="code">
-                      <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="name" prop="name">
-                      <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-                      <el-input v-model="dataForAdd.questionTypeInfo" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="content" prop="content">
-                      <el-input v-model="dataForAdd.content" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="count" prop="count">
-                      <el-input v-model="dataForAdd.count" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="score" prop="score">
-                      <el-input v-model="dataForAdd.score" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="percentable" prop="percentable">
-                      <el-input v-model="dataForAdd.percentable" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="ownerId" prop="ownerId">
-                      <el-input v-model="dataForAdd.ownerId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="ownerType" prop="ownerType">
-                      <el-input v-model="dataForAdd.ownerType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="questionSelectType" prop="questionSelectType">
-                      <el-input v-model="dataForAdd.questionSelectType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="privaryType" prop="privaryType">
-                      <el-input v-model="dataForAdd.privaryType" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="isDel" prop="isDel">
-                      <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="status" prop="status">
-                      <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="createUserId" prop="createUserId">
-                      <el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="updateTime" prop="updateTime">
-                      <el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="createTime" prop="createTime">
-                      <el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>
-                  </el-form-item>
-                                <el-form-item label="updateUserId" prop="updateUserId">
-                      <el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>
-                  </el-form-item>
-                          </el-form>
+            <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
+                                    <el-form-item label="code" prop="code">
+                        <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="name" prop="name">
+                        <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
+                        <el-input v-model="dataForAdd.questionTypeInfo" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="content" prop="content">
+                        <el-input v-model="dataForAdd.content" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="count" prop="count">
+                        <el-input v-model="dataForAdd.count" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="score" prop="score">
+                        <el-input v-model="dataForAdd.score" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="percentable" prop="percentable">
+                        <el-input v-model="dataForAdd.percentable" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="ownerId" prop="ownerId">
+                        <el-input v-model="dataForAdd.ownerId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="ownerType" prop="ownerType">
+                        <el-input v-model="dataForAdd.ownerType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="questionSelectType" prop="questionSelectType">
+                        <el-input v-model="dataForAdd.questionSelectType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="privaryType" prop="privaryType">
+                        <el-input v-model="dataForAdd.privaryType" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="isDel" prop="isDel">
+                        <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="status" prop="status">
+                        <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="createUserId" prop="createUserId">
+                        <el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="updateTime" prop="updateTime">
+                        <el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="createTime" prop="createTime">
+                        <el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>
+                    </el-form-item>
+                                    <el-form-item label="updateUserId" prop="updateUserId">
+                        <el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>
+                    </el-form-item>
+                            </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addDialogShow = false">取 消</el-button>
+                <el-button @click="cancelAdd()">取 消</el-button>
                 <el-button type="primary" @click="addData()">确 定</el-button>
             </div>
         </el-dialog>
@@ -294,94 +294,94 @@
                  * 校验规则
                  */
                 rules: {
-                    code:
-                    [
-                        {required: true, message: '请输入code', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    name:
-                    [
-                        {required: true, message: '请输入name', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    questionTypeInfo:
-                    [
-                        {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    content:
-                    [
-                        {required: true, message: '请输入content', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    count:
-                    [
-                        {required: true, message: '请输入count', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    score:
-                    [
-                        {required: true, message: '请输入score', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    percentable:
-                    [
-                        {required: true, message: '请输入percentable', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    ownerId:
-                    [
-                        {required: true, message: '请输入ownerId', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    ownerType:
-                    [
-                        {required: true, message: '请输入ownerType', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    questionSelectType:
-                    [
-                        {required: true, message: '请输入questionSelectType', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    privaryType:
-                    [
-                        {required: true, message: '请输入privaryType', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    isDel:
-                    [
-                        {required: true, message: '请输入isDel', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    status:
-                    [
-                        {required: true, message: '请输入status', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    createUserId:
-                    [
-                        {required: true, message: '请输入createUserId', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    updateTime:
-                    [
-                        {required: true, message: '请输入updateTime', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    createTime:
-                    [
-                        {required: true, message: '请输入createTime', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                    updateUserId:
-                    [
-                        {required: true, message: '请输入updateUserId', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
-                            }
+                            code:
+                [
+                    {required: true, message: '请输入code', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            name:
+                [
+                    {required: true, message: '请输入name', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            questionTypeInfo:
+                [
+                    {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            content:
+                [
+                    {required: true, message: '请输入content', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            count:
+                [
+                    {required: true, message: '请输入count', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            score:
+                [
+                    {required: true, message: '请输入score', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            percentable:
+                [
+                    {required: true, message: '请输入percentable', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            ownerId:
+                [
+                    {required: true, message: '请输入ownerId', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            ownerType:
+                [
+                    {required: true, message: '请输入ownerType', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            questionSelectType:
+                [
+                    {required: true, message: '请输入questionSelectType', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            privaryType:
+                [
+                    {required: true, message: '请输入privaryType', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            isDel:
+                [
+                    {required: true, message: '请输入isDel', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            status:
+                [
+                    {required: true, message: '请输入status', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            createUserId:
+                [
+                    {required: true, message: '请输入createUserId', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            updateTime:
+                [
+                    {required: true, message: '请输入updateTime', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            createTime:
+                [
+                    {required: true, message: '请输入createTime', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                            updateUserId:
+                [
+                    {required: true, message: '请输入updateUserId', trigger: 'blur'},
+                    {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+                ],
+                    }
 
-            }
+        }
         },
 
 
@@ -389,7 +389,7 @@
             /**
              * 查询
              */
-            findByCondition : async function() {
+            findByCondition: async function () {
                 let data = await this.http("/paperPolicy/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
                 console.log("data: ", data);
                 this.tableData = data.list;
@@ -411,7 +411,7 @@
              */
             toAdd(){
                 console.log("唤起添加对话框")
-                this.addDialogShow = true;
+                            this.addDialogShow = true;
             },
             /**
              * 唤起编辑对话框
@@ -426,27 +426,27 @@
              * 提交更新数据
              */
             updateData: async function () {
-                                console.log("更新数据");
+                console.log("更新数据");
                 console.log("dataForEdit:", this.dataForEdit);
 
                 this.$refs['editForm'].validate(async (valid) => {
-                if (!valid) {
-                    console.log("参数校验不通过，请处理");
-                    return false;
-                } else {
-                    var res = await this.http('/paperPolicy/api/update.do', this.dataForEdit, 1000);
-                    if (res) {
-                        Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-                        //        以下代码变动无法触发页面渲染
-                        //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-                        //          console.log(this.tableData)
-                    } else if (res == false) {
-                        console.log("请求成功，处理失败");
-                    } else if (res == null) {
-                        console.error("请求失败")
-                    }
-                    //        关闭对话框
-                    this.editDialogShow = false;
+                    if (!valid) {
+                        console.log("参数校验不通过，请处理");
+                        return false;
+                    } else {
+                        var res = await this.http('/paperPolicy/api/update.do', this.dataForEdit, 1000);
+                        if (res) {
+                            Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+                            //        以下代码变动无法触发页面渲染
+                            //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
+                            //          console.log(this.tableData)
+                        } else if (res == false) {
+                            console.log("请求成功，处理失败");
+                        } else if (res == null) {
+                            console.error("请求失败")
+                        }
+                        //        关闭对话框
+                        this.editDialogShow = false;
                     }
                 });
             },
@@ -457,30 +457,36 @@
                 console.log("添加数据");
                 console.log("dataForAdd:", this.dataForAdd);
 
-              this.$refs['addForm'].validate(async (valid) => {
-if (!valid) {
-console.log("参数校验不通过，请处理");
-return false;
-} else {
-let res = await this.http("/paperPolicy/api/save.do", this.dataForAdd, 1000);
-if (res == true) {
-this.$confirm('继续添加?查看列表?', '提示', {
-confirmButtonText: '继续添加',
-cancelButtonText: '查看列表',
-type: 'success',
-center: true
-}).then(() => {
-this.$refs['addForm'].resetFields();
+                this.$refs['addForm'].validate(async (valid) => {
+                    if (!valid) {
+                        console.log("参数校验不通过，请处理");
+                        return false;
+                    } else {
+                        let res = await this.http("/paperPolicy/api/save.do", this.dataForAdd, 1000);
+                        if (res == true) {
+                            this.$confirm('继续添加?查看列表?', '提示', {
+                                confirmButtonText: '继续添加',
+                                cancelButtonText: '查看列表',
+                                type: 'success',
+                                center: true
+                            }).then(() => {
+                                this.$refs['addForm'].resetFields();
+                            }).catch(() => {
+                                this.findByCondition();
 //        关闭对话框
-this.addDialogShow = false;
-}).catch(() => {
-this.findByCondition();
-//        关闭对话框
-this.addDialogShow = false;
-});
-}
-}
-});
+                                this.addDialogShow = false;
+                            });
+                        }
+                    }
+                });
+            },
+
+            /**
+             * 取消添加
+             */
+            cancelAdd: async function () {
+                this.findByCondition();
+                this.addDialogShow = false;
             },
 
             /**
@@ -488,11 +494,11 @@ this.addDialogShow = false;
              */
             async toRemove(idx, row) {
                 console.log("删除：", idx, row)
-                let data  = await this.http("/paperPolicy/api/delete.do?id=" + row.id);
-                if(data == true){
+                let data = await this.http("/paperPolicy/api/delete.do?id=" + row.id);
+                if (data == true) {
                     this.tableData.splice(idx, 1);
                     this.tableData = this.tableData;
-                }else if(data == false){
+                } else if (data == false) {
                     console.log("删除失败");
                     this.$notify({
                         title: '警告',
@@ -528,11 +534,13 @@ this.addDialogShow = false;
         border: 1px solid gainsboro;
         border-left: none;
     }
-      .el-pager > li.active{
-    background-color: #3091F2;
-    border: none;
-    color: white;
-  }
+
+    .el-pager > li.active {
+        background-color: #3091F2;
+        border: none;
+        color: white;
+    }
+
     button.btn-prev {
         border-left: 1px solid gainsboro;
     }

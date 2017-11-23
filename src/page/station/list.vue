@@ -154,7 +154,7 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addDialogShow = false">取 消</el-button>
+        <el-button @click="cancelAdd()">取 消</el-button>
         <el-button type="primary" @click="addData()">确 定</el-button>
       </div>
     </el-dialog>
@@ -354,8 +354,6 @@
                 center: true
               }).then(() => {
                 this.$refs['addForm'].resetFields();
-//        关闭对话框
-                this.addDialogShow = false;
               }).catch(() => {
                 this.findByCondition();
 //        关闭对话框
@@ -365,6 +363,16 @@
           }
         });
       },
+
+
+      /**
+       * 取消添加
+       */
+      cancelAdd: async function(){
+        this.findByCondition();
+        this.addDialogShow = false;
+      },
+
 
       /**
        * 删除数据
@@ -422,38 +430,3 @@
     border-left: 1px solid gainsboro;
   }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
