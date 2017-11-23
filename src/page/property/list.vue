@@ -120,39 +120,39 @@
         <el-form-item label="属性名称" prop="name">
           <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="属性编号" prop="code">
-          <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="属性编号" prop="code">-->
+          <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="描述" prop="memo">
           <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="序号" prop="no">
-          <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
+          <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
         </el-form-item>
 
         <el-form-item label="属性信息" required>
           <el-table :data="dataForAdd.itemList"
                     border
                     style="width: 100%">
-            <el-table-column prop="no" label="编号" width="80px">
+            <el-table-column prop="no" label="序号" width="100px">
               <template slot-scope="scope">
                 <span>{{scope.$index + 1}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="名称" width="80px">
+            <el-table-column prop="name" label="名称">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.name" size="small"></el-input>
               </template>
             </el-table-column>
-            <el-table-column prop="value" label="值">
+            <el-table-column prop="idx" label="排序">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.value" size="small"></el-input>
+                <el-input type="number" v-model="scope.row.idx" size="small"></el-input>
               </template>
             </el-table-column>
             <el-table-column
               fixed="right"
               label="操作"
-              width="90">
+              width="100">
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="removeLine(scope.$index, scope.row)">删除</el-button>
               </template>

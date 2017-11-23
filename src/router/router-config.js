@@ -19,12 +19,12 @@ import DepartmentIndex from '../page/department/list.vue'
 import DepartmentAdd from '../page/department/add.vue'
 import StationIndex from '../page/station/list.vue'
 import PropertyIndex from '../page/property/list.vue'
+import Test from '../page/test.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
-
 
 export default [
   {
@@ -33,19 +33,20 @@ export default [
     path: '/leftMenu', component: leftMenu,
     // path: '/scene/setting', component: sceneSetting
   },
-  {path: '/role', component:RoleIndex},
-  {path: '/station', component:StationIndex},
-  {path: '/property', component:PropertyIndex},
+  {path: '/test', component: Test},
+  {path: '/role', component: RoleIndex},
+  {path: '/station', component: StationIndex},
+  {path: '/property', component: PropertyIndex},
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },
-  {path:'/department', component: DepartmentIndex},
-  {path:'/department/add', component: DepartmentAdd},
-  {path:'/commonQuestion', component: CommonQuestionIndex},
-  {path:'/commonQuestion/add', component: CommonQuestionAdd},
+  {path: '/department', component: DepartmentIndex},
+  {path: '/department/add', component: DepartmentAdd},
+  {path: '/commonQuestion', component: CommonQuestionIndex},
+  {path: '/commonQuestion/add', component: CommonQuestionAdd},
   {
     path: '/scene',
     component: Scene,
-    children:[
+    children: [
       {path: '', component: SceneSetting},
       {path: 'paper', component: ScenePaper},
       {path: 'user', component: SceneUser},
@@ -55,7 +56,7 @@ export default [
   {
     path: '/questionPolicy',
     component: QuestionPolicyIndex,
-    children:[
+    children: [
       {path: '', component: QuestionPolicyIndex},
       {path: '/edit', component: QuestionPolicyEdit},
     ]
@@ -64,7 +65,7 @@ export default [
   {
     path: '/step',
     component: Step,
-    children:[
+    children: [
       {path: '', component: Step1},
       {path: 'step2', component: Step2},
       {path: 'step3', component: Step3}
