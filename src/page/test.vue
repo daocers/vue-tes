@@ -11,49 +11,52 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="name" label="名称" width="80px">
-        <!--<template v-if="scope.row.name != current"  slot-scope="scope" >-->
-          <!--<el-input v-model="scope.row.name" size="small"></el-input>-->
-        <!--</template>-->
-
-        <template slot-scope="scope"  v-if="scope.row.name == current" >
-        <el-date-picker
-        v-model="value1"
-        type="date"
-        placeholder="选择日期">
-        </el-date-picker>
+      <el-table-column prop="date" label="日期">
+        <template slot-scope="scope">
+          <div v-if="scope.row.name == current">
+            <el-date-picker
+              v-model="scope.row.date"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </div>
+          <div v-else>
+            <span>{{scope.row.date}}</span>
+          </div>
         </template>
-        <!--<template slot-scope="scope" v-if="scope.row.name == current">-->
-        <!--<template v-if="scope.row.name != current" slot-scope="scope">-->
-          <!--<span>{{scope.row.name}}</span>-->
-        <!--</template>-->
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="80px">
-        <template slot-scope="scope" v-if="scope.row.name == current">
-          <el-input v-model="scope.row.name" size="small"></el-input>
+      <el-table-column prop="name" label="名称">
+        <template slot-scope="scope">
+          <div v-if="scope.row.name == current">
+            <el-input v-model="scope.row.name" size="small"></el-input>
+          </div>
+          <div v-else>
+            <span>{{scope.row.name}}</span>
+          </div>
+
         </template>
       </el-table-column>
 
       <el-table-column prop="date" label="日期">
-        <!--<template slot-scope="scope">-->
-          <!--<el-date-picker-->
-            <!--v-model="value1"-->
-            <!--type="date"-->
-            <!--placeholder="选择日期">-->
-          <!--</el-date-picker>-->
-        <!--</template>-->
       </el-table-column>
       <el-table-column prop="value" label="值">
-        <template slot-scope="scope" v-if="scope.row.name == current">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <template slot-scope="scope">
+          <div v-if="scope.row.name == current">
+            <el-select v-model="scope.row.value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+          <div v-else>
+            <span>{{scope.row.value}}</span>
+          </div>
         </template>
+
+
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -70,7 +73,7 @@
 
 <script>
   export default {
-    data(){
+    data() {
       return {
         current: 'name1',
         options: [
@@ -79,7 +82,7 @@
           {label: '年度', value: 3},
           {label: '半年度', value: 4},
         ],
-        list:[],
+        list: [],
       }
     },
     methods: {
@@ -92,8 +95,8 @@
       }
     },
     created: function () {
-      for(var i = 0; i < 1000; i++){
-        this.list.push({no: 'no'+i, name: 'name' + i,  date: new Date(), value: new Date().getTime()});
+      for (var i = 0; i < 1000; i++) {
+        this.list.push({no: 'no' + i, name: 'name' + i, date: new Date(), value: new Date().getTime()});
       }
     }
   }

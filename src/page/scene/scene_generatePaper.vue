@@ -135,13 +135,11 @@
     components: {ElRow},
     data: function () {
       return {
-        scene: {
-
-        },
+        scene: {},
         /**
          * 策略查询参数
          * */
-        paperPolicyQuery:{
+        paperPolicyQuery: {
           questionSelectType: null,
           ownerType: '',
           minCount: 0,
@@ -153,21 +151,17 @@
         /**
          * 查询出来的所有策略
          * */
-        paperPolicyList:[
-
-        ],
+        paperPolicyList: [],
         /**
          * 存放已经选择的试卷策略
          * */
-        checkedPaperPolicy:[
-
-        ]
+        checkedPaperPolicy: []
       }
     },
     methods: {
       /**
-      * 查询试卷策略
-      * */
+       * 查询试卷策略
+       * */
       getPaperPolicy: function (formName) {
         console.log("查询表单");
         console.log("queryData: ", JSON.stringify(this.paperPolicy));

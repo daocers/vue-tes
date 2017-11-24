@@ -89,10 +89,10 @@
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="属性名称" prop="name">
-          <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
+          <el-input :disabled="true" v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="属性编号" prop="code">
-          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+          <el-input :disabled="true" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="memo">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
@@ -101,12 +101,12 @@
           <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
-          <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="删除标志" prop="isDel">
-          <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="状态" prop="status">-->
+          <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="删除标志" prop="isDel">-->
+          <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
+        <!--</el-form-item>-->
 
         <el-form-item label="属性信息" required>
           <el-table :data="dataForEdit.itemList"
@@ -119,7 +119,12 @@
             </el-table-column>
             <el-table-column prop="name" label="名称">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.name" size="small"></el-input>
+                <div v-if="scope.row.id != null">
+                  <span>{{scope.row.name}}</span>
+                </div>
+                <div v-else>
+                  <el-input v-model="scope.row.name" size="small"></el-input>
+                </div>
               </template>
             </el-table-column>
             <el-table-column prop="idx" label="排序">
@@ -152,7 +157,7 @@
           <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
         <!--<el-form-item label="属性编号" prop="code">-->
-          <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="描述" prop="memo">
           <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
@@ -161,7 +166,7 @@
           <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
         </el-form-item>
 
-        <el-form-item label="属性信息" required>
+        <el-form-item label="属性信息" prop="itemList">
           <el-table :data="dataForAdd.itemList"
                     border
                     style="width: 100%">
@@ -209,6 +214,42 @@
 
   export default {
     data() {
+      var contains = function (arr, item) {
+        if (arr == undefined || arr == null || item == undefined || item == null) {
+          return false;
+        } else {
+          let arrItem;
+          for (arrItem in arr) {
+            if (arrItem == item) {
+              return true;
+            }
+          }
+          return false;
+        }
+      }
+
+      var checkPropertyItem = (rule, value, callback) => {
+        console.log("value: ", value);
+        var names = new Array();
+        if (value.length == 0) {
+          callback(new Error("请配置属性明细"));
+        } else {
+          let item = value[value.length - 1];
+          console.log("item: ", item);
+          let name = item.name;
+          console.log("name: ", name);
+          if (name == undefined || name == '') {
+            callback(new Error("属性明细名称不能为空"));
+          } else if (name.length > 10) {
+            callback(new Error("属性明细名称在10位以内"));
+          } else if (contains(names, name)) {
+            callback(new Error("属性明细名称不能重复"));
+          } else {
+            names.push(name)
+            callback();
+          }
+        }
+      };
       return {
         /**
          * 表格数据
@@ -235,7 +276,7 @@
          */
         dataForAdd: {
           itemList: [
-//            {id: 1, name: '困难'}
+            {id: null, name: '', idx: null}
           ],
         },
 
@@ -266,11 +307,11 @@
          * 校验规则
          */
         rules: {
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
+//          code:
+//            [
+//              {required: true, message: '请输入code', trigger: 'blur'},
+//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//            ],
           memo:
             [
               {max: 100, message: '长度在3-100个字符', trigger: 'blur'}
@@ -285,6 +326,10 @@
               {required: true, message: '请输入name', trigger: 'blur'},
               {min: 2, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
+          itemList:
+            [
+              {validator: checkPropertyItem, required: true, trigger: 'blur'}
+            ]
 //          status:
 //            [
 //              {required: true, message: '请输入status', trigger: 'blur'},
@@ -346,8 +391,9 @@
        * 跳转到添加数据页面
        */
       toAdd() {
-        console.log("唤起添加对话框")
+        console.log("唤起添加对话框");
         this.addDialogShow = true;
+
       },
       /**
        * 唤起编辑对话框
@@ -476,12 +522,12 @@
       console.log("created....")
       this.findByCondition();
     },
-    computed:{
+    computed: {
       /**
        * 获取属性明细的编号
        */
-      getItemNo:function (index) {
-        if(index){
+      getItemNo: function (index) {
+        if (index) {
           return index + 1;
         }
       }
@@ -505,20 +551,22 @@
     border-left: 1px solid gainsboro;
   }
 
-
   /*
   * 以下用于修改form中表格中输入框的样式
   */
-  form .el-table td{
+  form .el-table td {
     padding: 0px;
   }
-  form .el-table td:last-child{
+
+  form .el-table td:last-child {
     padding-left: 10px;
   }
-  form .el-table .cell{
+
+  form .el-table .cell {
     padding: 0px;
   }
+
   /*.el-table--border  td:first-child .cell{*/
-    /*padding-left: 0px;*/
+  /*padding-left: 0px;*/
   /*}*/
 </style>
