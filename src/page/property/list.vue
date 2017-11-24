@@ -152,22 +152,22 @@
     </el-dialog>
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
+      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="属性名称" prop="name">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+          <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <!--<el-form-item label="属性编号" prop="code">-->
-        <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="描述" prop="memo">
-          <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
+          <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="序号" prop="no">
-          <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
+          <el-input type="number" v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
 
         <el-form-item label="属性信息" prop="itemList">
-          <el-table :data="dataForAdd.itemList"
+          <el-table :data="dataForEdit.itemList"
                     border
                     style="width: 100%">
             <el-table-column prop="no" label="序号" width="100px">
@@ -272,9 +272,9 @@
           pageNum: 1,
         },
         /**
-         * 添加对话框数据
+         * 对话框数据
          */
-        dataForAdd: {
+        dataForEdit: {
           itemList: [
             {id: null, name: '', idx: null}
           ],
@@ -294,11 +294,6 @@
         editDialogShow: false,
 
         /**
-         * 修改对话框数据
-         */
-        dataForEdit: {},
-
-        /**
          * 修改对话框数据索引值
          */
         dataForEditIndex: null,
@@ -307,20 +302,10 @@
          * 校验规则
          */
         rules: {
-//          code:
-//            [
-//              {required: true, message: '请输入code', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
           memo:
             [
               {max: 100, message: '长度在3-100个字符', trigger: 'blur'}
             ],
-//          no:
-//            [
-//              {required: true, message: '请输入no', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
           name:
             [
               {required: true, message: '请输入name', trigger: 'blur'},
@@ -330,36 +315,6 @@
             [
               {validator: checkPropertyItem, required: true, trigger: 'blur'}
             ]
-//          status:
-//            [
-//              {required: true, message: '请输入status', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          isDel:
-//            [
-//              {required: true, message: '请输入isDel', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          createUserId:
-//            [
-//              {required: true, message: '请输入createUserId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          createTime:
-//            [
-//              {required: true, message: '请输入createTime', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          updateUserId:
-//            [
-//              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          updateTime:
-//            [
-//              {required: true, message: '请输入updateTime', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
         }
 
       }
@@ -373,8 +328,10 @@
       findByCondition: async function () {
         let data = await this.http("/property/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        this.tableData = data.list;
-        this.totalCount = data.total;//总记录数目
+        if(data != null){
+          this.tableData = data.list;
+          this.totalCount = data.total;//总记录数目
+        }
       },
 
       /**
@@ -418,7 +375,8 @@
           } else {
             var res = await this.http('/property/api/update.do', this.dataForEdit, 1000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+              this.findByCondition();
+//              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
               //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
               //          console.log(this.tableData)
@@ -437,14 +395,14 @@
        */
       addData: async function () {
         console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
+        console.log("dataForAdd:", this.dataForEdit);
 
         this.$refs['addForm'].validate(async (valid) => {
           if (!valid) {
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/property/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/property/api/save.do", this.dataForEdit, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -495,13 +453,13 @@
        * 添加属性明细
        */
       addItem: function () {
-        this.dataForAdd.itemList.push({no: this.itemIndex});
+        this.dataForEdit.itemList.push({no: this.itemIndex});
       },
       /**
        * 删除明细
        */
       removeLine: function (idx, row) {
-        this.dataForAdd.itemList.splice(idx, 1);
+        this.dataForEdit.itemList.splice(idx, 1);
       },
 
       handleSizeChange(val) {
@@ -554,17 +512,17 @@
   /*
   * 以下用于修改form中表格中输入框的样式
   */
-  form .el-table td {
-    padding: 0px;
-  }
+  /*form .el-table td {*/
+    /*padding: 0px;*/
+  /*}*/
 
-  form .el-table td:last-child {
-    padding-left: 10px;
-  }
+  /*form .el-table td:last-child {*/
+    /*padding-left: 10px;*/
+  /*}*/
 
-  form .el-table .cell {
-    padding: 0px;
-  }
+  /*form .el-table .cell {*/
+    /*padding: 0px;*/
+  /*}*/
 
   /*.el-table--border  td:first-child .cell{*/
   /*padding-left: 0px;*/

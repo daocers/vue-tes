@@ -17,6 +17,7 @@ import CommonQuestionIndex from '../page/commonQuestion/list.vue'
 import CommonQuestionAdd from '../page/commonQuestion/add.vue'
 import DepartmentIndex from '../page/department/list.vue'
 import DepartmentAdd from '../page/department/add.vue'
+import BranchIndex from '../page/branch/list.vue'
 import StationIndex from '../page/station/list.vue'
 import PropertyIndex from '../page/property/list.vue'
 import Test from '../page/test.vue'
@@ -36,6 +37,7 @@ export default [
   {path: '/test', component: Test},
   {path: '/role', component: RoleIndex},
   {path: '/station', component: StationIndex},
+  {path: '/branch', component: BranchIndex},
   {path: '/property', component: PropertyIndex},
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },

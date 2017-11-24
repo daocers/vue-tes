@@ -341,6 +341,7 @@
               }).then(() => {
                 this.$refs['addForm'].resetFields();
               }).catch(() => {
+                this.$refs['addForm'].resetFields();
                 this.findByCondition();
 //        关闭对话框
                 this.addDialogShow = false;
