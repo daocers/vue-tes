@@ -102,10 +102,10 @@
         </el-form-item>
 
         <!--<el-form-item label="状态" prop="status">-->
-          <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="删除标志" prop="isDel">-->
-          <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
 
         <el-form-item label="属性信息" required>
@@ -328,7 +328,7 @@
       findByCondition: async function () {
         let data = await this.http("/property/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        if(data != null){
+        if (data != null) {
           this.tableData = data.list;
           this.totalCount = data.total;//总记录数目
         }
@@ -513,15 +513,15 @@
   * 以下用于修改form中表格中输入框的样式
   */
   /*form .el-table td {*/
-    /*padding: 0px;*/
+  /*padding: 0px;*/
   /*}*/
 
   /*form .el-table td:last-child {*/
-    /*padding-left: 10px;*/
+  /*padding-left: 10px;*/
   /*}*/
 
   /*form .el-table .cell {*/
-    /*padding: 0px;*/
+  /*padding: 0px;*/
   /*}*/
 
   /*.el-table--border  td:first-child .cell{*/

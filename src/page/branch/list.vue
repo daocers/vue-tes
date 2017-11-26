@@ -9,7 +9,8 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toAdd()">添加</el-button>
+        <el-button type="primary" @click="toManage">层级管理</el-button>
+        <el-button type="primary" @click="toBatchAdd">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -135,6 +136,34 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        :limit="1"
+        action="http://localhost:8090/branch/api/batchAdd.do"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-change="handleChange"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <div style="display: inline-block; margin-left: 20px;">
+          没有模板？<a type="success" href="http://localhost:8090/branch/downloadModel.do">下载模板</a>
+          <!--<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>-->
+        </div>
+        <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
+      </el-upload>
+
+      <el-alert v-show="batchAddErrorMessage != ''"
+        v-bind:title='batchAddErrorMessage'
+        type="error">
+      </el-alert>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -146,6 +175,10 @@
   export default {
     data() {
       return {
+        /**
+         * 批量导入的错误信息
+         */
+        batchAddErrorMessage: '',
         /**
          * 表格数据
          **/
@@ -179,6 +212,11 @@
          * 修改对话框是否显示
          */
         editDialogShow: false,
+
+        /**
+         * 批量添加对话框
+         */
+        batchAddDialogShow: false,
 
         /**
          * 修改对话框数据
@@ -224,7 +262,9 @@
               {required: true, message: '请输入status', trigger: 'change'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-        }
+        },
+
+        fileList:[],
 
       }
     },
@@ -257,6 +297,24 @@
       toAdd() {
         console.log("唤起添加对话框")
         this.addDialogShow = true;
+      },
+
+      toManage(){
+        console.log("去往管理页面");
+        this.$router.push("/branch/manage");
+      },
+      toBatchAdd(){
+        console.log("唤起批量导入对话框。。。")
+//        this.$refs.upload.clearFiles();
+        this.batchAddErrorMessage = '';
+        this.batchAddDialogShow = true;
+      },
+      /**
+       * 批量导入
+       */
+      async batchAdd(){
+        let res = await this.$refs.upload.submit();
+        console.log("上传结果： ", res);
       },
       /**
        * 唤起编辑对话框
@@ -351,6 +409,57 @@
             type: 'warning'
           });
         }
+      },
+
+      /**
+       * 批量添加对话框关闭时候执行
+       */
+      handleClose(){
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+      },
+
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handleChange(file, fileList){
+        console.info("change file: ", file);
+        console.info("change fileList: ", fileList);
+
+      },
+      handlePreview(file) {
+        console.log("导入结果：", file.response);
+      },
+
+      /**
+       * 服务器成功响应并处理后回调
+       */
+      handleSuccess(response, file, fileList){
+        console.log("上传结果：", response)
+        if(response.result == false){
+          this.batchAddErrorMessage = response.message;
+        }else{
+          this.findByCondition();
+          this.$refs.upload.clearFiles();
+          this.batchAddDialogShow = false;
+          this.$notify({
+            title: '成功',
+            message: '批量导入机构信息成功',
+            type: 'success',
+            duration: 0
+          });
+        }
+      },
+      handleError(err, file, fileList){
+        console.log("上传失败，原因：", err);
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+        this.$notify({
+          title: '失败',
+          message: '批量导入机构信息失败',
+          type: 'error',
+          duration: 0
+        });
       },
 
       handleSizeChange(val) {

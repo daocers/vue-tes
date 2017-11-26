@@ -12,6 +12,10 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 var host = "http://localhost:8090/";
 
+Vue.prototype.httpGet = async function (url) {
+  let response = await axios.get(url);
+};
+
 Vue.prototype.http = async function (url, queryData, timeout) {
   let response, res;
   try{

@@ -18,9 +18,12 @@ import CommonQuestionAdd from '../page/commonQuestion/add.vue'
 import DepartmentIndex from '../page/department/list.vue'
 import DepartmentAdd from '../page/department/add.vue'
 import BranchIndex from '../page/branch/list.vue'
+import BranchAdd from '../page/branch/add.vue'
 import StationIndex from '../page/station/list.vue'
 import PropertyIndex from '../page/property/list.vue'
 import Test from '../page/test.vue'
+
+import QuestionTypeIndex from '../page/questionType/list.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
@@ -38,6 +41,7 @@ export default [
   {path: '/role', component: RoleIndex},
   {path: '/station', component: StationIndex},
   {path: '/branch', component: BranchIndex},
+  {path: '/branch/manage', component: BranchAdd},
   {path: '/property', component: PropertyIndex},
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },
@@ -73,7 +77,9 @@ export default [
       {path: 'step3', component: Step3}
     ]
 
-  }
+  },
+  {path: '/questionType', component:QuestionTypeIndex},
+
 
   // {path: '/scene/setting', component: sceneSetting}
 ]

@@ -30,7 +30,7 @@
     </el-row>
 
     <el-form-item label="作答时间" prop="duration" placeholder="作答时间">
-      <el-input type="number" v-model="scene.duration"></el-input>
+      <el-input type="number" :min="1" v-model="scene.duration"></el-input>
     </el-form-item>
 
     <el-form-item label="顺延时间" prop="delay">
