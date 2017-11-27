@@ -34,7 +34,7 @@
     </el-form-item>
 
     <el-form-item label="顺延时间" prop="delay">
-      <el-select v-model="scene.delay" placeholder="最晚进场时间">
+      <el-select v-model="scene.delay" placeholder="迟到多久不准进场">
         <el-option label="15分钟" value="15"></el-option>
         <el-option label="30分钟" value="30"></el-option>
       </el-select>

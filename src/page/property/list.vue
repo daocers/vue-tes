@@ -152,22 +152,22 @@
     </el-dialog>
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
         <el-form-item label="属性名称" prop="name">
-          <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
+          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
         <!--<el-form-item label="属性编号" prop="code">-->
         <!--<el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="描述" prop="memo">
-          <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
+          <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="序号" prop="no">
-          <el-input type="number" v-model="dataForEdit.no" placeholder="请输入"></el-input>
+          <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
         </el-form-item>
 
         <el-form-item label="属性信息" prop="itemList">
-          <el-table :data="dataForEdit.itemList"
+          <el-table :data="dataForAdd.itemList"
                     border
                     style="width: 100%">
             <el-table-column prop="no" label="序号" width="100px">
@@ -275,6 +275,14 @@
          * 对话框数据
          */
         dataForEdit: {
+          itemList: [
+            {id: null, name: '', idx: null}
+          ],
+        },
+        /**
+         * 添加对话框数据
+         */
+        dataForAdd: {
           itemList: [
             {id: null, name: '', idx: null}
           ],
@@ -395,14 +403,14 @@
        */
       addData: async function () {
         console.log("添加数据");
-        console.log("dataForAdd:", this.dataForEdit);
+        console.log("dataForAdd:", this.dataForAdd);
 
         this.$refs['addForm'].validate(async (valid) => {
           if (!valid) {
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/property/api/save.do", this.dataForEdit, 1000);
+            let res = await this.http("/property/api/save.do", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -412,6 +420,7 @@
               }).then(() => {
                 this.$refs['addForm'].resetFields();
               }).catch(() => {
+                this.$refs['addForm'].resetFields();
                 this.findByCondition();
 //        关闭对话框
                 this.addDialogShow = false;
@@ -427,6 +436,8 @@
        */
       cancelAdd: async function () {
         this.findByCondition();
+        this.$refs['addForm'].resetFields();
+        this.dataForAdd.itemList = [{id: null, name: '', idx: null}];
         this.addDialogShow = false;
       },
 
@@ -453,13 +464,21 @@
        * 添加属性明细
        */
       addItem: function () {
-        this.dataForEdit.itemList.push({no: this.itemIndex});
+        if (this.editDialogShow) {
+          this.dataForEdit.itemList.push({no: this.itemIndex});
+        } else {
+          this.dataForAdd.itemList.push({no: this.itemIndex});
+        }
       },
       /**
        * 删除明细
        */
       removeLine: function (idx, row) {
-        this.dataForEdit.itemList.splice(idx, 1);
+        if (this.editDialogShow) {
+          this.dataForEdit.itemList.splice(idx, 1);
+        } else {
+          this.dataForAdd.itemList.splice(idx, 1);
+        }
       },
 
       handleSizeChange(val) {

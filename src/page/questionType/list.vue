@@ -357,18 +357,25 @@
           } else {
             let res = await this.http("/questionType/api/save.do", this.dataForAdd, 1000);
             if (res == true) {
+              this.$refs['addForm'].resetFields();
+              this.$refs['editTable'].clearSelection();
+
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
                 cancelButtonText: '查看列表',
                 type: 'success',
                 center: true
               }).then(() => {
-                this.$refs['addForm'].resetFields();
+//                this.$refs['addForm'].resetFields();
+//                this.$refs['editTable'].clearSelection();
               }).catch(() => {
+//                this.$refs['addForm'].resetFields();
+//                this.$refs['editTable'].clearSelection();
                 this.findByCondition();
 //        关闭对话框
                 this.addDialogShow = false;
               });
+
             }
           }
         });

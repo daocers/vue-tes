@@ -24,6 +24,7 @@ import PropertyIndex from '../page/property/list.vue'
 import Test from '../page/test.vue'
 
 import QuestionTypeIndex from '../page/questionType/list.vue'
+import QuestionBankIndex from '../page/questionBank/list.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
@@ -79,6 +80,7 @@ export default [
 
   },
   {path: '/questionType', component:QuestionTypeIndex},
+  {path: '/questionBank', component:QuestionBankIndex},
 
 
   // {path: '/scene/setting', component: sceneSetting}
