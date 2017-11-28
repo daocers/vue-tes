@@ -19,7 +19,8 @@ Vue.prototype.httpGet = async function (url) {
 Vue.prototype.http = async function (url, queryData, timeout) {
   let response, res;
   try{
-    //如果timeout无效，设置为1000ms
+    console.log("开始请求： ", url);
+    //如果timeout无效，设置为3000ms
     if(null == timeout || timeout == undefined || isNaN(timeout)){
       timeout = 3000;
     }
@@ -34,14 +35,18 @@ Vue.prototype.http = async function (url, queryData, timeout) {
         timeout: timeout
       });
 
-    console.log("data: ", response.data);
+    console.log("得到服务响应：", response);
+    // console.log("data: ", response.data);
     console.log("status: ", response.status);
-    console.log("statusText: ", response.statusText);
-    console.log("headers: ", response.headers);
-    console.log("config: ", response.config);
+    // console.log("statusText: ", response.statusText);
+    // console.log("headers: ", response.headers);
+    // console.log("config: ", response.config);
+    console.log("code: ", response.data.code);
     if(response.status == 200){
       console.debug("请求处理成功");
       var data = response.data;
+      console.log("数据实体： ", data);
+      console.log("数据结果： ", data.code);
       if(data.result){
         res = data.data;
       }else{

@@ -273,6 +273,7 @@
         class="upload-demo"
         ref="upload"
         :limit="1"
+        :data="dataForBatch"
         action="http://localhost:8090/commonQuestion/api/batchAdd.do"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
@@ -285,8 +286,7 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="javascript:download()">下载模板</a>
-          <el-button  size="small" type="success" plain @click="download">下载模板</el-button>
+          没有模板？<a type="success" href="#" @click="download">下载模板</a>
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
@@ -418,6 +418,8 @@
          */
         questionTypeMap: {},
 
+        fileList: [],
+
         /**
          * 校验规则
          */
@@ -465,27 +467,27 @@
         /**
          * 上传的校验
          */
-        batchAddRules:{
-          questionTypeId:[
+        batchAddRules: {
+          questionTypeId: [
             {type: 'number', required: true, message: '请选择题型', trigger: 'change'}
           ],
-          questionBankId:[
+          questionBankId: [
             {type: 'number', required: true, message: '请选择题库', trigger: 'change'}
           ]
-        }
+        },
 
       }
     },
 
 
     methods: {
-      download(){
-        if(this.dataForBatch.questionTypeId == null){
+      download() {
+        if (this.dataForBatch.questionTypeId == null) {
           this.batchAddErrorMessage = "请选择题型";
-        }else{
+        } else {
           this.batchAddErrorMessage = '';
+          window.location.href = "http://localhost:8090/commonQuestion/downloadModel.do?questionTypeId=" + this.dataForBatch.questionTypeId;
         }
-        window.location.href = "http://localhost:8090/branch/downloadModel.do";
       },
 
       toBatchAdd() {
@@ -679,7 +681,7 @@
       /**
        * 批量添加对话框关闭时候执行
        */
-      handleClose(){
+      handleClose() {
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;
       },
@@ -687,7 +689,7 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
-      handleChange(file, fileList){
+      handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
 
@@ -699,11 +701,11 @@
       /**
        * 服务器成功响应并处理后回调
        */
-      handleSuccess(response, file, fileList){
+      handleSuccess(response, file, fileList) {
         console.log("上传结果：", response)
-        if(response.result == false){
+        if (response.result == false) {
           this.batchAddErrorMessage = response.message;
-        }else{
+        } else {
           this.findByCondition();
           this.$refs.upload.clearFiles();
           this.batchAddDialogShow = false;
@@ -715,7 +717,7 @@
           });
         }
       },
-      handleError(err, file, fileList){
+      handleError(err, file, fileList) {
         console.log("上传失败，原因：", err);
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;
