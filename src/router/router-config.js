@@ -22,6 +22,7 @@ import BranchAdd from '../page/branch/add.vue'
 import StationIndex from '../page/station/list.vue'
 import PropertyIndex from '../page/property/list.vue'
 import Test from '../page/test.vue'
+import PaperPolicyIndex from '../page/paperPolicy/list.vue'
 
 import QuestionTypeIndex from '../page/questionType/list.vue'
 import QuestionBankIndex from '../page/questionBank/list.vue'
@@ -81,6 +82,7 @@ export default [
   },
   {path: '/questionType', component:QuestionTypeIndex},
   {path: '/questionBank', component:QuestionBankIndex},
+  {path: '/paperPolicy', component:PaperPolicyIndex},
 
 
   // {path: '/scene/setting', component: sceneSetting}

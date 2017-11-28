@@ -47,8 +47,12 @@
             <el-menu-item-group>
               <template slot="title">分组一</template>
               <el-menu-item index="/scene">步骤</el-menu-item>
-              <el-menu-item index="/questionPolicy">试题策略列表</el-menu-item>
-              <el-menu-item index="/questionPolicy/edit">试题策略编辑</el-menu-item>
+              <el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>
+              <el-menu-item index="/property">属性管理</el-menu-item>
+              <el-menu-item index="/questionType">题型管理</el-menu-item>
+              <el-menu-item index="/questionBank">题库管理</el-menu-item>
+              <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
+              <el-menu-item index="/paperPolicy">试卷策略</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group title="分组2">
               <el-menu-item index="/role">role</el-menu-item>
