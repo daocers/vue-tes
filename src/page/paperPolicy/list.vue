@@ -126,16 +126,14 @@
                     size="small"
                     style="width: 100%">
             <el-table-column
-              label="题型"
-              property="questionTypeId"
-              width="50px">
+              label="题型">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.questionTypeId" label="dfasd">ddsd</el-checkbox>
+                <span>{{questionTypeIdNameMap[scope.row.questionTypeId]}}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="试题策略名称"
-              property="questionPolicyName">
+              property="name">
             </el-table-column>
             <el-table-column
               label="策略归属"
@@ -144,13 +142,13 @@
 
             <el-table-column
               label="题量"
-              property="count"
+              property="questionCount"
               width="60px">
             </el-table-column>
             <el-table-column
               label="分值"
               property="score"
-              width="60px">
+              width="80px">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.score"></el-input>
               </template>
@@ -159,7 +157,7 @@
 
 
           <div id="query" style="border: 1px solid gainsboro; margin-top: 10px; padding: 3px;">
-            <el-form :inline="true" ref="policyQueryForm" :model="policyQueryForm" :rules="queryRules">
+            <el-form :inline="true" ref="policyQueryForm" :model="policyQueryForm">
               <el-form-item label="名称" prop="name" size="small">
                 <el-input v-model="policyQueryForm.name" placeholder="请输入"></el-input>
               </el-form-item>
@@ -173,43 +171,49 @@
                 </el-select>
               </el-form-item>
               <el-form-item size="small">
-                <el-button type="primary" plain @click="findByCondition()">查询</el-button>
+                <el-button type="primary" plain @click="getQuestionPolicyList">查询</el-button>
                 <el-button type="default" plain @click="reset()">重置</el-button>
               </el-form-item>
             </el-form>
           </div>
 
 
-
           <el-table
             ref="quesPolicyTable"
             border
-            :data="tableData"
+            :data="questionPolicyList"
             highlight-current-row
-            @current-change="handleCurrentChange"
+            @current-change="handleQustionPolicyCurrentChange"
+            max-height="250px"
             style="width: 100%">
             <el-table-column
               type="index"
               width="50">
             </el-table-column>
             <el-table-column
-              property="date"
+              property="name"
               label="试题策略名称">
             </el-table-column>
             <el-table-column
-              property="name"
+              property="createUserName"
               label="创建人">
             </el-table-column>
             <el-table-column
-              property="name"
+              property="createTime"
               label="创建时间">
             </el-table-column>
             <el-table-column
-              property="name"
+              property="questionCount"
               label="题量">
             </el-table-column>
           </el-table>
-
+          <el-pagination style="float: right; margin-top: 10px;"
+                         @current-change="handlePolicyCurrentChange"
+                         :current-page="policyQueryForm.pageNum"
+                         :page-size="policyQueryForm.pageSize"
+                         layout="total, prev, pager, next, jumper"
+                         :total="questionPolicyCount">
+          </el-pagination>
 
         </el-form-item>
         <el-form-item label="总题量" prop="count">
@@ -251,7 +255,10 @@
   export default {
     data() {
       return {
-        contentItemList: '',
+        /**
+         * 已经选择的试题系列表
+         */
+        contentItemList: [],
         /**
          * 表格数据
          **/
@@ -280,6 +287,15 @@
           pageSize: 10,
           pageNum: 1,
         },
+
+        /**
+         * 查询到的试题策略信息
+         */
+        questionPolicyList: [],
+        /**
+         * 查询到的试题策略数量
+         */
+        questionPolicyCount: 0,
         /**
          * 添加对话框数据
          */
@@ -316,6 +332,16 @@
           {id: 2, name: '统一'},
           {id: 3, name: '统一乱序'},
         ],
+
+        /**
+         * 已选择的试题策略信息  id: obj
+         */
+        choicedMap: {},
+
+        /**
+         * 试题信息 id:name map
+         */
+        questionTypeIdNameMap: {},
         /**
          * 校验规则
          */
@@ -487,6 +513,26 @@
           });
         }
       },
+      handleQustionPolicyCurrentChange(currentRow, oldCurrentRow) {
+        console.log("old: ", oldCurrentRow);
+        console.log("new : ", currentRow);
+        if (this.choicedMap[currentRow.id]) {
+          this.$notify({
+            title: '警告',
+            message: "该题型已经选择策略，如需更改，请先删除已选项",
+            type: 'warning'
+          });
+        } else {
+          this.choicedMap[currentRow.id] = currentRow;
+//          let tmpList = [];
+//          for (let key in this.choicedMap) {
+//            let value = this.choicedMap[key];
+//            tmpList.push(value);
+//          }
+          this.contentItemList.push(currentRow);
+        }
+
+      },
 
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
@@ -497,7 +543,21 @@
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.findByCondition();
+      },
+
+      handlePolicyCurrentChange(val) {
+        this.policyQueryForm.pageNum = val;
+        console.log(`当前页: ${val}`);
+        this.getQuestionPolicyList();
+      },
+
+      async getQuestionPolicyList() {
+        let questionPolicyList = await this.http("/questionPolicy/api/findByCondition.do?pageNum="
+          + this.policyQueryForm.pageNum + "&pageSize=" + this.policyQueryForm.pageSize, this.policyQueryForm);
+        this.questionPolicyList = questionPolicyList.list;
+        this.questionPolicyCount = questionPolicyList.total;
       }
+
     },
     /**
      * 页面初始化时候执行
@@ -507,6 +567,12 @@
       this.findByCondition();
       let questionTypeList = await  this.http("/questionType/api/findAll.do");
       this.questionTypeList = questionTypeList;
+      for(let i = 0; i < questionTypeList.length; i++){
+        let item = questionTypeList[i];
+        console.log("item: " , item);
+        this.questionTypeIdNameMap[item.id + ""] = item.name;
+      }
+      console.log("questionTypeIdNameMap: ", this.questionTypeIdNameMap);
       console.log("题型列表： ", questionTypeList);
     }
   }
@@ -528,7 +594,7 @@
     border-left: 1px solid gainsboro;
   }
 
-  #query form-item--mini.el-form-item, #query .el-form-item--small.el-form-item{
+  #query form-item--mini.el-form-item, #query .el-form-item--small.el-form-item {
     padding-bottom: 5px;
   }
 </style>
