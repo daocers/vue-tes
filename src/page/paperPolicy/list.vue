@@ -102,19 +102,115 @@
     </el-pagination>
 
 
-    <el-dialog title="编辑" :visible.sync="editDialogShow">
+    <el-dialog v-bind:title="this.dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="试卷策略编码" prop="code">
-          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
-        </el-form-item>
+
         <el-form-item label="策略名称" prop="name">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题型信息" prop="questionTypeInfo">
-          <el-input v-model="dataForEdit.questionTypeInfo" placeholder="请输入"></el-input>
+        <el-form-item v-show="this.dataForEdit.id" label="试卷策略编码" prop="code">
+          <el-input :disabled="false" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item label="题型信息" prop="questionTypeIdList">
+          <el-checkbox-group
+            v-model="dataForEdit.questionTypeIdList" @change="handleCheckBox">
+            <el-checkbox v-for="item in questionTypeList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+
+
         <el-form-item label="策略内容" prop="content">
-          <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
+
+          <el-table ref="contentTable" border :data="contentItemList"
+                    highlight-current-row
+                    size="small"
+                    style="width: 100%">
+            <el-table-column
+              label="题型"
+              property="questionTypeId"
+              width="50px">
+              <template slot-scope="scope">
+                <el-checkbox v-model="scope.row.questionTypeId" label="dfasd">ddsd</el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="试题策略名称"
+              property="questionPolicyName">
+            </el-table-column>
+            <el-table-column
+              label="策略归属"
+              property="ownerName">
+            </el-table-column>
+
+            <el-table-column
+              label="题量"
+              property="count"
+              width="60px">
+            </el-table-column>
+            <el-table-column
+              label="分值"
+              property="score"
+              width="60px">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.score"></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+
+
+          <div id="query" style="border: 1px solid gainsboro; margin-top: 10px; padding: 3px;">
+            <el-form :inline="true" ref="policyQueryForm" :model="policyQueryForm" :rules="queryRules">
+              <el-form-item label="名称" prop="name" size="small">
+                <el-input v-model="policyQueryForm.name" placeholder="请输入"></el-input>
+              </el-form-item>
+              <el-form-item label="题型" prop="questionTypeId" size="small">
+                <el-select v-model="policyQueryForm.questionTypeId">
+                  <el-option
+                    v-for="item in questionTypeList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item size="small">
+                <el-button type="primary" plain @click="findByCondition()">查询</el-button>
+                <el-button type="default" plain @click="reset()">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+
+
+
+          <el-table
+            ref="quesPolicyTable"
+            border
+            :data="tableData"
+            highlight-current-row
+            @current-change="handleCurrentChange"
+            style="width: 100%">
+            <el-table-column
+              type="index"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              property="date"
+              label="试题策略名称">
+            </el-table-column>
+            <el-table-column
+              property="name"
+              label="创建人">
+            </el-table-column>
+            <el-table-column
+              property="name"
+              label="创建时间">
+            </el-table-column>
+            <el-table-column
+              property="name"
+              label="题量">
+            </el-table-column>
+          </el-table>
+
+
         </el-form-item>
         <el-form-item label="总题量" prop="count">
           <el-input v-model="dataForEdit.count" placeholder="请输入"></el-input>
@@ -126,6 +222,10 @@
           <el-switch v-model="dataForEdit.percentable" active-value="1" inactive-value="2"></el-switch>
         </el-form-item>
         <el-form-item label="试卷选择方式" prop="questionSelectType">
+          <el-select v-model="dataForEdit.questionSelectType" placeholder="请选择试卷选择方式">
+            <el-option v-for="item in questionSelectTypeList" :key="item.id" label="item.name"
+                       :value="item.name"></el-option>
+          </el-select>
           <el-input v-model="dataForEdit.questionSelectType" placeholder="请输入"></el-input>
           <span>随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
         </el-form-item>
@@ -140,67 +240,6 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="code" prop="code">
-          <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="name" prop="name">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-          <el-input v-model="dataForAdd.questionTypeInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="content" prop="content">
-          <el-input v-model="dataForAdd.content" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="count" prop="count">
-          <el-input v-model="dataForAdd.count" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="score" prop="score">
-          <el-input v-model="dataForAdd.score" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="percentable" prop="percentable">
-          <el-input v-model="dataForAdd.percentable" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="ownerId" prop="ownerId">
-          <el-input v-model="dataForAdd.ownerId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="ownerType" prop="ownerType">
-          <el-input v-model="dataForAdd.ownerType" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="questionSelectType" prop="questionSelectType">
-          <el-input v-model="dataForAdd.questionSelectType" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="privaryType" prop="privaryType">
-          <el-input v-model="dataForAdd.privaryType" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="isDel" prop="isDel">
-          <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="status" prop="status">
-          <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId">
-          <el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime">
-          <el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime">
-          <el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId">
-          <el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 
 </template>
@@ -212,6 +251,7 @@
   export default {
     data() {
       return {
+        contentItemList: '',
         /**
          * 表格数据
          **/
@@ -233,6 +273,14 @@
           pageNum: 1,
         },
         /**
+         * 试题策略查询参数
+         */
+        policyQueryForm: {
+          name: null,
+          pageSize: 10,
+          pageNum: 1,
+        },
+        /**
          * 添加对话框数据
          */
         dataForAdd: {},
@@ -249,31 +297,33 @@
         /**
          * 修改对话框数据
          */
-        dataForEdit: {},
-
+        dataForEdit: {
+          questionTypeIdList: ['1'],
+        },
         /**
          * 修改对话框数据索引值
          */
         dataForEditIndex: null,
 
         /**
+         * 题型列表
+         */
+        questionTypeList: [{}],
+
+
+        questionSelectTypeList: [
+          {id: 1, name: '随机选择'},
+          {id: 2, name: '统一'},
+          {id: 3, name: '统一乱序'},
+        ],
+        /**
          * 校验规则
          */
         rules: {
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
           name:
             [
               {required: true, message: '请输入name', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          questionTypeInfo:
-            [
-              {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 2, max: 16, message: '长度在2-16个字符', trigger: 'blur'}
             ],
           content:
             [
@@ -295,55 +345,13 @@
               {required: true, message: '请输入percentable', trigger: 'blur'},
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-          ownerId:
-            [
-              {required: true, message: '请输入ownerId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          ownerType:
-            [
-              {required: true, message: '请输入ownerType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
           questionSelectType:
             [
-              {required: true, message: '请输入questionSelectType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {required: true, type: 'number', message: '请输入questionSelectType', trigger: 'blur'},
             ],
           privaryType:
             [
               {required: true, message: '请输入privaryType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          isDel:
-            [
-              {required: true, message: '请输入isDel', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          status:
-            [
-              {required: true, message: '请输入status', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createUserId:
-            [
-              {required: true, message: '请输入createUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateTime:
-            [
-              {required: true, message: '请输入updateTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createTime:
-            [
-              {required: true, message: '请输入createTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateUserId:
-            [
-              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
         }
 
@@ -352,6 +360,9 @@
 
 
     methods: {
+      handleCheckBox(value) {
+        console.log("checked : ", value);
+      },
       /**
        * 查询
        */
@@ -377,7 +388,10 @@
        */
       toAdd() {
         console.log("唤起添加对话框")
-        this.addDialogShow = true;
+        this.editDialogShow = true;
+        this.dataForEdit = {
+          questionTypeIdList: [],
+        };
       },
       /**
        * 唤起编辑对话框
@@ -491,6 +505,9 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+      let questionTypeList = await  this.http("/questionType/api/findAll.do");
+      this.questionTypeList = questionTypeList;
+      console.log("题型列表： ", questionTypeList);
     }
   }
 </script>
@@ -509,5 +526,9 @@
 
   button.btn-prev {
     border-left: 1px solid gainsboro;
+  }
+
+  #query form-item--mini.el-form-item, #query .el-form-item--small.el-form-item{
+    padding-bottom: 5px;
   }
 </style>
