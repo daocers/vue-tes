@@ -102,7 +102,7 @@
     </el-pagination>
 
 
-    <el-dialog v-bind:title="this.dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
+    <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
 
         <el-form-item label="策略名称" prop="name">
@@ -112,10 +112,10 @@
           <el-input :disabled="false" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="题型信息" prop="questionTypeIdList">
-          <el-checkbox-group
-            v-model="dataForEdit.questionTypeIdList" @change="handleCheckBox">
-            <el-checkbox v-for="item in questionTypeList" disabled :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-          </el-checkbox-group>
+          <el-tag style="margin-right: 10px;" v-for="item in questionTypeList" :key="item.id"
+                  v-show="dataForEdit.questionTypeIdList.indexOf(item.id) > -1">{{item.name}}
+          </el-tag>
+          <el-tag v-show="dataForEdit.questionTypeIdList.length == 0">请选择指定题型的选题策略</el-tag>
         </el-form-item>
 
 
@@ -154,7 +154,9 @@
               </template>
             </el-table-column>
           </el-table>
+        </el-form-item>
 
+        <el-row>
 
           <div id="query" style="border: 1px solid gainsboro; margin-top: 10px; padding: 3px;">
             <el-form :inline="true" ref="policyQueryForm" :model="policyQueryForm">
@@ -214,28 +216,41 @@
                          layout="total, prev, pager, next, jumper"
                          :total="questionPolicyCount">
           </el-pagination>
+        </el-row>
 
-        </el-form-item>
-        <el-form-item label="总题量" prop="count">
-          <el-input v-model="dataForEdit.count" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="总得分" prop="score">
-          <el-input v-model="dataForEdit.score" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="是否百分制" prop="percentable">
-          <el-switch v-model="dataForEdit.percentable" active-value="1" inactive-value="2"></el-switch>
-        </el-form-item>
+
         <el-form-item label="试卷选择方式" prop="questionSelectType">
           <el-select v-model="dataForEdit.questionSelectType" placeholder="请选择试卷选择方式">
-            <el-option v-for="item in questionSelectTypeList" :key="item.id" label="item.name"
-                       :value="item.name"></el-option>
+            <el-option v-for="item in questionSelectTypeList" :key="item.id" :label="item.name"
+                       :value="item.id"></el-option>
           </el-select>
-          <el-input v-model="dataForEdit.questionSelectType" placeholder="请输入"></el-input>
           <span>随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
         </el-form-item>
-        <el-form-item label="是否私有" prop="privaryType">
-          <el-switch v-model="dataForEdit.privaryType" active-value="1" inactive-value="2"></el-switch>
-        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="总题量" prop="count">
+              <el-input v-model="getCount" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
+            <el-form-item label="总得分" prop="score">
+              <el-input v-model="dataForEdit.score" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="是否私有" prop="privaryType">
+              <el-switch v-model="dataForEdit.privaryType" active-value="1" inactive-value="2"></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" :offset="2">
+            <el-form-item label="是否百分制" prop="percentable">
+              <el-switch v-model="dataForEdit.percentable" active-value="1" inactive-value="2"></el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -251,10 +266,46 @@
 
 <script>
   import Vue from 'vue'
+  import ElRow from "element-ui/packages/row/src/row";
+  import ElCol from "element-ui/packages/col/src/col";
+
 
   export default {
+    components: {
+      ElCol,
+      ElRow
+    },
     data() {
+      var checkPerScore = (score) => {
+        console.log(score);
+        let regex = /^(\d{1,2})(\.[5])?$/g;
+        return regex.exec(score);
+      };
+      /**
+       * 校验试卷策略信息
+       * @param rule
+       * @param value
+       * @param callback
+       */
+      var checkPaperPolicyContent = (rule, value, callback) => {
+        console.log("contentItemList: ", this.contentItemList);
+        console.log("value:   :::", value);
+        let lineCount = this.contentItemList.length;
+        for (let i = 0; i < lineCount; i++) {
+          let line = this.contentItemList[i];
+          let questionPolicy = line.id;
+          let perScore = line.score;
+          if (!checkPerScore(perScore)) {
+            callback(new Error("只能输入100以内的整数或者以为小数，如果为小数只能为*.5结束"));
+          }
+        }
+        callback();
+      };
       return {
+        /**
+         * 试卷策略和对应的分值信息
+         */
+        quesPolicyAndScoreInfo: {},
         /**
          * 已经选择的试题系列表
          */
@@ -296,15 +347,7 @@
          * 查询到的试题策略数量
          */
         questionPolicyCount: 0,
-        /**
-         * 添加对话框数据
-         */
-        dataForAdd: {},
 
-        /**
-         * 添加对话框是否显示
-         */
-        addDialogShow: false,
         /**
          * 修改对话框是否显示
          */
@@ -314,7 +357,7 @@
          * 修改对话框数据
          */
         dataForEdit: {
-          questionTypeIdList: ['1'],
+          questionTypeIdList: [],
         },
         /**
          * 修改对话框数据索引值
@@ -353,31 +396,19 @@
             ],
           content:
             [
-              {required: true, message: '请输入content', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          count:
-            [
-              {required: true, message: '请输入count', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          score:
-            [
-              {required: true, message: '请输入score', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {validator: checkPaperPolicyContent, trigger: 'change'},
             ],
           percentable:
             [
-              {required: true, message: '请输入percentable', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {required: true, message: '请输入percentable', trigger: 'change'},
             ],
           questionSelectType:
             [
-              {required: true, type: 'number', message: '请输入questionSelectType', trigger: 'blur'},
+              {required: true, type: 'number', message: '请输入questionSelectType', trigger: 'change'},
             ],
           privaryType:
             [
-              {required: true, message: '请输入privaryType', trigger: 'blur'},
+              {required: true, message: '请输入privaryType', trigger: 'change'},
             ],
         }
 
@@ -416,6 +447,7 @@
         console.log("唤起添加对话框")
         this.editDialogShow = true;
         this.dataForEdit = {
+          count: 0,
           questionTypeIdList: [],
         };
       },
@@ -516,25 +548,21 @@
       handleQustionPolicyCurrentChange(currentRow, oldCurrentRow) {
         console.log("old: ", oldCurrentRow);
         console.log("new : ", currentRow);
-        if (this.choicedMap[currentRow.id]) {
+        if (this.choicedMap[currentRow.questionTypeId]) {
           this.$notify({
             title: '警告',
             message: "该题型已经选择策略，如需更改，请先删除已选项",
             type: 'warning'
           });
         } else {
-          this.choicedMap[currentRow.id] = currentRow;
+          this.choicedMap[currentRow.questionTypeId] = currentRow;
 
           let questionTypeIdList = [];
-          for(let key in this.choicedMap){
-            questionTypeIdList.push(key);
+          for (let key in this.choicedMap) {
+            questionTypeIdList.push(parseInt(key));
           }
-          this.questionTypeIdList = questionTypeIdList;
-//          let tmpList = [];
-//          for (let key in this.choicedMap) {
-//            let value = this.choicedMap[key];
-//            tmpList.push(value);
-//          }
+          this.dataForEdit.questionTypeIdList = questionTypeIdList;
+          console.log("this.dataForEdit.questionTypeIdList: ", this.dataForEdit.questionTypeIdList);
           this.contentItemList.push(currentRow);
         }
 
@@ -560,7 +588,7 @@
       async getQuestionPolicyList() {
         let questionPolicyList = await this.http("/questionPolicy/api/findByCondition.do?pageNum="
           + this.policyQueryForm.pageNum + "&pageSize=" + this.policyQueryForm.pageSize, this.policyQueryForm);
-        if(questionPolicyList){
+        if (questionPolicyList) {
           this.questionPolicyList = questionPolicyList.list;
           this.questionPolicyCount = questionPolicyList.total;
         }
@@ -576,13 +604,31 @@
       this.findByCondition();
       let questionTypeList = await  this.http("/questionType/api/findAll.do");
       this.questionTypeList = questionTypeList;
-      for(let i = 0; i < questionTypeList.length; i++){
+      for (let i = 0; i < questionTypeList.length; i++) {
         let item = questionTypeList[i];
-        console.log("item: " , item);
+        console.log("item: ", item);
         this.questionTypeIdNameMap[item.id + ""] = item.name;
       }
       console.log("questionTypeIdNameMap: ", this.questionTypeIdNameMap);
       console.log("题型列表： ", questionTypeList);
+    },
+
+    computed: {
+      getCount: function () {
+        let count = 0;
+        let totalScore = 0;
+        for (let key in this.choicedMap) {
+          let obj = this.choicedMap[key];
+          let perScore = obj.score;
+          let perCount = obj.questionCount;
+          console.log("perScore: ", perScore);
+          console.log("perCount: ", perCount);
+          totalScore = parseInt(totalScore) + parseInt(perCount * perScore * 10);
+          count = parseInt(count) + parseInt(perCount);
+        }
+        this.dataForEdit.score = totalScore / 10;
+        return count;
+      }
     }
   }
 </script>
