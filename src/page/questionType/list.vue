@@ -142,7 +142,7 @@
         <el-form-item label="题型属性" prop="propertyList">
           <el-table
             border
-            ref="multipleTable"
+            ref="addTable"
             :data="propertyList"
             tooltip-effect="dark"
             style="width: 100%"
@@ -358,7 +358,7 @@
             let res = await this.http("/questionType/api/save.do", this.dataForAdd, 1000);
             if (res == true) {
               this.$refs['addForm'].resetFields();
-              this.$refs['editTable'].clearSelection();
+              this.$refs['addTable'].clearSelection();
 
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',

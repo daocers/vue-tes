@@ -114,7 +114,7 @@
         <el-form-item label="题型信息" prop="questionTypeIdList">
           <el-checkbox-group
             v-model="dataForEdit.questionTypeIdList" @change="handleCheckBox">
-            <el-checkbox v-for="item in questionTypeList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+            <el-checkbox v-for="item in questionTypeList" disabled :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -524,6 +524,12 @@
           });
         } else {
           this.choicedMap[currentRow.id] = currentRow;
+
+          let questionTypeIdList = [];
+          for(let key in this.choicedMap){
+            questionTypeIdList.push(key);
+          }
+          this.questionTypeIdList = questionTypeIdList;
 //          let tmpList = [];
 //          for (let key in this.choicedMap) {
 //            let value = this.choicedMap[key];
@@ -554,8 +560,11 @@
       async getQuestionPolicyList() {
         let questionPolicyList = await this.http("/questionPolicy/api/findByCondition.do?pageNum="
           + this.policyQueryForm.pageNum + "&pageSize=" + this.policyQueryForm.pageSize, this.policyQueryForm);
-        this.questionPolicyList = questionPolicyList.list;
-        this.questionPolicyCount = questionPolicyList.total;
+        if(questionPolicyList){
+          this.questionPolicyList = questionPolicyList.list;
+          this.questionPolicyCount = questionPolicyList.total;
+        }
+
       }
 
     },

@@ -363,6 +363,7 @@
       cancelEdit(){
         this.dialogShow = false;
         this.resetDataForEdit();
+        this.findByCondition();
       },
       /**
        * 提交更新数据
@@ -415,7 +416,7 @@
               console.error("请求失败")
             }
             //        关闭对话框
-            this.dialogShow = false;
+//            this.dialogShow = false;
           }
         });
       },

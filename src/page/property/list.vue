@@ -418,6 +418,11 @@
                 type: 'success',
                 center: true
               }).then(() => {
+                this.dataForEdit = {
+                  itemList: [
+                    {id: null, name: '', idx: null}
+                  ],
+                };
                 this.$refs['addForm'].resetFields();
               }).catch(() => {
                 this.$refs['addForm'].resetFields();
