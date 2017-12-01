@@ -65,7 +65,7 @@
 
           },
           /**
-           * 已选择数据项
+           * 已选择信息
            */
           checkedData:[],
           userSelectType: {
