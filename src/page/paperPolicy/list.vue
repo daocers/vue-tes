@@ -153,6 +153,14 @@
                 <el-input v-model="scope.row.score"></el-input>
               </template>
             </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="90">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" @click="toRemoveContent(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-form-item>
 
@@ -224,7 +232,7 @@
             <el-option v-for="item in questionSelectTypeList" :key="item.id" :label="item.name"
                        :value="item.id"></el-option>
           </el-select>
-          <span>随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
+          <span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
         </el-form-item>
         <el-row>
           <el-col :span="10">
@@ -277,6 +285,9 @@
     },
     data() {
       var checkPerScore = (score) => {
+        if(score == 0){
+          return false;
+        }
         console.log(score);
         let regex = /^(\d{1,2})(\.[5])?$/g;
         return regex.exec(score);
@@ -296,7 +307,7 @@
           let questionPolicy = line.id;
           let perScore = line.score;
           if (!checkPerScore(perScore)) {
-            callback(new Error("只能输入100以内的整数或者以为小数，如果为小数只能为*.5结束"));
+            callback(new Error("第" + (i + 1) + "行分值输入有误\n只能输入100以内的正整数或者以为小数，如果为小数只能为*.5结束"));
           }
         }
         callback();
@@ -472,7 +483,8 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/paperPolicy/api/update.do', this.dataForEdit, 1000);
+            this.dataForEdit.contentItemList = this.contentItemList;
+            var res = await this.http('/paperPolicy/api/save.do', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -545,6 +557,20 @@
           });
         }
       },
+      /**
+       * 删除已经选择的试题信息
+       */
+      toRemoveContent(idx, row) {
+        console.log("idx: ", idx);
+        console.log("row: ", row);
+        this.contentItemList.splice(idx, 1);
+//        从已选择的记录中删除
+        this.choicedMap[row.questionTypeId] = undefined;
+      },
+
+      /**
+       * 试题策略列表，选中某一行时候执行
+       */
       handleQustionPolicyCurrentChange(currentRow, oldCurrentRow) {
         console.log("old: ", oldCurrentRow);
         console.log("new : ", currentRow);
@@ -568,23 +594,36 @@
 
       },
 
+      /**
+       * 试卷策略列表，每页显示条数变化时候执行
+       */
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         console.log(`每页 ${val} 条`);
         this.findByCondition();
       },
+
+      /**
+       * 试卷策略列表，页码变动时候执行
+       */
       handleCurrentChange(val) {
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.findByCondition();
       },
 
+      /**
+       * 查询试题策略，当页码变动时候执行
+       */
       handlePolicyCurrentChange(val) {
         this.policyQueryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.getQuestionPolicyList();
       },
 
+      /**
+       * 获取试题策略列表
+       */
       async getQuestionPolicyList() {
         let questionPolicyList = await this.http("/questionPolicy/api/findByCondition.do?pageNum="
           + this.policyQueryForm.pageNum + "&pageSize=" + this.policyQueryForm.pageSize, this.policyQueryForm);
@@ -617,13 +656,15 @@
       getCount: function () {
         let count = 0;
         let totalScore = 0;
-        for (let key in this.choicedMap) {
-          let obj = this.choicedMap[key];
-          let perScore = obj.score;
-          let perCount = obj.questionCount;
+        for (let i = 0; i < this.contentItemList.length; i++) {
+          let item = this.contentItemList[i];
+          let perScore = item.score;
+          let perCount = item.questionCount;
           console.log("perScore: ", perScore);
           console.log("perCount: ", perCount);
-          totalScore = parseInt(totalScore) + parseInt(perCount * perScore * 10);
+          if (perScore) {
+            totalScore = parseInt(totalScore) + parseInt(perCount * perScore * 10);
+          }
           count = parseInt(count) + parseInt(perCount);
         }
         this.dataForEdit.score = totalScore / 10;
