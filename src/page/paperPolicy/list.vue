@@ -108,12 +108,12 @@
         <el-form-item label="策略名称" prop="name">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item v-show="this.dataForEdit.id" label="试卷策略编码" prop="code">
-          <el-input :disabled="false" v-model="dataForEdit.code" placeholder="请输入"></el-input>
+        <el-form-item v-show="dataForEdit.id" label="试卷策略编码" prop="code">
+          <el-input disabled v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="题型信息" prop="questionTypeIdList">
           <el-tag style="margin-right: 10px;" v-for="item in questionTypeList" :key="item.id"
-                  v-show="dataForEdit.questionTypeIdList.indexOf(item.id) > -1">{{item.name}}
+                  v-show="dataForEdit.questionTypeIdList.indexOf(parseInt(item.id)) > -1">{{item.name}}
           </el-tag>
           <el-tag v-show="dataForEdit.questionTypeIdList.length == 0">请选择指定题型的选题策略</el-tag>
         </el-form-item>
@@ -121,14 +121,14 @@
 
         <el-form-item label="策略内容" prop="content">
 
-          <el-table ref="contentTable" border :data="contentItemList"
+          <el-table ref="contentTable" border :data="dataForEdit.contentItemList"
                     highlight-current-row
                     size="small"
                     style="width: 100%">
             <el-table-column
               label="题型">
               <template slot-scope="scope">
-                <span>{{questionTypeIdNameMap[scope.row.questionTypeId]}}</span>
+                <span>{{questionTypeIdNameMap[parseInt(scope.row.questionTypeId)]}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -227,13 +227,13 @@
         </el-row>
 
 
-        <el-form-item label="试卷选择方式" prop="questionSelectType">
-          <el-select v-model="dataForEdit.questionSelectType" placeholder="请选择试卷选择方式">
-            <el-option v-for="item in questionSelectTypeList" :key="item.id" :label="item.name"
-                       :value="item.id"></el-option>
-          </el-select>
-          <span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
-        </el-form-item>
+        <!--<el-form-item label="试卷选择方式" prop="questionSelectType">-->
+          <!--<el-select v-model="dataForEdit.questionSelectType" placeholder="请选择试卷选择方式">-->
+            <!--<el-option v-for="item in questionSelectTypeList" :key="item.id" :label="item.name"-->
+                       <!--:value="item.id"></el-option>-->
+          <!--</el-select>-->
+          <!--<span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>-->
+        <!--</el-form-item>-->
         <el-row>
           <el-col :span="10">
             <el-form-item label="总题量" prop="count">
@@ -249,21 +249,21 @@
 
         <el-row>
           <el-col :span="10">
-            <el-form-item label="是否私有" prop="privaryType">
-              <el-switch v-model="dataForEdit.privaryType" active-value="1" inactive-value="2"></el-switch>
+            <el-form-item label="私有" prop="privaryType">
+              <el-switch v-model="dataForEdit.privaryType" :active-value="1"  :inactive-value="2"></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
-            <el-form-item label="是否百分制" prop="percentable">
-              <el-switch v-model="dataForEdit.percentable" active-value="1" inactive-value="2"></el-switch>
+            <el-form-item label="百分制" prop="percentable">
+              <el-switch v-model="dataForEdit.percentable" :active-value="1"  :inactive-value="2"></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button @click="cancelCommit">取 消</el-button>
+        <el-button type="primary" @click="commitData()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -285,7 +285,7 @@
     },
     data() {
       var checkPerScore = (score) => {
-        if(score == 0){
+        if (score == 0) {
           return false;
         }
         console.log(score);
@@ -299,11 +299,11 @@
        * @param callback
        */
       var checkPaperPolicyContent = (rule, value, callback) => {
-        console.log("contentItemList: ", this.contentItemList);
+        console.log("contentItemList: ", this.dataForEdit.contentItemList);
         console.log("value:   :::", value);
-        let lineCount = this.contentItemList.length;
+        let lineCount = this.dataForEdit.contentItemList.length;
         for (let i = 0; i < lineCount; i++) {
-          let line = this.contentItemList[i];
+          let line = this.dataForEdit.contentItemList[i];
           let questionPolicy = line.id;
           let perScore = line.score;
           if (!checkPerScore(perScore)) {
@@ -369,6 +369,8 @@
          */
         dataForEdit: {
           questionTypeIdList: [],
+          contentItemList: [],
+          count: 0,
         },
         /**
          * 修改对话框数据索引值
@@ -411,7 +413,7 @@
             ],
           percentable:
             [
-              {required: true, message: '请输入percentable', trigger: 'change'},
+              {type: 'number', required: true, message: '请输入percentable', trigger: 'change'},
             ],
           questionSelectType:
             [
@@ -419,7 +421,7 @@
             ],
           privaryType:
             [
-              {required: true, message: '请输入privaryType', trigger: 'change'},
+              {type: 'number', required: true, message: '请输入privaryType', trigger: 'change'},
             ],
         }
 
@@ -437,8 +439,14 @@
       findByCondition: async function () {
         let data = await this.http("/paperPolicy/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        this.tableData = data.list;
-        this.totalCount = data.total;//总记录数目
+        if (data) {
+          this.tableData = data.list;
+          this.totalCount = data.total;//总记录数目
+        } else {
+          this.tableData = [];
+          this.totalCount = 0;
+        }
+
       },
 
       /**
@@ -460,6 +468,7 @@
         this.dataForEdit = {
           count: 0,
           questionTypeIdList: [],
+          contentItemList: [],
         };
       },
       /**
@@ -474,7 +483,7 @@
       /**
        * 提交更新数据
        */
-      updateData: async function () {
+      commitData: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -483,20 +492,44 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            this.dataForEdit.contentItemList = this.contentItemList;
-            var res = await this.http('/paperPolicy/api/save.do', this.dataForEdit, 1000);
+            var res = await this.http('/paperPolicy/api/save.do', this.dataForEdit, 3000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-              //        以下代码变动无法触发页面渲染
-              //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-              //          console.log(this.tableData)
+              if (this.dataForEdit.id) {
+//                修改
+                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+                //        以下代码变动无法触发页面渲染
+                //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
+                //          console.log(this.tableData)
+                //        关闭对话框
+                this.editDialogShow = false;
+              } else {
+//                新增
+                this.$confirm('继续添加?查看列表?', '提示', {
+                  confirmButtonText: '继续添加',
+                  cancelButtonText: '查看列表',
+                  type: 'success',
+                  center: true
+                }).then(() => {
+                  this.dataForEdit = {
+                    count: 0,
+                    questionTypeIdList: [],
+                    contentItemList: [],
+                  };
+//                  this.$refs['addForm'].resetFields();
+                }).catch(() => {
+                  this.findByCondition();
+//        关闭对话框
+                  this.addDialogShow = false;
+                });
+              }
+
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
               console.error("请求失败")
             }
             //        关闭对话框
-            this.editDialogShow = false;
+//            this.editDialogShow = false;
           }
         });
       },
@@ -532,11 +565,14 @@
       },
 
       /**
-       * 取消添加
+       * 取消
        */
-      cancelAdd: async function () {
-        this.findByCondition();
-        this.addDialogShow = false;
+      cancelCommit: async function () {
+        this.$refs["editForm"].resetFields();
+        if (!this.dataForEdit.id) {
+          this.findByCondition();
+        }
+        this.editDialogShow = false;
       },
 
       /**
@@ -563,7 +599,7 @@
       toRemoveContent(idx, row) {
         console.log("idx: ", idx);
         console.log("row: ", row);
-        this.contentItemList.splice(idx, 1);
+        this.dataForEdit.contentItemList.splice(idx, 1);
 //        从已选择的记录中删除
         this.choicedMap[row.questionTypeId] = undefined;
       },
@@ -589,7 +625,7 @@
           }
           this.dataForEdit.questionTypeIdList = questionTypeIdList;
           console.log("this.dataForEdit.questionTypeIdList: ", this.dataForEdit.questionTypeIdList);
-          this.contentItemList.push(currentRow);
+          this.dataForEdit.contentItemList.push(currentRow);
         }
 
       },
@@ -642,22 +678,28 @@
       console.log("created....")
       this.findByCondition();
       let questionTypeList = await  this.http("/questionType/api/findAll.do");
-      this.questionTypeList = questionTypeList;
-      for (let i = 0; i < questionTypeList.length; i++) {
-        let item = questionTypeList[i];
-        console.log("item: ", item);
-        this.questionTypeIdNameMap[item.id + ""] = item.name;
+      if (questionTypeList) {
+        this.questionTypeList = questionTypeList;
+        for (let i = 0; i < questionTypeList.length; i++) {
+          let item = questionTypeList[i];
+          console.log("item: ", item);
+          this.questionTypeIdNameMap[parseInt(item.id)] = item.name;
+        }
+        console.log("questionTypeIdNameMap: ", this.questionTypeIdNameMap);
+        console.log("题型列表： ", questionTypeList);
       }
-      console.log("questionTypeIdNameMap: ", this.questionTypeIdNameMap);
-      console.log("题型列表： ", questionTypeList);
     },
 
+
     computed: {
+      /**
+       * 计算题量和总得分
+       */
       getCount: function () {
         let count = 0;
         let totalScore = 0;
-        for (let i = 0; i < this.contentItemList.length; i++) {
-          let item = this.contentItemList[i];
+        for (let i = 0; i < this.dataForEdit.contentItemList.length; i++) {
+          let item = this.dataForEdit.contentItemList[i];
           let perScore = item.score;
           let perCount = item.questionCount;
           console.log("perScore: ", perScore);

@@ -171,8 +171,8 @@
           <el-input type="number" :disabled="true" v-model="getQuestionCount" placeholder="0"></el-input>
         </el-form-item>
 
-        <el-form-item label="是否私有" prop="privaryType">
-          <el-switch v-model="dataForEdit.privaryType" active-value="1" inactive-value="2"></el-switch>
+        <el-form-item label="私有" prop="privaryType">
+          <el-switch v-model="dataForEdit.privaryType" :active-value="2" :inactive-value="1"></el-switch>
         </el-form-item>
       </el-form>
 

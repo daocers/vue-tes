@@ -13,8 +13,8 @@
 
     <div class="btn-group">
       <div>
-        <el-button type="primary" @click="next()" v-show="nextStep">下一步</el-button>
-        <el-button @click="prev()" v-show="preStep">上一步</el-button>
+        <el-button type="primary" @click="next()" v-show="step != 4">下一步</el-button>
+        <el-button @click="prev()" v-show="step != 1">上一步</el-button>
         <el-button type="primary" @click="save()" v-show="commit">保存</el-button>
         <!--<el-button type="info" @click="overview()" v-show="preview">预览</el-button>-->
       </div>
@@ -29,7 +29,7 @@
     data: function () {
       return {
         preStep: false,
-        nextStep: true,
+//        nextStep: true,
         commit: false,
 //        preview: false,
         step: 1,//步骤
@@ -40,7 +40,7 @@
           ownerType: null,
           ownerId: null,
           authCode: '',
-          changePaper: 1,
+          changePaper: 2,
           delayTime: null,
           duration: null,
           paperPolicyId: null,
@@ -58,32 +58,49 @@
       }
     },
     methods: {
-      next: function () {
-        console.log("scene： ", JSON.stringify(this.scene))
-
-        this.$refs.view.$refs['sceneForm'].validate((valid) => {
-          if (valid) {
-            alert('submit! OK');
-            this.step = this.step + 1;
-            console.log("下一步。。。");
-            if(this.step > 1){
-              this.preStep = true;
-            }
-            if(this.step == 2){
+      next: async function () {
+        console.log("scene： ", this.scene);
+        if(this.step == 1){
+//          跳转到选择试卷策略
+//          参数校验，不通过返回false，不予跳转
+          this.$refs.view.$refs['sceneForm'].validate((valid) => {
+            if(valid){
+              this.step++;
               this.$router.push({path: '/scene/paper'});
-            }else if(this.step == 3){
-              this.$router.push({path: '/scene/user'});
-            }else if(this.step == 4){
-              this.$router.push(({path: '/scene/review'}))
-            }else {
-              console.log("步骤紊乱了。。。")
+            }else{
+              return false;
             }
-          } else {
-            console.log('error submit!!');
-
+          });
+        }else if(this.step == 2){
+//          试卷策略必选
+          if(this.scene.paperPolicyId){
+            this.step++;
+            this.$router.push({path: '/scene/user'});
+          }else{
+            this.$notify({
+              title: '警告',
+              message: '请选择试卷策略用于生成试卷',
+              type: 'warning'
+            });
             return false;
           }
-        });
+//          跳转到选择用户
+        }else if(this.step == 3){
+//          跳转到预览
+          this.$router.push({path: '/scene/review'});
+          this.step++;
+        }else if(this.step == 4){
+          let data = this.http("/scene/api/save.do", this.scene);
+          if(data){
+            console.log("保存成功");
+          }else{
+            console.log("保存失败");
+          }
+        }else {
+//          理论上不能跳转到此处
+          console.log("步骤紊乱。。。")
+          return false;
+        }
 
       },
       prev: function () {

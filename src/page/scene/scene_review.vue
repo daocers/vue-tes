@@ -2,7 +2,7 @@
   <div id="review">
     <el-tag style="margin-top: 10px;">基本信息</el-tag><router-link class="view-link" to="/scene">修改</router-link>
     <div class="grid-content">
-      <el-form label-position="left" inline class="demo-table-expand">
+      <el-form label-position="left" inline class="demo-table-expand"  label-width="120px">
         <el-form-item label="场次名称">
           <span>{{scene.name}}</span>
         </el-form-item>

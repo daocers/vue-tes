@@ -1,6 +1,6 @@
 <template>
   <div id="user">
-    <el-form :inline="true" ref="userForm" :model="userSelectType" label-width="80">
+    <el-form :inline="true" ref="userForm" :model="userSelectType" label-width="80" size="small">
       <el-form-item label="组织类型">
         <el-select v-model="userSelectType.type">
           <el-option label="分行" value="1"></el-option>
@@ -8,7 +8,7 @@
           <el-option label="岗位" value="3"></el-option>
         </el-select>
       </el-form-item>
-      <el-button type="default" @click="queryTreeData('userForm')">查询</el-button>
+      <el-button type="primary" plain @click="queryTreeData('userForm')" size="small">查询</el-button>
     </el-form>
 
     <div class="tree">
@@ -23,6 +23,36 @@
       </el-tree>
     </div>
 
+    <div class="checked">
+      <el-table>
+        <el-table
+          ref="checkedTable"
+          :data="checkedData"
+          highlight-current-row
+          @current-change="handleCurrentChange"
+          max-height="500px"
+          style="width: 100%">
+          <el-table-column
+            type="index"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            property="date"
+            label="日期"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            property="name"
+            label="姓名"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            property="address"
+            label="地址">
+          </el-table-column>
+        </el-table>
+      </el-table>
+    </div>
   </div>
 
 </template>
@@ -34,6 +64,10 @@
           scene: {
 
           },
+          /**
+           * 已选择数据项
+           */
+          checkedData:[],
           userSelectType: {
             type: '',
           },

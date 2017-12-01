@@ -46,7 +46,7 @@
             </template>
             <el-menu-item-group>
               <template slot="title">分组一</template>
-              <el-menu-item index="/scene">步骤</el-menu-item>
+              <el-menu-item index="/scene">场次管理</el-menu-item>
               <el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>
               <el-menu-item index="/property">属性管理</el-menu-item>
               <el-menu-item index="/questionType">题型管理</el-menu-item>
