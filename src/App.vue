@@ -55,7 +55,10 @@
               <el-menu-item index="/paperPolicy">试卷策略</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group title="分组2">
-              <el-menu-item index="/role">role</el-menu-item>
+              <el-menu-item index="/role">角色</el-menu-item>
+              <el-menu-item index="/branch">机构</el-menu-item>
+              <el-menu-item index="/department">部门</el-menu-item>
+              <el-menu-item index="/station">岗位</el-menu-item>
             </el-menu-item-group>
             <el-submenu index="1-4">
               <template slot="title">选项4</template>
