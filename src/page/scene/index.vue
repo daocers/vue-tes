@@ -23,9 +23,11 @@
 </template>
 
 <script>
-//  import store from 'src/store.js'
+  //  import store from 'src/store.js'
+  import $ from 'jquery'
+
   export default {
-    name:'sceneIndex',
+    name: 'sceneIndex',
     data: function () {
       return {
         preStep: false,
@@ -33,7 +35,7 @@
         commit: false,
 //        preview: false,
         step: 1,//步骤
-        scene:{
+        scene: {
           id: null,
           code: '',
           name: '',
@@ -53,30 +55,48 @@
           percentable: null,
           metaScoreInfo: '',
           openTime: '',
-          closeTime: ''
+          closeTime: '',
+          /**
+           * 已选中的试卷策略，只有一个
+           */
+          checkedPaperPolicy: [],
+          /**
+           * 已选择的用户信息
+           * 指定部门或者岗位或者机构信息
+           */
+          checkedUserData: [],
+
+          /**
+           * 用户选择，已选择的类型和id列表map
+           */
+          checkedTypeIdList: {},
+          /**
+           * 用户选择方式  1 机构， 2 部门， 3 岗位
+           */
+          userSelectType: null,
         }
       }
     },
     methods: {
       next: async function () {
         console.log("scene： ", this.scene);
-        if(this.step == 1){
+        if (this.step == 1) {
 //          跳转到选择试卷策略
 //          参数校验，不通过返回false，不予跳转
           this.$refs.view.$refs['sceneForm'].validate((valid) => {
-            if(valid){
+            if (valid) {
               this.step++;
               this.$router.push({path: '/scene/paper'});
-            }else{
+            } else {
               return false;
             }
           });
-        }else if(this.step == 2){
+        } else if (this.step == 2) {
 //          试卷策略必选
-          if(this.scene.paperPolicyId){
+          if (this.scene.paperPolicyId) {
             this.step++;
             this.$router.push({path: '/scene/user'});
-          }else{
+          } else {
             this.$notify({
               title: '警告',
               message: '请选择试卷策略用于生成试卷',
@@ -85,18 +105,18 @@
             return false;
           }
 //          跳转到选择用户
-        }else if(this.step == 3){
+        } else if (this.step == 3) {
 //          跳转到预览
           this.$router.push({path: '/scene/review'});
           this.step++;
-        }else if(this.step == 4){
+        } else if (this.step == 4) {
           let data = this.http("/scene/api/save.do", this.scene);
-          if(data){
+          if (data) {
             console.log("保存成功");
-          }else{
+          } else {
             console.log("保存失败");
           }
-        }else {
+        } else {
 //          理论上不能跳转到此处
           console.log("步骤紊乱。。。")
           return false;
@@ -105,34 +125,36 @@
       },
       prev: function () {
         console.log("上一步。。。");
+        this.step--;
         this.$router.go(-1);
+        $('html,body').animate({scrollTop: 0}, 500);
       },
       save: function () {
         console.log("保存。。。");
       },
-      overview: function(){
+      overview: function () {
         console.log("预览。。。");
       },
       handlePreStep: function () {
         this.$router.go(-1);
         this.step--;
         this.goStep(this.step);
-        $('html,body').animate({scrollTop:0},500);
+        $('html,body').animate({scrollTop: 0}, 500);
       },
       choicePaper: function () {
         this.step = 2;
         this.$router.push({path: '/scene/paper'});
       },
       handleNextStep: function () {
-        this.$router.push('/activePublic/step'+(this.step+1));
+        this.$router.push('/activePublic/step' + (this.step + 1));
         var _this = this;
         setTimeout(function () {
-          if(_this.isRouter){
+          if (_this.isRouter) {
             _this.step++;
             _this.goStep(_this.step);
           }
         })
-        $('html,body').animate({scrollTop:0},500);
+        $('html,body').animate({scrollTop: 0}, 500);
 
       },
       handlePublish: function () {
@@ -141,22 +163,34 @@
       goStep: function (n) {
         switch (n) {
           case 1 :
-            this.preview = true;this.preStep = false;this.nextStep = true;this.publish = false;
+            this.preview = true;
+            this.preStep = false;
+            this.nextStep = true;
+            this.publish = false;
             break;
           case 2 :
-            this.preview = false;this.preStep = true;this.nextStep = true;this.publish = false;
+            this.preview = false;
+            this.preStep = true;
+            this.nextStep = true;
+            this.publish = false;
             break;
           case 3 :
-            this.preview = false;this.preStep = true;this.nextStep = true;this.publish = false;
+            this.preview = false;
+            this.preStep = true;
+            this.nextStep = true;
+            this.publish = false;
             break;
           case 4 :
-            this.preview = false;this.preStep = true;this.nextStep = false;this.publish = true;
+            this.preview = false;
+            this.preStep = true;
+            this.nextStep = false;
+            this.publish = true;
             break;
         }
       }
     },
-    watch:{
-      '$route': function (to,from) {
+    watch: {
+      '$route': function (to, from) {
         this.isRouter = true;
       }
     }

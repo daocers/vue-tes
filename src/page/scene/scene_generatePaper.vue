@@ -190,6 +190,7 @@
        */
       handleCurrentRowChange: function (currentRow, oldCurrentRow) {
         this.checkedPaperPolicy = [currentRow];
+        this.scene.checkedPaperPolicy = [currentRow];
         this.$parent.$data.scene.paperPolicyId = currentRow.id;
       },
       handleSizeChange(val) {

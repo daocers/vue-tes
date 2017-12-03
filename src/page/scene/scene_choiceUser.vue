@@ -2,7 +2,7 @@
   <div id="user">
     <el-form :inline="true" ref="userForm" label-width="80" size="small">
       <el-form-item label="组织类型">
-        <el-select v-model="userSelectType" @change="handleTypeChange">
+        <el-select v-model="scene.userSelectType" @change="handleTypeChange">
           <el-option label="机构" value="1"></el-option>
           <el-option label="部门" value="2"></el-option>
           <el-option label="岗位" value="3"></el-option>
@@ -17,6 +17,7 @@
         :check-strictly="doNotRelation"
         show-checkbox
         default-expand-all
+        :default-checked-keys="scene.checkedTypeIdList[scene.userSelectType]"
         node-key="id"
         ref="tree"
         @node-click="handleTreeClick"
@@ -30,7 +31,7 @@
       <el-table
         border
         ref="checkedTable"
-        :data="checkedData"
+        :data="scene.checkedUserData"
         highlight-current-row
         max-height="500px"
         style="width: 100%">
@@ -71,7 +72,7 @@
           /**
            * 已选择信息
            */
-          checkedData:[],
+          checkedUserData:[],
           /**
            * 用户选择方式
            */
@@ -92,6 +93,7 @@
            * key 为 type + "*" + id
            */
           resData: {},
+
         }
       },
       methods:{
@@ -102,12 +104,12 @@
         getTreeData: async function () {
           let treeData;
           console.log("查询tree data...")
-          console.log("userSelectType: ", JSON.stringify(this.userSelectType));
-          if(this.userSelectType == 1){
+          console.log("userSelectType: ", JSON.stringify(this.scene.userSelectType));
+          if(this.scene.userSelectType == 1){
             treeData = await this.http("/branch/api/getBranchTree.do");
-          }else if(this.userSelectType== 2){
+          }else if(this.scene.userSelectType== 2){
             treeData = await  this.http("/department/api/findAll.do");
-          }else if(this.userSelectType == 3){
+          }else if(this.scene.userSelectType == 3){
             treeData = await this.http("/station/api/findAll.do");
           }
           if(!treeData){
@@ -140,22 +142,33 @@
               data['type'] = "岗位";
             }
             this.resData[key] = data;
-            this.checkedData.push(data);
+            this.checkedUserData.push(data);
+            this.scene.checkedUserData.push(data);
+
+            let typeIdList = this.scene.checkedTypeIdList[this.userSelectType];
+            if(!typeIdList){
+              typeIdList = [];
+            }
+            typeIdList.push(data.id);
           }else{
 
             if(this.resData[key]){//已经选中的又取消了
               this.resData[key] = undefined;
-              let newCheckedData = [];
+              let newcheckedUserData = [];
               for(let id in this.resData){
                 let obj = this.resData[id];
                 if(obj){
-                  newCheckedData.push(this.resData[id]);
+                  newcheckedUserData.push(this.resData[id]);
                 }
               }
-              this.checkedData = newCheckedData;
+              this.checkedUserData = newcheckedUserData;
+              this.scene.checkedUserData = newcheckedUserData;
+
+              let typeIdList = this.scene.checkedTypeIdList[this.userSelectType];
+              this.scene.checkedTypeIdList[this.userSelectType] = typeIdList.splice(data.id, 1);
             }
           }
-          console.log("checkedData:::", this.checkedData);
+          console.log("checkedUserData:::", this.checkedUserData);
 
         },
         /**
