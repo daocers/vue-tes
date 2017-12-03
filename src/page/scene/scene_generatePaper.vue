@@ -7,7 +7,8 @@
       <el-table
         border
         ref="selectedPaperPolicy"
-        :data="checkedPaperPolicy"
+        :row-style="rowStyle"
+        :data="$parent.$data.scene.checkedPaperPolicy"
         highlight-current-row
         style="width: 100%">
         <el-table-column
@@ -44,7 +45,7 @@
       </el-table>
     </el-row>
 
-    <el-row style="border: 1px solid lightblue">
+    <el-row style="border: 1px solid dodgerblue">
       <el-form :inline="true" ref="queryPolicyForm" :model="queryForm" label-width="80px" size="small">
         <el-form-item label="策略名称">
           <el-input v-model="queryForm.name" placeholeder="输入策略名称"></el-input>
@@ -122,7 +123,7 @@
                      :total="totalCount">
       </el-pagination>
     </el-row>
-
+    <span style="display: block; color: cornflowerblue;">查询试卷策略，点击蓝色表格中的行进行选择；如果已经选择，点击其他行将会替换已选策略。</span>
 
 
   </div>
@@ -135,7 +136,7 @@
     components: {ElRow},
     data: function () {
       return {
-        scene: {},
+        rowStyle: {background: '#f0f9eb'},
         /**
          * 策略查询参数
          * */
@@ -157,10 +158,10 @@
          * 查询出来的所有策略
          * */
         paperPolicyList: [],
-        /**
-         * 存放已经选择的试卷策略
-         * */
-        checkedPaperPolicy: [],
+//        /**
+//         * 存放已经选择的试卷策略
+//         * */
+//        checkedPaperPolicy: [],
       }
     },
     methods: {
@@ -189,8 +190,8 @@
        * @param oldCurrentRow
        */
       handleCurrentRowChange: function (currentRow, oldCurrentRow) {
-        this.checkedPaperPolicy = [currentRow];
-        this.scene.checkedPaperPolicy = [currentRow];
+        this.$parent.$data.scene.checkedPaperPolicy = [currentRow];
+
         this.$parent.$data.scene.paperPolicyId = currentRow.id;
       },
       handleSizeChange(val) {
@@ -205,13 +206,14 @@
       },
     },
     created: function () {
-      console.log("created...")
-      this.scene = this.$parent.$data.scene;
+      console.log("paper created")
     }
   }
 </script>
 
 <style>
+  <!--
+  分页导航样式-- >
   .el-pager > li, button.btn-prev, button.btn-next {
     border: 1px solid gainsboro;
     border-left: none;

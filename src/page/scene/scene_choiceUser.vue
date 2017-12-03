@@ -2,7 +2,7 @@
   <div id="user">
     <el-form :inline="true" ref="userForm" label-width="80" size="small">
       <el-form-item label="组织类型">
-        <el-select v-model="scene.userSelectType" @change="handleTypeChange">
+        <el-select v-model="userSelectType" @change="handleTypeChange">
           <el-option label="机构" value="1"></el-option>
           <el-option label="部门" value="2"></el-option>
           <el-option label="岗位" value="3"></el-option>
@@ -17,10 +17,9 @@
         :check-strictly="doNotRelation"
         show-checkbox
         default-expand-all
-        :default-checked-keys="scene.checkedTypeIdList[scene.userSelectType]"
+        :default-checked-keys="defaultChecked"
         node-key="id"
         ref="tree"
-        @node-click="handleTreeClick"
         @check-change="handleCheckChange"
         highlight-current
         :props="defaultProps">
@@ -31,7 +30,7 @@
       <el-table
         border
         ref="checkedTable"
-        :data="scene.checkedUserData"
+        :data="$parent.$data.scene.checkedList"
         highlight-current-row
         max-height="500px"
         style="width: 100%">
@@ -40,7 +39,7 @@
           width="50">
         </el-table-column>
         <el-table-column
-          property="type"
+          property="typeName"
           label="类型"
           width="120">
         </el-table-column>
@@ -56,140 +55,159 @@
 </template>
 
 <script type="text/javascript">
-    export default {
-      data: function () {
-        return {
-          /**
-           * 父子是否不进行关联勾选
-           */
-          doNotRelation: true,
-          /**
-           * 场次信息
-           */
-          scene: {
-
-          },
-          /**
-           * 已选择信息
-           */
-          checkedUserData:[],
-          /**
-           * 用户选择方式
-           */
-          userSelectType: '',
-          /**
-           * tree组件的属性配置
-           */
-          defaultProps: {
-            children: 'children',
-            label: 'name',
-          },
-          /**
-           * 树数据信息
-           */
-          treeData: [],
-          /**
-           * 已选中的key，obj信息，如果取消，设置obj为undefined
-           * key 为 type + "*" + id
-           */
-          resData: {},
-
-        }
-      },
-      methods:{
+  export default {
+    data: function () {
+      return {
         /**
-         * 获取树组件数据
-         * @returns {Promise.<void>}
+         * 父子是否不进行关联勾选
          */
-        getTreeData: async function () {
-          let treeData;
-          console.log("查询tree data...")
-          console.log("userSelectType: ", JSON.stringify(this.scene.userSelectType));
-          if(this.scene.userSelectType == 1){
-            treeData = await this.http("/branch/api/getBranchTree.do");
-          }else if(this.scene.userSelectType== 2){
-            treeData = await  this.http("/department/api/findAll.do");
-          }else if(this.scene.userSelectType == 3){
-            treeData = await this.http("/station/api/findAll.do");
-          }
-          if(!treeData){
-            treeData = [];
-          }
-          this.treeData = treeData;
-        },
-        handleTreeClick: function (value, node, tree) {
-          console.log("value: ", value);
-          console.log("node::", node);
-          console.log("tree: ", tree);
+        doNotRelation: true,
+        /**
+         * tree组件的属性配置
+         */
+        defaultProps: {
+          children: 'children',
+          label: 'name',
         },
         /**
-         * 树状组件勾选状态改变时触发
-         * @param data
-         * @param checked
-         * @param indeterminate
+         * 树数据信息
          */
-        handleCheckChange(data, checked, indeterminate) {
-          console.log("data：：", data);
-          console.log("checked::", checked);
-          console.log("indeterminate:", indeterminate);
-          var key = this.userSelectType + "*" + data.id;
-          if(checked){
-            if(this.userSelectType == 1){
-              data['type'] = "机构";
-            }else if(this.userSelectType == 2){
-              data['type'] = "部门";
-            }else if(this.userSelectType == 3){
-              data['type'] = "岗位";
-            }
-            this.resData[key] = data;
-            this.checkedUserData.push(data);
-            this.scene.checkedUserData.push(data);
-
-            let typeIdList = this.scene.checkedTypeIdList[this.userSelectType];
-            if(!typeIdList){
-              typeIdList = [];
-            }
-            typeIdList.push(data.id);
-          }else{
-
-            if(this.resData[key]){//已经选中的又取消了
-              this.resData[key] = undefined;
-              let newcheckedUserData = [];
-              for(let id in this.resData){
-                let obj = this.resData[id];
-                if(obj){
-                  newcheckedUserData.push(this.resData[id]);
-                }
-              }
-              this.checkedUserData = newcheckedUserData;
-              this.scene.checkedUserData = newcheckedUserData;
-
-              let typeIdList = this.scene.checkedTypeIdList[this.userSelectType];
-              this.scene.checkedTypeIdList[this.userSelectType] = typeIdList.splice(data.id, 1);
-            }
-          }
-          console.log("checkedUserData:::", this.checkedUserData);
-
-        },
+        treeData: [],
         /**
-         * 用户选择方式改变时触发
-         * 清空已选树状组件内容
-         * @param type
+         * 已选中的key，obj信息，如果取消，设置obj为undefined
+         * key 为 type + "*" + id
          */
-        handleTypeChange(type){
-          console.log("type:::", type);
-          this.treeData = [];
-        }
-      },
-      created: function () {
-        console.log("created...")
-        this.scene = this.$parent.$data.scene;
+        resData: {},
+        /**
+         * 用户选择方式  1 机构， 2 部门， 3 岗位
+         */
+        userSelectType: '',
+
+        /**
+         * 树状组件默认选择项
+         */
+        defaultChecked: [],
+
+        /**
+         * 已选择的信息
+         * type:List<Obj>
+         */
+        checkedObjInfo: {},
+
+        /**
+         * 已选择的id信息
+         * type:List<id>
+         */
+        checkedIdInfo: {},
+
+        /**
+         * 已选择的列表
+         */
+        checkedList: [],
+
       }
+    },
+    methods: {
+      /**
+       * 获取树组件数据
+       * @returns {Promise.<void>}
+       */
+      getTreeData: async function () {
+        let treeData;
+        console.log("查询tree data...")
+        if (this.userSelectType == 1) {
+          treeData = await this.http("/branch/api/getBranchTree.do");
+        } else if (this.userSelectType == 2) {
+          treeData = await  this.http("/department/api/findAll.do");
+        } else if (this.userSelectType == 3) {
+          treeData = await this.http("/station/api/findAll.do");
+        }
+        if (!treeData) {
+          treeData = [];
+        }
+        this.treeData = treeData;
+//          设置默认选中项
+        this.defaultChecked = this.checkedIdInfo[this.userSelectType];
+
+        this.$parent.$data.checkedIdInfo = this.checkedIdInfo;
+      },
+      /**
+       * 树状组件勾选状态改变时触发
+       */
+      handleCheckChange(data, checked, indeterminate) {
+        let type = this.userSelectType;
+        var key = this.userSelectType + "*" + data.id;
+        console.log("key: ", key);
+        if (checked) {
+          if (this.userSelectType == 1) {
+            data['typeName'] = "机构";
+            data['type'] = 1;
+          } else if (this.userSelectType == 2) {
+            data['typeName'] = "部门";
+            data['type'] == 2;
+          } else if (this.userSelectType == 3) {
+            data['typeName'] = "岗位";
+            data['type'] == 3;
+          }
+          if (!this.checkedObjInfo[type]) {
+            this.checkedObjInfo[type] = [];
+          }
+          if (!this.checkedIdInfo[type]) {
+            this.checkedIdInfo[type] = [];
+          }
+          this.checkedObjInfo[type].push(data);
+          this.checkedIdInfo[type].push(data.id);
+          this.checkedList.push(data);
+
+          console.log("checkedIdInfo:@@@", this.checkedIdInfo);
+          console.log("checkedObjInfo:@@@", this.checkedObjInfo);
+          console.log("checkedList:@@", this.checkedList);
+        } else {
+          console.log("checkedIdInfo:@@@**", this.checkedIdInfo);
+          console.log("checkedObjInfo:@@@**", this.checkedObjInfo);
+          console.log("checkedList:@@**", this.checkedList);
+
+          let idx = this.checkedIdInfo[type].indexOf(data.id);
+          console.log("idx: ", idx);
+          if (idx > -1) {
+            this.checkedIdInfo[type].splice(idx, 1);
+            this.checkedObjInfo[type].splice(idx, 1);
+          }
+          let objIdx = this.checkedList.indexOf(data);
+          console.log("objIdx: ", idx);
+          if (objIdx > -1) {
+            this.checkedList.splice(objIdx, 1);
+          }
+
+          console.log("checkedIdInfo:@@@****", this.checkedIdInfo);
+          console.log("checkedObjInfo:@@@****", this.checkedObjInfo);
+          console.log("checkedList:@@****", this.checkedList);
+//
+//
+//          this.$parent.$data.checkedTypeIdListMap = this.checkedIdInfo;
+        }
+        this.$parent.$data.checkedList = this.checkedList;
+        this.$parent.$data.checkedIdInfo = this.checkedIdInfo;
+      },
+      /**
+       * 用户选择方式改变时触发
+       * 清空已选树状组件内容
+       * @param type
+       */
+      handleTypeChange(type) {
+        console.log("type:::", type);
+        this.treeData = [];
+      }
+    },
+    created: function () {
+      console.log("created...")
+      this.scene = this.$parent.$data.scene;
     }
+  }
 </script>
 
 <style>
-  .tree{
+  .tree {
     border: 1px solid rgba(69, 139, 255, 0.62);
     border-radius: 3px;
     padding: 5px;

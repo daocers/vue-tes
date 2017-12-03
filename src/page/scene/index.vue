@@ -14,9 +14,9 @@
     <div class="btn-group">
       <div>
         <el-button type="primary" @click="next()" v-show="step != 4">下一步</el-button>
-        <el-button @click="prev()" v-show="step != 1">上一步</el-button>
-        <el-button type="primary" @click="save()" v-show="commit">保存</el-button>
-        <!--<el-button type="info" @click="overview()" v-show="preview">预览</el-button>-->
+        <el-button type="default" plain @click="prev()" v-show="step != 1">上一步</el-button>
+        <el-button type="primary" @click="save()" v-show="step == 4">保存</el-button>
+        <el-button type="success" plain @click="toPreview()" v-show="previewFlag">预览</el-button>
       </div>
     </div>
   </div>
@@ -33,6 +33,10 @@
         preStep: false,
 //        nextStep: true,
         commit: false,
+        /**
+         * 预览按钮是否显示
+         */
+        previewFlag: false,
 //        preview: false,
         step: 1,//步骤
         scene: {
@@ -66,18 +70,35 @@
            */
           checkedUserData: [],
 
+//          /**
+//           * 用户选择，已选择的类型和id列表map
+//           */
+//          checkedTypeIdListMap: {},
+
           /**
-           * 用户选择，已选择的类型和id列表map
+           * 已选择的信息
+           * type:List<Obj>
            */
-          checkedTypeIdList: {},
+          checkedObjInfo: {},
+
           /**
-           * 用户选择方式  1 机构， 2 部门， 3 岗位
+           * 已选择的id信息
+           * type:List<id>
            */
-          userSelectType: null,
+          checkedIdInfo: {},
+
+          /**
+           * 已选择的列表
+           */
+          checkedList: [],
+
         }
       }
     },
     methods: {
+      /**
+       * 下一步操作
+       */
       next: async function () {
         console.log("scene： ", this.scene);
         if (this.step == 1) {
@@ -106,9 +127,19 @@
           }
 //          跳转到选择用户
         } else if (this.step == 3) {
-//          跳转到预览
-          this.$router.push({path: '/scene/review'});
-          this.step++;
+          if(this.scene.checkedUserData && this.scene.checkedUserData.length > 0){
+            //          跳转到预览
+            this.step++;
+            this.$router.push({path: '/scene/review'});
+          }else{
+            this.$notify({
+              title: '警告',
+              message: '请选择考生所在机构/部门/岗位',
+              type: 'warning'
+            });
+            return false;
+          }
+
         } else if (this.step == 4) {
           let data = this.http("/scene/api/save.do", this.scene);
           if (data) {
@@ -123,72 +154,41 @@
         }
 
       },
+      /**
+       * 上一步按钮执行操作
+       */
       prev: function () {
+        console.log("scene： ", this.scene);
+
         console.log("上一步。。。");
+        if(this.step == 4){
+          this.$router.push({path: '/scene/user'});
+        }else if(this.step == 3){
+          this.$router.push({path: '/scene/paper'});
+        }else if(this.step == 2){
+          this.$router.push({path: '/scene'});
+        }else{
+          console.log("理论上不能到达此处");
+        }
         this.step--;
-        this.$router.go(-1);
         $('html,body').animate({scrollTop: 0}, 500);
       },
       save: function () {
         console.log("保存。。。");
-      },
-      overview: function () {
-        console.log("预览。。。");
-      },
-      handlePreStep: function () {
-        this.$router.go(-1);
-        this.step--;
-        this.goStep(this.step);
-        $('html,body').animate({scrollTop: 0}, 500);
-      },
-      choicePaper: function () {
-        this.step = 2;
-        this.$router.push({path: '/scene/paper'});
-      },
-      handleNextStep: function () {
-        this.$router.push('/activePublic/step' + (this.step + 1));
-        var _this = this;
-        setTimeout(function () {
-          if (_this.isRouter) {
-            _this.step++;
-            _this.goStep(_this.step);
-          }
-        })
-        $('html,body').animate({scrollTop: 0}, 500);
-
+        console.log("scene:::::#### ", this.scene);
       },
       handlePublish: function () {
         console.log('发布');
       },
-      goStep: function (n) {
-        switch (n) {
-          case 1 :
-            this.preview = true;
-            this.preStep = false;
-            this.nextStep = true;
-            this.publish = false;
-            break;
-          case 2 :
-            this.preview = false;
-            this.preStep = true;
-            this.nextStep = true;
-            this.publish = false;
-            break;
-          case 3 :
-            this.preview = false;
-            this.preStep = true;
-            this.nextStep = true;
-            this.publish = false;
-            break;
-          case 4 :
-            this.preview = false;
-            this.preStep = true;
-            this.nextStep = false;
-            this.publish = true;
-            break;
-        }
-      }
+
+      toPreview(){
+        this.step = 4;
+        this.previewFlag = false;
+        this.$router.push({path: "/scene/review"})
+
+      },
     },
+
     watch: {
       '$route': function (to, from) {
         this.isRouter = true;

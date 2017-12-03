@@ -40,18 +40,28 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="允许换卷" prop="changePaper">
-      <el-switch v-model="scene.changePaper" :active-value="1" :inactive-value="2"></el-switch>
+    <el-form-item label="百分制" prop="percentable">
+      <el-switch v-model="scene.percentable" :active-value="1" :inactive-value="2"></el-switch>
     </el-form-item>
 
-    <el-form-item label="试卷类型" prop="paperGenerateType">
-      <el-select v-model="scene.paperGenerateType" placeholder="">
-        <el-option label="随机" value="1"></el-option>
-        <el-option label="统一" value="2"></el-option>
-        <el-option label="乱序统一" value="3"></el-option>
-      </el-select>
-      <span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样; 统一试卷，每张试卷一样; 乱序统一，试题相同，顺序不同</span>
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="试卷类型" prop="paperGenerateType">
+          <el-select v-model="scene.paperGenerateType" placeholder="">
+            <el-option label="随机" value="1"></el-option>
+            <el-option label="统一" value="2"></el-option>
+            <el-option label="乱序统一" value="3"></el-option>
+          </el-select>
+          <span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样;<br/> 统一试卷，每张试卷一样; <br/>乱序统一，试题相同，顺序不同</span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="允许换卷" prop="changePaper">
+          <el-switch v-model="scene.changePaper" :active-value="1" :inactive-value="2"></el-switch>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
 
     <el-form-item label="识别码" prop="authCode">
       <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
@@ -62,10 +72,14 @@
 
 <script>
   import ElRow from "element-ui/packages/row/src/row";
+  import ElCol from "element-ui/packages/col/src/col";
 
   export default {
 
-    components: {ElRow},
+    components: {
+      ElCol,
+      ElRow
+    },
     data() {
       var checkDuration = (rule, value, callback) => {
         console.log("duration: ", value)
@@ -79,15 +93,15 @@
           callback();
         }
       };
-      var checkAuthcode = (rule, value, callback) =>{
-        if(!value || value == '' || value == undefined){
+      var checkAuthcode = (rule, value, callback) => {
+        if (!value || value == '' || value == undefined) {
           callback(new Error("请输入10位场次识别码"));
-        }else {
+        } else {
           let reg = /^[0-9a-zA-Z]{10}$/;
-          if(!reg.test(value)){
+          if (!reg.test(value)) {
             value = '';
             callback(new Error("非法字符，请输入十位字母或数字"));
-          }else{
+          } else {
             callback();
           }
         }
