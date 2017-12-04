@@ -1,6 +1,17 @@
 <template>
   <div>
     <el-row style="margin-bottom: 30px;">
+      <el-form>
+        <el-form-item label="题库">
+          <el-select v-model="$parent.$data.scene.questionBankId"  placeholder="请指定本场考试所用题库" size="medium">
+            <el-option v-for="bank in questionBankList" :key="bank.id" :value="bank.id" :label="bank.name">
+            </el-option>
+          </el-select>
+          <span style="color: cornflowerblue; margin-left: 30px;">本场考试的试题将从选定的题库中抽取，如果试题不足，无法开场</span>
+        </el-form-item>
+      </el-form>
+
+
       <el-tag style="margin-top: 10px;">已选策略</el-tag>
 
       <!--已经选择的试卷策略-->
@@ -151,6 +162,11 @@
         },
 
         /**
+         * 题库列表
+         */
+        questionBankList: [],
+
+        /**
          * 数据总数
          */
         totalCount: 0,
@@ -205,8 +221,12 @@
         this.findByCondition();
       },
     },
-    created: function () {
+    created: async function () {
       console.log("paper created")
+      let data = await this.http("/questionBank/api/findAll.do");
+      if(data){
+        this.questionBankList = data;
+      }
     }
   }
 </script>

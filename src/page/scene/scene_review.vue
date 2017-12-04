@@ -69,7 +69,7 @@
             <el-table
               border
               ref="reviewCheckedTable"
-              :data="$parent.$data.scene.checkedUserData"
+              :data="$parent.$data.scene.checkedList"
               highlight-current-row
               max-height="500px"
               style="width: 100%">

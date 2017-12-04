@@ -6,9 +6,9 @@
 
     <el-row>
       <el-col :span="12">
-        <el-form-item label="开始时间" prop="beginTime">
+        <el-form-item label="开始时间" prop="openTime">
           <el-date-picker
-            v-model="scene.beginTime"
+            v-model="scene.openTime"
             format="yyyy-MM-dd HH:mm:00"
             type="datetime"
             :picker-options="pickerOptions"
@@ -52,7 +52,8 @@
             <el-option label="统一" value="2"></el-option>
             <el-option label="乱序统一" value="3"></el-option>
           </el-select>
-          <span style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样;<br/> 统一试卷，每张试卷一样; <br/>乱序统一，试题相同，顺序不同</span>
+          <span
+            style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样;<br/> 统一试卷，每张试卷一样; <br/>乱序统一，试题相同，顺序不同</span>
         </el-form-item>
       </el-col>
       <el-col :span="12">
@@ -118,29 +119,32 @@
         },
         scene: {},
         rules: {
-//          name: [
-//            {required: true, message: '请输入场次名称', trigger: 'blur'},
-//            {min: 3, max: 16, message: '场次名称在3到10个字之间', trigger: 'blur'}
-//          ],
-//          beginTime: [
-//            {type: 'date', required: true, message: '请设置开场时间', trigger: 'change'}
-//          ],
-//          duration: [
-//            {validator: checkDuration, required: true, trigger: 'change'}
-//          ],
-//          delay: [
-//            {required: true, message: '请选择顺延时间', trigger: 'change'}
-//          ],
-//          changePaper: [
-//            {type: 'number', required: true, message: "请设置是否允许换卷", trigger: 'change'}
-//          ],
-//          paperGenerateType: [
-//            {required: true, message: '请选择试卷生成方式', trigger: 'change'}
-//          ],
-//          authCode:[
-//            {required: true, message: '请输入场次识别码', trigger: 'blur'},
-//            {validator: checkAuthcode, required: true, trigger: 'blur'},
-//          ]
+          name: [
+            {required: true, message: '请输入场次名称', trigger: 'blur'},
+            {min: 2, max: 16, message: '场次名称在2到16个字之间', trigger: 'blur'}
+          ],
+          openTime: [
+            {type: 'date', required: true, message: '请设置开场时间', trigger: 'change'}
+          ],
+          duration: [
+            {validator: checkDuration, required: true, trigger: 'change'}
+          ],
+          delay: [
+            {required: true, message: '请选择顺延时间', trigger: 'change'}
+          ],
+          changePaper: [
+            {type: 'number', required: true, message: "请设置是否允许换卷", trigger: 'change'}
+          ],
+          percentable: [
+            {type: 'number', required: true, message: '请设置是否百分制', trigger: 'change'}
+          ],
+          paperGenerateType: [
+            {required: true, message: '请选择试卷生成方式', trigger: 'change'}
+          ],
+          authCode: [
+            {required: true, message: '请输入场次识别码', trigger: 'blur'},
+            {validator: checkAuthcode, trigger: 'blur'},
+          ]
 
         }
       }
@@ -155,16 +159,16 @@
        * 计算结束时间
        * */
       getEndTime: function () {
-        console.log(this.scene.beginTime)
+        console.log(this.scene.openTime)
 
-        let beginTime;
-        if (this.scene.beginTime) {
-          beginTime = this.scene.beginTime.getTime();
+        let openTime;
+        if (this.scene.openTime) {
+          openTime = this.scene.openTime.getTime();
         }
         let duration = this.scene.duration;
-        if (beginTime && duration) {
-          beginTime = beginTime + duration * 60 * 1000;
-          return new Date(beginTime)
+        if (openTime && duration) {
+          openTime = openTime + duration * 60 * 1000;
+          return new Date(openTime)
         }
       },
 

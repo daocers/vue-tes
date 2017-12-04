@@ -1,5 +1,6 @@
 // import activePublic from './page/activePublic/index.vue'
 import leftMenu from '../components/left-menu.vue'
+import SceneList from '../page/scene/list.vue'
 import Scene from '../page/scene/index.vue'
 import SceneSetting from '../page/scene/scene_setting.vue'
 import ScenePaper from '../page/scene/scene_generatePaper.vue'
@@ -51,6 +52,7 @@ export default [
   {path: '/department/add', component: DepartmentAdd},
   {path: '/commonQuestion', component: CommonQuestionIndex},
   {path: '/commonQuestion/add', component: CommonQuestionAdd},
+  {path: '/scene/list', component: SceneList},
   {
     path: '/scene',
     component: Scene,

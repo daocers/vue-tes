@@ -64,11 +64,6 @@
            * 已选中的试卷策略，只有一个
            */
           checkedPaperPolicy: [],
-          /**
-           * 已选择的用户信息
-           * 指定部门或者岗位或者机构信息
-           */
-          checkedUserData: [],
 
 //          /**
 //           * 用户选择，已选择的类型和id列表map
@@ -79,7 +74,7 @@
            * 已选择的信息
            * type:List<Obj>
            */
-          checkedObjInfo: {},
+//          checkedObjInfo: {},
 
           /**
            * 已选择的id信息
@@ -91,6 +86,11 @@
            * 已选择的列表
            */
           checkedList: [],
+
+          /**
+           * 存放key，用于取消选择时候的删除
+           */
+          checkedKeyList: [],
 
         }
       }
@@ -127,11 +127,11 @@
           }
 //          跳转到选择用户
         } else if (this.step == 3) {
-          if(this.scene.checkedUserData && this.scene.checkedUserData.length > 0){
+          if (this.scene.checkedList && this.scene.checkedList.length > 0) {
             //          跳转到预览
             this.step++;
             this.$router.push({path: '/scene/review'});
-          }else{
+          } else {
             this.$notify({
               title: '警告',
               message: '请选择考生所在机构/部门/岗位',
@@ -161,27 +161,45 @@
         console.log("scene： ", this.scene);
 
         console.log("上一步。。。");
-        if(this.step == 4){
+        if (this.step == 4) {
           this.$router.push({path: '/scene/user'});
-        }else if(this.step == 3){
+        } else if (this.step == 3) {
           this.$router.push({path: '/scene/paper'});
-        }else if(this.step == 2){
+        } else if (this.step == 2) {
           this.$router.push({path: '/scene'});
-        }else{
+        } else {
           console.log("理论上不能到达此处");
         }
         this.step--;
         $('html,body').animate({scrollTop: 0}, 500);
       },
-      save: function () {
+      save: async function () {
         console.log("保存。。。");
         console.log("scene:::::#### ", this.scene);
+        let res = await this.http("/scene/api/save.do", this.scene);
+        if (res) {
+          if (res == -1) {
+            this.$notify({
+              title: '警告',
+              message: "试卷策略校验不通过，无法生成试卷，请重新选择",
+              type: 'warning'
+            });
+          } else {
+            this.$alert('开场成功，即将跳转到场次列表', '成功', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$router.push("/scene/list");
+              }
+            });
+          }
+
+        }
       },
       handlePublish: function () {
         console.log('发布');
       },
 
-      toPreview(){
+      toPreview() {
         this.step = 4;
         this.previewFlag = false;
         this.$router.push({path: "/scene/review"})

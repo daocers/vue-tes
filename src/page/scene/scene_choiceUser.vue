@@ -30,7 +30,7 @@
       <el-table
         border
         ref="checkedTable"
-        :data="$parent.$data.scene.checkedList"
+        :data="checkedList"
         highlight-current-row
         max-height="500px"
         style="width: 100%">
@@ -92,7 +92,7 @@
          * 已选择的信息
          * type:List<Obj>
          */
-        checkedObjInfo: {},
+//        checkedObjInfo: {},
 
         /**
          * 已选择的id信息
@@ -104,6 +104,11 @@
          * 已选择的列表
          */
         checkedList: [],
+
+        /**
+         * 存放key，用于取消选择时候的删除
+         */
+        checkedKeyList: [],
 
       }
     },
@@ -135,10 +140,12 @@
        * 树状组件勾选状态改变时触发
        */
       handleCheckChange(data, checked, indeterminate) {
+        console.log("checked::::", checked);
         let type = this.userSelectType;
         var key = this.userSelectType + "*" + data.id;
         console.log("key: ", key);
         if (checked) {
+          console.log("^^^^^^^^^^^^^checked")
           if (this.userSelectType == 1) {
             data['typeName'] = "机构";
             data['type'] = 1;
@@ -149,45 +156,55 @@
             data['typeName'] = "岗位";
             data['type'] == 3;
           }
-          if (!this.checkedObjInfo[type]) {
-            this.checkedObjInfo[type] = [];
-          }
+//          if (!this.checkedObjInfo[type]) {
+//            this.checkedObjInfo[type] = [];
+//          }
           if (!this.checkedIdInfo[type]) {
             this.checkedIdInfo[type] = [];
           }
-          this.checkedObjInfo[type].push(data);
-          this.checkedIdInfo[type].push(data.id);
-          this.checkedList.push(data);
+          let idx = this.checkedIdInfo[type].indexOf(data.id);
+          if (idx > -1) {
+            console.log("已经存在");
+          } else {
+//            this.checkedObjInfo[type].push(data);
+            this.checkedIdInfo[type].push(data.id);
+            this.checkedList.push(data);
+            this.checkedKeyList.push(key);
+          }
 
-          console.log("checkedIdInfo:@@@", this.checkedIdInfo);
-          console.log("checkedObjInfo:@@@", this.checkedObjInfo);
-          console.log("checkedList:@@", this.checkedList);
+
+//          console.log("checkedIdInfo:@@@", this.checkedIdInfo);
+//          console.log("checkedObjInfo:@@@", this.checkedObjInfo);
+//          console.log("checkedList:@@", this.checkedList);
         } else {
-          console.log("checkedIdInfo:@@@**", this.checkedIdInfo);
-          console.log("checkedObjInfo:@@@**", this.checkedObjInfo);
-          console.log("checkedList:@@**", this.checkedList);
+          console.log("cancel^&^^^^^^^^^^^^")
+//          console.log("checkedIdInfo:@@@**", this.checkedIdInfo);
+//          console.log("checkedObjInfo:@@@**", this.checkedObjInfo);
+//          console.log("checkedList:@@**", this.checkedList);
 
           let idx = this.checkedIdInfo[type].indexOf(data.id);
           console.log("idx: ", idx);
           if (idx > -1) {
             this.checkedIdInfo[type].splice(idx, 1);
-            this.checkedObjInfo[type].splice(idx, 1);
+//            this.checkedObjInfo[type].splice(idx, 1);
           }
-          let objIdx = this.checkedList.indexOf(data);
-          console.log("objIdx: ", idx);
+          let objIdx = this.checkedKeyList.indexOf(key);
+          console.log("objIdx: ", objIdx);
           if (objIdx > -1) {
+            console.log("good")
             this.checkedList.splice(objIdx, 1);
+            this.checkedKeyList.splice(objIdx, 1);
+            console.log("******", this.checkedList);
           }
 
-          console.log("checkedIdInfo:@@@****", this.checkedIdInfo);
-          console.log("checkedObjInfo:@@@****", this.checkedObjInfo);
-          console.log("checkedList:@@****", this.checkedList);
-//
-//
-//          this.$parent.$data.checkedTypeIdListMap = this.checkedIdInfo;
+//          console.log("checkedIdInfo:@@@****", this.checkedIdInfo);
+//          console.log("checkedObjInfo:@@@****", this.checkedObjInfo);
+//          console.log("checkedList:@@****", this.checkedList);
         }
-        this.$parent.$data.checkedList = this.checkedList;
-        this.$parent.$data.checkedIdInfo = this.checkedIdInfo;
+//        this.$set(this.$parent.$data.scene.checkedList, this.checkedList);
+        this.$parent.$data.scene.checkedList = this.checkedList;
+        this.$parent.$data.scene.checkedKeyList = this.checkedKeyList;
+        this.$parent.$data.scene.checkedIdInfo = this.checkedIdInfo;
       },
       /**
        * 用户选择方式改变时触发
@@ -201,7 +218,10 @@
     },
     created: function () {
       console.log("created...")
-      this.scene = this.$parent.$data.scene;
+      this.checkedList = this.$parent.$data.scene.checkedList;
+      this.checkedKeyList = this.$parent.$data.scene.checkedKeyList;
+      this.checkedIdInfo = this.$parent.$data.scene.checkedIdInfo;
+//      this.checkedObjInfo = this.$parent.$data.scene.checkedObjInfo;
     }
   }
 </script>
