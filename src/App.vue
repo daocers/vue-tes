@@ -56,6 +56,7 @@
             </el-menu-item-group>
             <el-menu-item-group title="分组2">
               <el-menu-item index="/role">角色</el-menu-item>
+              <el-menu-item index="/permission">权限</el-menu-item>
               <el-menu-item index="/branch">机构</el-menu-item>
               <el-menu-item index="/department">部门</el-menu-item>
               <el-menu-item index="/station">岗位</el-menu-item>

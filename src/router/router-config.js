@@ -27,6 +27,9 @@ import PaperPolicyIndex from '../page/paperPolicy/list.vue'
 
 import QuestionTypeIndex from '../page/questionType/list.vue'
 import QuestionBankIndex from '../page/questionBank/list.vue'
+
+import PermissionIndex from '../page/permission/list.vue'
+import PermissionManage from '../page/permission/manage.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
@@ -45,6 +48,9 @@ export default [
   {path: '/station', component: StationIndex},
   {path: '/branch', component: BranchIndex},
   {path: '/branch/manage', component: BranchAdd},
+  {path: '/permission', component: PermissionIndex},
+  {path: '/permission/manage', component: PermissionManage},
+
   {path: '/property', component: PropertyIndex},
   {path: '/role/add', component: RoleAdd},
   // {path:'', component: },

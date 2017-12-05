@@ -20,7 +20,7 @@ Vue.prototype.http = async function (url, queryData, timeout) {
   let response, res;
   try{
     console.log("开始请求： ", url);
-    //如果timeout无效，设置为3000ms
+    //如果timeout无效，设置为5000ms
     if(null == timeout || timeout == undefined || isNaN(timeout)){
       timeout = 5000;
     }

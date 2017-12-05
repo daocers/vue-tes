@@ -55,6 +55,7 @@
         width="90">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="toAuth(scope.$index, scope.row)">授权</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -89,6 +90,25 @@
       </div>
     </el-dialog>
 
+
+    <el-dialog title="授权" :visible.sync="authdialogShow">
+      <el-tree
+        :data="treeData"
+        show-checkbox
+        default-expand-all
+        :default-checked-keys="defaultChecked"
+        node-key="id"
+        ref="tree"
+        highlight-current
+        :props="defaultProps">
+      </el-tree>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" plain @click="cancelCommit()">取 消</el-button>
+        <el-button type="primary" @click="commitData()">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -100,6 +120,11 @@
   export default {
     data() {
       return {
+        defaultProps: {
+          children: 'children',
+          label: 'name',
+        },
+        defaultChecked:[],
         /**
          * 表格数据
          **/
@@ -201,7 +226,7 @@
        * 取消提交
        */
       cancelCommit: function () {
-        this.dataForEdit = {};
+        this.$refs['editForm'].clearValidate();
         this.dialogShow = false;
       },
       /**
@@ -217,15 +242,15 @@
             return false;
           } else {
             let res, addFlag;
-            if(this.dataForEdit.id){
+            if (this.dataForEdit.id) {
               res = await this.http("/role/api/update.do", this.dataForEdit);
               addFlag = false;
-            }else {
+            } else {
               res = await this.http("/role/api/save.do", this.dataForEdit);
               addFlag = true;
             }
             if (res) {
-              if(addFlag){
+              if (addFlag) {
 //                新增
                 this.$confirm('继续添加?查看列表?', '提示', {
                   confirmButtonText: '继续添加',
@@ -234,18 +259,24 @@
                   center: true
                 }).then(() => {
                   this.$refs['editForm'].resetFields();
+                  this.$refs['editForm'].clearValidate();
                   this.dialogShow = true;
                 }).catch(() => {
                   this.findByCondition();
 //        关闭对话框
                   this.dialogShow = false;
                 });
-              }else{
+              } else {
 //                更新
                 Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
                 //        以下代码变动无法触发页面渲染
                 //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
                 //          console.log(this.tableData)
+                this.findByCondition();
+                this.$refs['editForm'].clearValidate();
+
+//        关闭对话框
+                this.dialogShow = false;
               }
             } else if (res == false) {
               console.log("请求成功，处理失败");
