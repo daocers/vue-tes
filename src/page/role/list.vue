@@ -91,7 +91,7 @@
     </el-dialog>
 
 
-    <el-dialog title="授权" :visible.sync="authdialogShow">
+    <el-dialog title="授权" :visible.sync="authDialogShow">
       <el-tree
         :data="treeData"
         show-checkbox
@@ -124,6 +124,8 @@
           children: 'children',
           label: 'name',
         },
+        authDialogShow: false,
+        treeData: [],
         defaultChecked:[],
         /**
          * 表格数据
@@ -212,6 +214,13 @@
         console.log("唤起添加对话框");
         this.dataForEdit = {};
         this.dialogShow = true;
+      },
+
+      toAuth(idx, row){
+        console.log("授权")
+        this.dataForEdit = JSON.parse(JSON.stringify(row));
+        this.dataForEditIndex = idx;
+        this.authDialogShow = true;
       },
       /**
        * 唤起编辑对话框
@@ -323,6 +332,10 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+      let treeData = await this.http("/permission/api/getPermissionTree.do", null);
+      if(treeData){
+        this.treeData = treeData;
+      }
     }
   }
 </script>

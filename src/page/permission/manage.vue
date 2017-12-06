@@ -27,35 +27,24 @@
         <el-form v-show="addFormShow" label-position="left" :model="dataForAdd" :rules="rules" ref="addForm"
                  label-width="80px">
 
-          <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForEdit">
-            <el-form-item label="权限编码" prop="code">
-              <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="controller" prop="controller">
-              <el-input v-model="dataForAdd.controller" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="action" prop="action">
-              <el-input v-model="dataForAdd.action" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="httpMethod" prop="httpMethod">
-              <el-input v-model="dataForAdd.httpMethod" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="序号" prop="no">
-              <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="描述" prop="memo">
-              <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="类型" prop="type">
-              <el-select v-model="dataForAdd.type">
-                <el-option label="菜单" value="1"></el-option>
-                <el-option label="子菜单" value="2"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
+          <el-form-item label="权限编码" prop="code">
+            <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="序号" prop="no">
+            <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="memo">
+            <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="dataForAdd.type">
+              <el-option label="菜单" value="1"></el-option>
+              <el-option label="子菜单" value="2"></el-option>
+            </el-select>
+          </el-form-item>
 
           <div slot="footer" class="dialog-footer">
             <el-button @click="addDialogShow = false">取 消</el-button>
@@ -67,33 +56,24 @@
         <el-form v-show="editFormShow" label-position="left" :model="dataForEdit" :rules="rules" ref="editForm"
                  label-width="80px">
 
-          <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-            <el-form-item label="code" prop="code">
-              <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="name" prop="name">
-              <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="controller" prop="controller">
-              <el-input v-model="dataForEdit.controller" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="action" prop="action">
-              <el-input v-model="dataForEdit.action" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="httpMethod" prop="httpMethod">
-              <el-input v-model="dataForEdit.httpMethod" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="no" prop="no">
-              <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="memo" prop="memo">
-              <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="type" prop="type">
-              <el-input v-model="dataForEdit.type" placeholder="请输入"></el-input>
-            </el-form-item>
-          </el-form>
-
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="编码" prop="code">
+            <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="序号" prop="no">
+            <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="memo">
+            <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="dataForEdit.type">
+              <el-option label="菜单" value="1"></el-option>
+              <el-option label="子菜单" value="2"></el-option>
+            </el-select>
+          </el-form-item>
           <div slot="footer" class="dialog-footer">
             <el-button @click="editDialogShow = false">取 消</el-button>
             <el-button type="primary" @click="updateData()">确 定</el-button>
@@ -131,76 +111,47 @@
               {required: true, message: '请输入name', trigger: 'blur'},
               {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
+          url:
+            [
+              {required: true, message: '请输入url', trigger: 'blur'},
+              {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
+            ],
           code:
             [
               {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 20, message: '长度在3-20个字符', trigger: 'blur'}
+              {min: 3, max: 30, message: '长度在3-30个字符', trigger: 'blur'}
             ],
-          address:
-            [
-//              {required: true, message: '请输入address', trigger: 'blur'},
-            {min: 3, max: 10, message: '长度在3-100个字符', trigger: 'blur'}
-          ],
+          memo: [{max: 100, message: '长度在100个字符以内', trigger: 'blur'}],
+          type: [
+            {required: true, message: '请选择菜单类型', trigger: 'change'}
+          ]
 //          level:
 //            [
 //              {required: true, message: '请输入level', trigger: 'blur'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
 //          ],
-          superiorId:
-            [
-              {required: true, message: '请输入superiorId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-          ],
+//          superiorId:
+//            [
+//              {required: true, message: '请输入superiorId', trigger: 'blur'},
+////              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+//          ],
         }
       }
     },
     methods: {
-      setAddData: function () {
-        var node = this.$refs['tree'].getCurrentNode();
-        console.log("当前选中的node: ", node);
-        if (node == null) {
-          this.$message.warning("请选择上级菜单");
-        } else {
-          this.dataForAdd.superiorId = node.id;
-          this.dataForAdd.level = node.level + 1;
-          this.dataForAdd.superiorName = node.name;
-        }
-      },
-      setEditData: function () {
-        var node = this.$refs['tree'].getCurrentNode();
-        console.log("当前选中的node: ", node);
-        if (node == null) {
-          this.$message.warning("请选择上级机构");
-        } else {
-          this.dataForEdit.id = node.id ;
-          this.dataForEdit.name = node.name ;
-          this.dataForEdit.address = node.address ;
-          this.dataForEdit.code = node.code ;
-          this.dataForEdit.level = node.level ;
-        }
-      },
       /**
        * 展示添加表单
        */
       toAdd() {
-        if(this.permissionTree.length == 0){
-          this.dataForAdd.superiorId = null;
-          this.dataForAdd.level = 0;
-          this.dataForAdd.superiorName = null;
+        var node = this.$refs['tree'].getCurrentNode();
+        console.log("当前选中的node: ", node);
+        if (node == null) {
+          this.dataForAdd = {};
+        } else {
+          this.dataForAdd.superiorId = node.id;
           this.addBtnShow = false;
           this.addFormShow = true;
           this.editFormShow = false;
-        }else{
-          var node = this.$refs['tree'].getCurrentNode();
-          console.log("当前选中的node: ", node);
-          if (node == null) {
-            this.$message.warning("请选择上级机构");
-          } else {
-            this.setAddData();
-            this.addBtnShow = false;
-            this.addFormShow = true;
-            this.editFormShow = false;
-          }
         }
 
       },
@@ -213,7 +164,7 @@
         if (node == null) {
           this.$message.warning("请选择机构");
         } else {
-          this.setEditData();
+          this.dataForEdit = node;
           this.addBtnShow = false;
           this.addFormShow = false;
           this.editFormShow = true;
@@ -229,8 +180,8 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/save.do", this.dataForAdd);
-            if(res != null && res != undefined){
+            let res = await this.http("/permission/api/save.do", this.dataForAdd);
+            if (res != null && res != undefined) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
               currentNode.children.push(this.dataForAdd);
@@ -260,8 +211,8 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/update.do", this.dataForEdit);
-            if(res == true){
+            let res = await this.http("/permission/api/update.do", this.dataForEdit);
+            if (res == true) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
               currentNode.name = this.dataForEdit.name;
@@ -300,8 +251,8 @@
     },
     created: async function () {
       let data = await this.http("/permission/api/getPermissionTree.do", null);
-      if(data == null || data == undefined){
-        data  = [];
+      if (data == null || data == undefined) {
+        data = [];
       }
       console.log("data: ", data);
       this.permissionTree = data;

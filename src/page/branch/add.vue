@@ -138,7 +138,7 @@
         var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
         if (node == null) {
-          this.$message.warning("请选择上级机构");
+          this.$message.warning("请选择要编辑的机构");
         } else {
           this.dataForEdit.id = node.id ;
           this.dataForEdit.name = node.name ;
