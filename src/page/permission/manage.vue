@@ -28,10 +28,10 @@
                  label-width="80px">
 
           <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForEdit">
-            <el-form-item label="code" prop="code">
+            <el-form-item label="权限编码" prop="code">
               <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="name" prop="name">
+            <el-form-item label="名称" prop="name">
               <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item label="controller" prop="controller">
@@ -43,14 +43,17 @@
             <el-form-item label="httpMethod" prop="httpMethod">
               <el-input v-model="dataForAdd.httpMethod" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="no" prop="no">
+            <el-form-item label="序号" prop="no">
               <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="memo" prop="memo">
+            <el-form-item label="描述" prop="memo">
               <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="type" prop="type">
-              <el-input v-model="dataForAdd.type" placeholder="请输入"></el-input>
+            <el-form-item label="类型" prop="type">
+              <el-select v-model="dataForAdd.type">
+                <el-option label="菜单" value="1"></el-option>
+                <el-option label="子菜单" value="2"></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
 
