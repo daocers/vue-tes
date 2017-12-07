@@ -104,8 +104,8 @@
       </el-tree>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" plain @click="cancelCommit()">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button type="primary" plain @click="cancelAuth()">取 消</el-button>
+        <el-button type="primary" @click="commitAuth()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -126,7 +126,12 @@
         },
         authDialogShow: false,
         treeData: [],
-        defaultChecked:[],
+        defaultChecked: [],
+
+        /**
+         * 被授权的角色id
+         */
+        authRoleId: '',
         /**
          * 表格数据
          **/
@@ -216,9 +221,10 @@
         this.dialogShow = true;
       },
 
-      toAuth(idx, row){
+      toAuth(idx, row) {
         console.log("授权")
         this.dataForEdit = JSON.parse(JSON.stringify(row));
+        this.authRoleId = row.id;
         this.dataForEditIndex = idx;
         this.authDialogShow = true;
       },
@@ -230,6 +236,30 @@
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.dataForEditIndex = idx;
         this.dialogShow = true;
+      },
+
+      cancelAuth: function () {
+        //            设置勾选，清空所有已选
+        this.$refs.tree.setCheckedKeys([], false);
+        this.authDialogShow = false;
+      },
+
+      commitAuth: async function () {
+        let checkedIds = this.$refs.tree.getCheckedKeys();
+        if (!checkedIds || checkedIds.length == 0) {
+          this.$message.warning("请选择权限菜单");
+        } else {
+          let res = await this.http("/role/api/authorize.do?roleId=" + this.authRoleId, checkedIds);
+          if (res) {
+            this.dataForEdit.permissionIdList = checkedIds;
+            this.$message.success("授权成功");
+          } else {
+            this.$message.error("授权失败");
+          }
+          //            设置勾选，清空所有已选
+          this.$refs.tree.setCheckedKeys([], false);
+          this.authDialogShow = false;
+        }
       },
       /**
        * 取消提交
@@ -333,7 +363,7 @@
       console.log("created....")
       this.findByCondition();
       let treeData = await this.http("/permission/api/getPermissionTree.do", null);
-      if(treeData){
+      if (treeData) {
         this.treeData = treeData;
       }
     }
