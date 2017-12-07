@@ -14,7 +14,7 @@
         >
         </el-tree>
       </el-col>
-      <el-col :span="8" :offset="2">
+      <el-col :span="12" :offset="2">
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <span>操作提示: 选中菜单，新增下级菜单/编辑当前菜单</span>
@@ -26,30 +26,37 @@
 
         <el-form v-show="addFormShow" label-position="left" :model="dataForAdd" :rules="rules" ref="addForm"
                  label-width="80px">
+          <el-form-item label="上级菜单" prop="superiorName">
+            <el-input disabled v-model="dataForAdd.superiorName" placeholder="请输入"></el-input>
+          </el-form-item>
 
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+          </el-form-item>
           <el-form-item label="权限编码" prop="code">
             <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="dataForAdd.type" placeholder="请选择菜单类型" type="number">
+              <el-option label="菜单" :value="1"></el-option>
+              <el-option label="子菜单" :value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="URL" prop="url">
+            <el-input :disabled="dataForAdd.type == 1" v-model="dataForAdd.url" placeholder="请输入url"></el-input>
+          </el-form-item>
+
+          <el-form-item label="描述" prop="memo">
+            <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="序号" prop="no">
             <el-input v-model="dataForAdd.no" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="描述" prop="memo">
-            <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="类型" prop="type">
-            <el-select v-model="dataForAdd.type">
-              <el-option label="菜单" value="1"></el-option>
-              <el-option label="子菜单" value="2"></el-option>
-            </el-select>
-          </el-form-item>
 
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="addDialogShow = false">取 消</el-button>
-            <el-button type="primary" @click="updateData()">确 定</el-button>
-          </div>
+          <el-form-item>
+            <el-button type="primary" @click="add">添加</el-button>
+            <el-button type="info" plain @click="cancel">取消</el-button>
+          </el-form-item>
 
         </el-form>
 
@@ -62,23 +69,27 @@
           <el-form-item label="编码" prop="code">
             <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="序号" prop="no">
-            <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
+          <el-form-item label="类型" prop="type">
+            <el-select v-model="dataForEdit.type" type="number">
+              <el-option label="菜单" :value="1"></el-option>
+              <el-option label="子菜单" :value="2"></el-option>
+            </el-select>
           </el-form-item>
+          <el-form-item label="URL" prop="url">
+            <el-input :disabled="dataForEdit.type == 1" v-model="dataForEdit.url" placeholder="请输入url"></el-input>
+          </el-form-item>
+
           <el-form-item label="描述" prop="memo">
             <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="类型" prop="type">
-            <el-select v-model="dataForEdit.type">
-              <el-option label="菜单" value="1"></el-option>
-              <el-option label="子菜单" value="2"></el-option>
-            </el-select>
+          <el-form-item label="序号" prop="no">
+            <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
           </el-form-item>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editDialogShow = false">取 消</el-button>
-            <el-button type="primary" @click="updateData()">确 定</el-button>
-          </div>
 
+          <el-form-item>
+            <el-button type="primary" @click="save">保存</el-button>
+            <el-button type="info" plain @click="cancel">取消</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -91,6 +102,40 @@
 <script>
   export default {
     data() {
+      /**
+       * 校验url
+       * @param rule
+       * @param value
+       * @param callback
+       */
+      var checkUrl = (rule, value, callback) => {
+        console.log("value:::", value);
+        let url, type;
+        if (this.addFormShow) {
+          console.log("add")
+          url = this.dataForAdd.url;
+          type = this.dataForAdd.type;
+        } else {
+          console.log("edit")
+          url = this.dataForEdit.url;
+          type = this.dataForEdit.type;
+        }
+        if (url) {
+          url = url.trim();
+        }
+        console.log("url::", url);
+        console.log("type::", type);
+        if (type == 2) {
+          if (!url || url.length == 0) {
+            callback(new Error("url不能为空"));
+          } else if (url.length > 100) {
+            callback(new Error("url长度长度不能超过100"));
+          } else {
+            callback();
+          }
+        }
+        callback();
+      }
       return {
 //        添加按钮是否显示
         addBtnShow: true,
@@ -104,7 +149,12 @@
           label: 'name',
         },
         dataForEdit: {},
-        dataForAdd: {},
+        dataForAdd: {
+//          将字段添加到vue监控中
+          type: '',
+          superiorId: '',
+          superiorName: '',
+        },
         rules: {
           name:
             [
@@ -113,9 +163,10 @@
             ],
           url:
             [
-              {required: true, message: '请输入url', trigger: 'blur'},
-              {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
-            ],
+              {validator: checkUrl, trigger: 'blur'},
+//              {required: true, message: '请输入url', trigger: 'blur'},
+//              {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
+          ],
           code:
             [
               {required: true, message: '请输入code', trigger: 'blur'},
@@ -123,18 +174,8 @@
             ],
           memo: [{max: 100, message: '长度在100个字符以内', trigger: 'blur'}],
           type: [
-            {required: true, message: '请选择菜单类型', trigger: 'change'}
+            {type: 'number', required: true, message: '请选择菜单类型', trigger: 'change'}
           ]
-//          level:
-//            [
-//              {required: true, message: '请输入level', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//          ],
-//          superiorId:
-//            [
-//              {required: true, message: '请输入superiorId', trigger: 'blur'},
-////              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//          ],
         }
       }
     },
@@ -146,13 +187,14 @@
         var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
         if (node == null) {
-          this.dataForAdd = {};
+          this.dataForAdd = {superiorId: 0, superiorName: '无'};
         } else {
+          this.dataForAdd.superiorName = node.name;
           this.dataForAdd.superiorId = node.id;
-          this.addBtnShow = false;
-          this.addFormShow = true;
-          this.editFormShow = false;
         }
+        this.addBtnShow = false;
+        this.addFormShow = true;
+        this.editFormShow = false;
 
       },
       /**
@@ -164,7 +206,14 @@
         if (node == null) {
           this.$message.warning("请选择机构");
         } else {
-          this.dataForEdit = node;
+          this.dataForEdit = JSON.parse(JSON.stringify(node))
+//          this.dataForEdit.id = node.id;
+//          this.dataForEdit.name = node.name;
+//          this.dataForEdit.code = node.code;
+//          this.dataForEdit.type = node.type;
+//          this.dataForEdit.url = node.url;
+//          this.dataForEdit.memo = node.memo;
+//          this.dataForEdit.no = node.no;
           this.addBtnShow = false;
           this.addFormShow = false;
           this.editFormShow = true;
@@ -184,7 +233,17 @@
             if (res != null && res != undefined) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
-              currentNode.children.push(this.dataForAdd);
+
+//              子节点，加入到对应的子节点中
+              if (currentNode) {
+                currentNode.children.push(JSON.parse(JSON.stringify(this.dataForAdd)));
+              } else {
+//                添加的根节点，直接添加到树组件数据中
+                this.permissionTree.push(JSON.parse(JSON.stringify(this.dataForAdd)));
+              }
+
+              this.$refs['addForm'].resetFields();
+              this.$refs['addForm'].clearValidate();
               this.addBtnShow = true;
               this.addFormShow = false;
             }
@@ -197,7 +256,9 @@
        */
       cancel() {
         this.$refs['addForm'].resetFields();
+        this.$refs['addForm'].clearValidate();
         this.$refs['editForm'].resetFields();
+        this.$refs['editForm'].clearValidate();
         this.addFormShow = false;
         this.addBtnShow = true;
         this.editFormShow = false;
@@ -213,17 +274,24 @@
           } else {
             let res = await this.http("/permission/api/update.do", this.dataForEdit);
             if (res == true) {
-              this.dataForAdd.id = res;
-              var currentNode = this.$refs['tree'].getCurrentNode();
-              currentNode.name = this.dataForEdit.name;
-              currentNode.address = this.dataForEdit.address;
-              currentNode.code = this.dataForEdit.code;
+              console.log("this.dataForEdit:::", this.dataForEdit)
+              var node = this.$refs['tree'].getCurrentNode();
+              node.name = this.dataForEdit.name;
+              node.code = this.dataForEdit.code;
+              node.type = this.dataForEdit.type;
+              node.url = this.dataForEdit.url;
+              node.memo = this.dataForEdit.memo;
+              node.no = this.dataForEdit.no;
+
+              this.$refs['editForm'].resetFields();
+              this.$refs['editForm'].clearValidate();
               this.addBtnShow = true;
               this.editFormShow = false;
             }
           }
         });
       },
+
       /**
        * 取消编辑
        */
@@ -241,10 +309,12 @@
         console.log("节点被点击： ", node);
         if (this.addFormShow) {
           console.log("add ... ", node);
-          this.setAddData();
+          this.dataForAdd.superiorId = node.id;
+          this.dataForAdd.superiorName = node.name;
+
         } else if (this.editFormShow) {
           console.log("edit ... ", node);
-          this.setEditData();
+          this.cancel();
         }
       }
 
