@@ -30,6 +30,9 @@ import QuestionBankIndex from '../page/questionBank/list.vue'
 
 import PermissionIndex from '../page/permission/list.vue'
 import PermissionManage from '../page/permission/manage.vue'
+import ExamEntrance from '../page/exam/entrance.vue'
+import ExamNotice from '../page/exam/notice.vue'
+import ExamMain from '../page/exam/main.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
@@ -91,6 +94,9 @@ export default [
   {path: '/questionType', component:QuestionTypeIndex},
   {path: '/questionBank', component:QuestionBankIndex},
   {path: '/paperPolicy', component:PaperPolicyIndex},
+  {path: '/exam', component: ExamEntrance},
+  {path: '/exam/notice', component: ExamNotice},
+  {path: '/exam/main', component: ExamMain},
 
 
   // {path: '/scene/setting', component: sceneSetting}

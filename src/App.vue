@@ -9,9 +9,9 @@
         学员|教师|管理员
         <!--顶部导航-->
         <!--<el-menu default-active="5" class="el-menu-demo" mode="horizontal" @select="">-->
-          <!--<el-menu-item index="1">学员</el-menu-item>-->
-          <!--<el-menu-item index="2">我是教师</el-menu-item>-->
-          <!--<el-menu-item index="3">我是管理员</el-menu-item>-->
+        <!--<el-menu-item index="1">学员</el-menu-item>-->
+        <!--<el-menu-item index="2">我是教师</el-menu-item>-->
+        <!--<el-menu-item index="3">我是管理员</el-menu-item>-->
         <!--</el-menu>-->
       </el-col>
       <el-col :span=4 :offset=6>
@@ -65,6 +65,11 @@
               <template slot="title">选项4</template>
               <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
               <el-menu-item index="/department">部门</el-menu-item>
+            </el-submenu>
+            <el-submenu index="1-5">
+              <template slot="title">选项5</template>
+              <el-menu-item index="/department">部门</el-menu-item>
+              <el-menu-item index="/exam">考试</el-menu-item>
             </el-submenu>
           </el-submenu>
           <el-menu-item index="2">
@@ -199,118 +204,9 @@
     text-color: "#fff";
     height: 50px;
   }
-  .view{
+
+  .view {
     margin: 10px;
   }
 </style>
 
-
-<!--<template>-->
-<!--<div id="app" class="demo">-->
-<!--message: {{message}}-->
-<!--<el-row :gutter="20">-->
-<!--<el-col :span="16">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--<el-col :span="8">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--</el-row>-->
-<!--<el-row :gutter="20">-->
-<!--<el-col :span="8">-->
-<!--<div class="grid-content bg-purple">-->
-<!--<el-col :span="12">-->
-<!--<h5>自定义颜色</h5>-->
-<!--<div id="leftMenu">-->
-
-<!--</div>-->
-<!--</el-col>-->
-<!--</div>-->
-<!--</el-col>-->
-<!--<el-col :span="8">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--<el-col :span="4">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--<el-col :span="4">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--</el-row>-->
-<!--<el-row :gutter="20">-->
-<!--<el-col :span="4">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--<el-col :span="16">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--<el-col :span="4">-->
-<!--<div class="grid-content bg-purple"></div>-->
-<!--</el-col>-->
-<!--</el-row>-->
-<!--</div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--//  import Vue from 'vue'-->
-<!--//-->
-<!--//  new Vue({-->
-<!--//    el: '#app',-->
-<!--//    data: {-->
-<!--//      message: 'hello Vue.js!'-->
-<!--//    }-->
-<!--//  })-->
-<!--import ElRow from "element-ui/packages/row/src/row";-->
-<!--import ElCol from "element-ui/packages/col/src/col";-->
-<!--import leftMenu from './components/left-menu.vue'-->
-<!--export default {-->
-<!--components: {-->
-<!--ElCol,-->
-<!--ElRow,-->
-<!--leftMenu-->
-<!--},-->
-<!--data() {-->
-<!--return {-->
-<!--message: 'hello Vue.js'-->
-<!--}-->
-<!--},-->
-<!--}-->
-<!--</script>-->
-
-
-<!--<style>-->
-<!--.el-row {-->
-<!--margin-bottom: 20px;-->
-
-<!--&-->
-<!--:last-child {-->
-<!--margin-bottom: 0;-->
-<!--}-->
-
-<!--}-->
-<!--.el-col {-->
-<!--border-radius: 4px;-->
-<!--}-->
-
-<!--.bg-purple-dark {-->
-<!--background: #99a9bf;-->
-<!--}-->
-
-<!--.bg-purple {-->
-<!--background: #d3dce6;-->
-<!--}-->
-
-<!--.bg-purple-light {-->
-<!--background: #e5e9f2;-->
-<!--}-->
-
-<!--.grid-content {-->
-<!--border-radius: 4px;-->
-<!--min-height: 36px;-->
-<!--}-->
-
-<!--.row-bg {-->
-<!--padding: 10px 0;-->
-<!--background-color: #f9fafc;-->
-<!--}-->
-<!--</style>-->
