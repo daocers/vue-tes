@@ -30,9 +30,14 @@ import QuestionBankIndex from '../page/questionBank/list.vue'
 
 import PermissionIndex from '../page/permission/list.vue'
 import PermissionManage from '../page/permission/manage.vue'
+
+import ExamIndex from '../page/exam/index.vue'
 import ExamEntrance from '../page/exam/entrance.vue'
 import ExamNotice from '../page/exam/notice.vue'
 import ExamMain from '../page/exam/main.vue'
+
+import SceneMyJoin from '../page/scene/myJoin.vue'
+import SceneMyOpen from '../page/scene/myOpen.vue'
 // import  from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
 // import Station from '../page/station/list.vue'
@@ -91,12 +96,15 @@ export default [
     ]
 
   },
-  {path: '/questionType', component:QuestionTypeIndex},
-  {path: '/questionBank', component:QuestionBankIndex},
-  {path: '/paperPolicy', component:PaperPolicyIndex},
+  {path: '/questionType', component: QuestionTypeIndex},
+  {path: '/questionBank', component: QuestionBankIndex},
+  {path: '/paperPolicy', component: PaperPolicyIndex},
   {path: '/exam', component: ExamEntrance},
+  {path: '/exam/index', component: ExamIndex},
   {path: '/exam/notice', component: ExamNotice},
   {path: '/exam/main', component: ExamMain},
+  {path: '/scene/myJoin', component: SceneMyJoin},
+  {path: '/scene/myOpen', component: SceneMyOpen},
 
 
   // {path: '/scene/setting', component: sceneSetting}

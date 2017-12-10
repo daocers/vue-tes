@@ -25,7 +25,7 @@
     },
     methods: {
       toNotice(){
-        this.$router.push("/main.vue/notice");
+        this.$router.push("/exam/notice");
       }
     },
     created: function () {

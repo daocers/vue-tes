@@ -70,6 +70,8 @@
               <template slot="title">选项5</template>
               <el-menu-item index="/department">部门</el-menu-item>
               <el-menu-item index="/exam">考试</el-menu-item>
+              <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>
+              <el-menu-item index="/scene/myOpen">我开场的</el-menu-item>
             </el-submenu>
           </el-submenu>
           <el-menu-item index="2">
@@ -147,7 +149,8 @@
   #app {
     min-width: 1200px;
     margin: 0 auto;
-    font-family: "Helvetica Neue", "PingFang SC", Arial, sans-serif;
+    /*font-family: "Microsoft YaHei UI"*/
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   }
 
   /* 头部导航 */
