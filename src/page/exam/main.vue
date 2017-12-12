@@ -39,8 +39,8 @@
               <el-radio label="C">C</el-radio>
               <el-radio label="D">D</el-radio>
             </el-radio-group>
-            <el-checkbox-group  v-show="currentQuestion.typeCode == 'multi'"
-              v-model="multiAnswer">
+            <el-checkbox-group v-show="currentQuestion.typeCode == 'multi'"
+                               v-model="multiAnswer">
               <el-checkbox label="A">A</el-checkbox>
               <el-checkbox label="B">B</el-checkbox>
               <el-checkbox label="C">C</el-checkbox>
@@ -49,7 +49,7 @@
             </el-checkbox-group>
 
             <el-checkbox-group v-show="currentQuestion.typeCode == 'judge'"
-              v-model="judgeAnswer" >
+                               v-model="judgeAnswer">
               <el-checkbox label="T">正确</el-checkbox>
               <el-checkbox label="F">错误</el-checkbox>
             </el-checkbox-group>
@@ -95,73 +95,138 @@
         singleAnswer: '',
         multiAnswer: [],
         judgeAnswer: [],
-        timeLeft: '01:10:09',
+//        剩余时间，单位：秒
+        timeLeft: 1000,
+//        定时器上显示的信息
+        timerInfo: '',
 
-        questionList:[
-          {no: '单选第一题', answer: ''},
-          {no: '单选第二题', answer: ''},
-          {no: '单选第三题', answer: ''},
-          {no: '多选第一题', answer: ''},
+        endTime: null,
+
+        questionList: [
+          {no: '单选第一题', id: '', answer: ''},
+          {no: '单选第二题', id: '', answer: ''},
+          {no: '单选第三题', id: '', answer: ''},
+          {no: '多选第一题', id: '', answer: ''},
         ]
       }
     },
     methods: {
+      changeTime() {
+        let h, m, s;
+//        还没有截止
+        if (this.endTime.getTime() > new Date().getTime()) {
+          h = Math.floor(t / 1000 / 60 / 60 % 24);
+          m = Math.floor(t / 1000 / 60 % 60);
+          s = Math.floor(t / 1000 % 60);
+
+          if(h < 10){
+            h = '0' + h;
+          }
+          if(m < 10){
+            m = '0' + m;
+          }
+          if(s < 10){
+            s = '0' + s;
+          }
+          this.timerInfo = h + '时' + m + '分' + s + '秒';
+
+        }
+
+
+      },
       /**
        * 下一题
        */
-      toNext(){
+      toNext() {
 
       },
       /**
        * 上一题
        */
-      toPrev(){
+      toPrev() {
 
       },
       /**
        * 提交试卷
        */
-      commitPaper(){
+      async commitPaper() {
         console.log("提交试卷！");
+        let res = await this.http("/exam/api/commitPaper.do?paperId=" + this.paperId, this.questionList);
+        if (res) {
+          this.$notify.success({
+            title: "成功",
+            message: '交卷成功',
+            duration: 0,
+          });
+        } else {
+          this.$notify.error({
+            title: "失败",
+            message: '试卷提交失败，请联系管理员',
+            duration: 0,
+          });
+        }
+
+        this.endTime = new Date(new Date().getTime() + this.timeLeft);
       },
     },
     created: async function () {
       console.log("created");
-      let questionList = await this.http("/paper/api/getQuestionList.do?paperId=" + this.paperId);
-      if(questionList){
+      let questionList = await this.http("/exam/api/getQuestionList.do?paperId=" + this.paperId);
+      if (questionList) {
         this.questionList = questionList;
-      }else{
+      } else {
         this.$notify.error({
           title: '错误',
           message: '获取试题信息失败',
           duration: 0
         })
       }
+
+//      定时器
+      setInterval(function () {
+        if(this.endTime.getTime() > new Date().getTime()){
+          this.changeTime();
+        }else{
+//          清除定时器
+          clearInterval();
+//          提交试卷
+          this.$alert('考试时间用完，提交试卷', '时间到！', {
+            confirmButtonText: '确定',
+            callback: action => {
+//              this.$message({
+//                type: 'info',
+//                message: `action: ${ action }`
+//              });
+            }
+          });
+        }
+      }, 1000);
     }
   }
 </script>
 
 
 <style>
-  input.el-input__inner{
+  input.el-input__inner {
     color: cornflowerblue;
     background-color: rgba(64, 158, 255, 0.32);
   }
 
-  .title{
+  .title {
     margin-bottom: 10px;
   }
 
-  .content{
+  .content {
     min-height: 300px;
     max-height: 600px;
     margin-left: 15px;
   }
 
-  .content-item{
+  .content-item {
     margin-bottom: 5px;
   }
-  .answer{
+
+  .answer {
 
   }
 </style>
