@@ -9,7 +9,7 @@
         </el-form-item>
         <div style="float: right">
           <el-form-item>
-            <el-input v-model="timeLeft" disabled style="width: 200px;">
+            <el-input v-model="timerInfo" disabled style="width: 200px; color: #3091F2">
               <template slot="prepend">剩余时间</template>
             </el-input>
           </el-form-item>
@@ -100,7 +100,7 @@
 //        定时器上显示的信息
         timerInfo: '',
 
-        endTime: null,
+        endTime: new Date(),
 
         questionList: [
           {no: '单选第一题', id: '', answer: ''},
@@ -115,6 +115,7 @@
         let h, m, s;
 //        还没有截止
         if (this.endTime.getTime() > new Date().getTime()) {
+          let t = this.endTime.getTime() - new Date().getTime();
           h = Math.floor(t / 1000 / 60 / 60 % 24);
           m = Math.floor(t / 1000 / 60 % 60);
           s = Math.floor(t / 1000 % 60);
@@ -128,7 +129,7 @@
           if(s < 10){
             s = '0' + s;
           }
-          this.timerInfo = h + '时' + m + '分' + s + '秒';
+          this.timerInfo = h + ':' + m + ':' + s;
 
         }
 
@@ -181,16 +182,21 @@
           duration: 0
         })
       }
+//      let end = new Date();
+//      end.setMinutes(59);
+//      this.endTime = end;
 
+      this.endTime = new Date(2017, 11, 14);
 //      定时器
+      let _this = this;
       setInterval(function () {
-        if(this.endTime.getTime() > new Date().getTime()){
-          this.changeTime();
+        if(_this.endTime.getTime() > new Date().getTime()){
+          _this.changeTime();
         }else{
 //          清除定时器
           clearInterval();
 //          提交试卷
-          this.$alert('考试时间用完，提交试卷', '时间到！', {
+          _this.$alert('考试时间用完，提交试卷', '时间到！', {
             confirmButtonText: '确定',
             callback: action => {
 //              this.$message({
