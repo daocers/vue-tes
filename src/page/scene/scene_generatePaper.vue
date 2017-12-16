@@ -3,7 +3,7 @@
     <el-row style="margin-bottom: 30px;">
       <el-form>
         <el-form-item label="题库">
-          <el-select v-model="$parent.$data.scene.questionBankId"  placeholder="请指定本场考试所用题库" size="medium">
+          <el-select v-model="$parent.$data.scene.questionBankId" placeholder="请指定本场考试所用题库" size="medium">
             <el-option v-for="bank in questionBankList" :key="bank.id" :value="bank.id" :label="bank.name">
             </el-option>
           </el-select>
@@ -12,7 +12,15 @@
       </el-form>
 
 
-      <el-tag style="margin-top: 10px;">已选策略</el-tag>
+      <el-row  style="margin-top: 10px;">
+        <el-tag style="margin-right: 30px;">已选策略</el-tag>
+        <!--<span style="color: red;" v-show="paperPolicyAvailable == false">当前试题策略无法生成试卷</span>-->
+        <el-tag type="danger"  v-show="paperPolicyAvailable == false"><i class="el-icon-error"></i> 当前试题策略无法生成试卷</el-tag>
+        <el-tag type="success" style="color: green;" v-show="paperPolicyAvailable == true"><i class="el-icon-success"></i>当前策略可用</el-tag>
+        <el-button v-show="$parent.$data.scene.questionBankId && $parent.$data.scene.paperPolicyId"
+                   type="warning" @click="checkPaperPolicy" style="float: right" size="medium">校验试题策略</el-button>
+      </el-row>
+
 
       <!--已经选择的试卷策略-->
       <el-table
@@ -56,7 +64,7 @@
       </el-table>
     </el-row>
 
-    <el-row style="border: 1px solid dodgerblue">
+    <el-row style="border: 1px solid cornflowerblue; padding: 5px">
       <el-form :inline="true" ref="queryPolicyForm" :model="queryForm" label-width="80px" size="small">
         <el-form-item label="策略名称">
           <el-input v-model="queryForm.name" placeholeder="输入策略名称"></el-input>
@@ -147,6 +155,10 @@
     components: {ElRow},
     data: function () {
       return {
+        /**
+         * 试题策略是否可用
+         */
+        paperPolicyAvailable : null,
         rowStyle: {background: '#f0f9eb'},
         /**
          * 策略查询参数
@@ -182,6 +194,25 @@
     },
     methods: {
       /**
+       * 校验试题策略是否有效
+       */
+      async checkPaperPolicy() {
+        let paperPolicyId = this.$parent.$data.scene.paperPolicyId;
+        let questionBankId = this.$parent.$data.scene.questionBankId;
+        if (paperPolicyId) {
+          let res = await this.http("/paperPolicy/api/checkPaperPolicy.do?paperPolicyId=" +
+            paperPolicyId + "&questionBankId=" + questionBankId);
+          if(res == true){
+            this.paperPolicyAvailable = true;
+          }else if(res == false){
+            this.paperPolicyAvailable = false;
+          }else{
+            this.paperPolicyAvailable = null;
+          }
+
+        }
+      },
+      /**
        * 查询
        */
       findByCondition: async function () {
@@ -206,6 +237,8 @@
        * @param oldCurrentRow
        */
       handleCurrentRowChange: function (currentRow, oldCurrentRow) {
+//        清除试题策略的校验信息
+        this.paperPolicyAvailable = null;
         this.$parent.$data.scene.checkedPaperPolicy = [currentRow];
 
         this.$parent.$data.scene.paperPolicyId = currentRow.id;
@@ -224,7 +257,7 @@
     created: async function () {
       console.log("paper created")
       let data = await this.http("/questionBank/api/findAll.do");
-      if(data){
+      if (data) {
         this.questionBankList = data;
       }
     }

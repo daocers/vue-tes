@@ -1,9 +1,23 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
+      <el-form-item label="题库" prop="questionBankId">
+        <el-select v-model="queryForm.questionBankId">
+          <el-option v-for="bank in questionBankList"
+                     :key="bank.id" :label="bank.name" :value="bank.id"></el-option>
+        </el-select>
       </el-form-item>
+      <el-form-item label="题型" prop="questionTypeId">
+        <el-select v-model="queryForm.questionTypeId">
+          <el-option v-for="type in questionTypeList"
+                     :key="type.id" :label="type.name" :value="type.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="题目" prop="title">
+        <el-input v-model="queryForm.title" placeholder="支持模糊"></el-input>
+      </el-form-item>
+
+
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
         <el-button type="default" plain @click="reset()">重置</el-button>
@@ -352,7 +366,9 @@
          * 查询参数
          **/
         queryForm: {
-          name: null,
+          title: null,
+          questionTypeId: null,
+          questionBankId: null,
           pageSize: 10,
           pageNum: 1,
         },
