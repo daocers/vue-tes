@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-row :gutter=5 class="header">
+    <el-row :gutter=0 class="header">
       <el-col :span=4>
         <!--logo-->
         logo
@@ -15,7 +15,7 @@
         <!--</el-menu>-->
       </el-col>
       <el-col :span=4 :offset=6>
-        <div style="text-align: right; font-size: 15px; vertical-align: middle; margin-right: 10px;">
+        <div style="text-align: right; font-size: 15px; vertical-align: middle; padding-right: 10px;">
           <el-dropdown>
             <i class="el-icon-menu" style="margin-right: 15px; color: white"></i>
             <el-dropdown-menu slot="dropdown">
@@ -28,12 +28,12 @@
         </div>
       </el-col>
     </el-row>
-    <el-row :gutter=5>
-      <el-col :span=4 style=" min-height: 600px;">
+    <el-row :gutter=0>
+      <el-col :span=4>
         <el-menu
           :router="true"
           default-active="2"
-          class="el-menu-vertical-demo"
+          v-bind:style="menuClass"
           @open="handleOpen"
           @close="handleClose"
           background-color="#545c64"
@@ -90,9 +90,6 @@
       </el-col>
     </el-row>
 
-    <div style="position: relative;height: 60px;width: 100%;">
-
-    </div>
 
     <!--<main>-->
     <!--<div class="main-left">-->
@@ -127,7 +124,12 @@
     name: 'app',
     data: function () {
       return {
-        active: true
+        heightInfo: 500,
+        active: true,
+        menuClass: {
+          width: '240px',
+          height: '500px',
+        }
       }
     },
     methods: {
@@ -136,7 +138,16 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
-      }
+      },
+
+    },
+    created: function () {
+      let height = document.documentElement.clientHeight;
+      console.log("height:::", height);
+//      this.heightInfo = parseInt(height) - 50;
+      let res = parseInt(height) - 50 + 'px';
+      console.log("res:::", res);
+      this.menuClass.height = res;
     }
   }
 </script>
@@ -150,7 +161,7 @@
     min-width: 1200px;
     margin: 0 auto;
     /*font-family: "Microsoft YaHei UI"*/
-    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   }
 
   /* 头部导航 */
@@ -195,7 +206,7 @@
     -ms-flex: 1;
     flex: 1;
     background-color: #fff;
-    padding: 50px 70px;
+    /*padding: 50px 70px;*/
   }
 
   main .el-menu {
