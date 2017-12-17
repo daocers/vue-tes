@@ -30,6 +30,7 @@
     </el-row>
     <el-row :gutter=0>
       <el-col :span=4>
+        <!--:xl="3" :lg="3" :md="4" :sm="3" :xs="3"-->
         <el-menu
           :router="true"
           default-active="2"
@@ -85,25 +86,12 @@
         </el-menu>
       </el-col>
       <el-col :span="20">
+        <!--:xl="21" :lg="21" :md="20" :sm="21" :xs="21"-->
         <!--视图区-->
         <router-view class="view"></router-view>
       </el-col>
     </el-row>
 
-
-    <!--<main>-->
-    <!--<div class="main-left">-->
-    <!--<el-menu default-active="/activePublic" class="el-menu-vertical-demo" :router="true">-->
-    <!--<el-menu-item index="/leftMenu" :class="{'isActive': 'active'}">活动</el-menu-item>-->
-    <!--<el-menu-item index="/scene/setting" :class="{'isActive':'!active'}">系统管理</el-menu-item>-->
-    <!--</el-menu>-->
-    <!--</div>-->
-
-    <!--&lt;!&ndash;右侧内容区&ndash;&gt;-->
-    <!--<div class="main-right">-->
-
-    <!--</div>-->
-    <!--</main>-->
   </div>
 </template>
 
@@ -158,7 +146,7 @@
   }
 
   #app {
-    min-width: 1200px;
+    /*min-width: 1200px;*/
     margin: 0 auto;
     /*font-family: "Microsoft YaHei UI"*/
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
@@ -167,7 +155,7 @@
   /* 头部导航 */
   header {
     z-index: 1000;
-    min-width: 1200px;
+    /*min-width: 1200px;*/
     transition: all 0.5s ease;
     border-top: solid 4px #3091F2;
     background-color: #fff;
@@ -220,7 +208,7 @@
   }
 
   .view {
-    margin: 10px;
+    padding: 10px;
   }
 </style>
 

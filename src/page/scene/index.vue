@@ -30,6 +30,10 @@
     name: 'sceneIndex',
     data: function () {
       return {
+        /**
+         * 试卷策略
+         */
+        paperPolicyAvailable: null,
         preStep: false,
 //        nextStep: true,
         commit: false,
@@ -115,8 +119,27 @@
         } else if (this.step == 2) {
 //          试卷策略必选
           if (this.scene.paperPolicyId) {
-            this.step++;
-            this.$router.push({path: '/scene/user'});
+            console.log("available:::", this.paperPolicyAvailable)
+            let message = '';
+            if (this.paperPolicyAvailable == true) {
+
+            } else if (this.paperPolicyAvailable == false) {
+              message = "试卷策略校验不通过，无法生成考卷，请核对"
+            } else {
+              message = "请校验试卷策略";
+            }
+            if (message != '') {
+              this.$notify({
+                title: '警告',
+                message: message,
+                type: 'warning'
+              });
+              return false;
+            } else {
+              this.step++;
+              this.$router.push({path: '/scene/user'});
+            }
+
           } else {
             this.$notify({
               title: '警告',

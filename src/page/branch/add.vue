@@ -1,6 +1,6 @@
 <template>
   <div id="add">
-    <el-row :gutter="20">
+    <el-row :gutter="0">
       <el-col :span="8" style="border: 1px solid gainsboro">
         <el-tree
           ref="tree"
