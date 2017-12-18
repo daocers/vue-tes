@@ -61,6 +61,7 @@
               <el-menu-item index="/branch">机构</el-menu-item>
               <el-menu-item index="/department">部门</el-menu-item>
               <el-menu-item index="/station">岗位</el-menu-item>
+              <el-menu-item index="/user">用户</el-menu-item>
             </el-menu-item-group>
             <el-submenu index="1-4">
               <template slot="title">选项4</template>
