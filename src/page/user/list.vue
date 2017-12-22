@@ -1,8 +1,11 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="姓名" prop="name">
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="员工号" prop="username">
+        <el-input v-model="queryForm.username" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
@@ -39,27 +42,34 @@
         label="姓名">
       </el-table-column>
       <el-table-column
-        prop="branchId"
+        prop="branchName"
         label="机构">
       </el-table-column>
       <el-table-column
-        prop="departmentId"
+        prop="departmentName"
         label="部门">
       </el-table-column>
       <el-table-column
-        prop="stationId"
+        prop="stationName"
         label="岗位">
       </el-table-column>
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == 1">启用</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+          <el-tag size="small" v-if="scope.row.status == 3">缺考</el-tag>
+          <el-tag size="small" type="warning" v-if="scope.row.status == 4">审核中</el-tag>
+          <el-tag size="small" type="danger" v-if="scope.row.status == 5">作弊</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="createTime"
         label="创建时间">
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        prop="createUserName"
         label="创建人">
       </el-table-column>
 
@@ -86,14 +96,14 @@
 
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="用户名" prop="username"  :label-width="labelWidth">
+      <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
+        <el-form-item label="用户名" prop="username" :label-width="labelWidth">
           <el-input disabled v-model="dataForEdit.username" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idNo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.idNo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="姓名" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="机构" prop="branchId" :label-width="labelWidth">
@@ -116,12 +126,12 @@
     </el-dialog>
 
     <el-dialog title="分配角色" :visible.sync="assignDialogShow" :before-close="handleAssignClose">
-      <el-form ref="assignForm" :rules="rules"  :model="dataForAssign">
-        <el-form-item label="用户名" prop="username"  :label-width="labelWidth">
+      <el-form ref="assignForm" :rules="rules" :model="dataForAssign">
+        <el-form-item label="用户名" prop="username" :label-width="labelWidth">
           <el-input disabled v-model="dataForAssign.username"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleList" :label-width="labelWidth">
-          <el-select v-model="dataForAssign.roleList" multiple placeholder="请选择" style="width: 100%;">
+          <el-select v-model="dataForAssign.roleIdList" multiple placeholder="请选择" style="width: 100%;">
             <el-option
               v-for="role in roleList"
               :key="role.id"
@@ -132,7 +142,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleAssignColose">取 消</el-button>
+        <el-button @click="handleAssignClose">取 消</el-button>
         <el-button type="primary" @click="commitAssign">确 定</el-button>
       </div>
     </el-dialog>
@@ -176,7 +186,7 @@
   export default {
     data() {
       return {
-        labelWidth: '80px',
+        labelWidth: '90px',
         /**
          * 批量导入的错误信息
          */
@@ -198,6 +208,7 @@
          **/
         queryForm: {
           name: null,
+          username: '',
           pageSize: 10,
           pageNum: 1,
         },
@@ -212,7 +223,7 @@
          * 分派角色使用的信息
          */
         dataForAssign: {
-          roleList: [],
+          roleIdList: [],
 
         },
 
@@ -266,7 +277,7 @@
       findByCondition: async function () {
         let data = await this.http("/user/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        if(data){
+        if (data) {
           this.tableData = data.list;
           this.totalCount = data.total;//总记录数目
         }
@@ -318,9 +329,10 @@
       /**
        * 唤起分配角色对话框
        */
-      toAssign(idx, row){
+      toAssign(idx, row) {
         console.log("分派角色：：", row)
-        this.dataForEdit = JSON.parse(JSON.stringify(row));
+        this.dataForAssign = JSON.parse(JSON.stringify(row));
+        console.log("this.dataForAssign:::", this.dataForAssign);
         this.dataForEditIndex = idx;
         this.assignDialogShow = true;
       },
@@ -413,7 +425,7 @@
       /**
        * 处理分配角色对话框关闭
        */
-      handleAssignClose(){
+      handleAssignClose() {
         console.log("分配角色对话框关闭");
         console.log("this.dataForAssign:::", this.dataForAssign)
         this.$refs.assignForm.resetFields();
@@ -424,11 +436,24 @@
       /**
        * 提交角色分配信息
        */
-      async commitAssign(){
-        let res = await this.http("/user/api/assignRole.do?userId=" + this.dataForAssign.id, this.dataForAssign.roleList);
-        if(res){
-          
+      async commitAssign() {
+        let res = await this.http("/user/api/assignRole.do?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
+        if (res) {
+          Vue.set(this.tableData, this.dataForEditIndex, this.dataForAssign);
+          this.$notify({
+            title: '成功',
+            message: '角色分配成功',
+            type: 'success'
+          });
+          //        以下代码变动无法触发页面渲染
+          //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
+          //          console.log(this.tableData)
+        } else if (res == false) {
+          console.log("请求成功，处理失败");
+        } else if (res == null) {
+          console.error("请求失败")
         }
+        this.assignDialogShow = false;
       },
       /**
        * 批量添加对话框关闭时候执行
@@ -500,7 +525,7 @@
       this.findByCondition();
       let roleList = await this.http("/role/api/findAll.do");
       this.roleList = roleList;
-    }
+    },
   }
 </script>
 
