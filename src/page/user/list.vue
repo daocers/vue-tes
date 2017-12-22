@@ -27,59 +27,40 @@
 
       <el-table-column
         prop="username"
-        label="username">
+        label="员工号">
       </el-table-column>
-      <el-table-column
-        prop="password"
-        label="password">
-      </el-table-column>
-      <el-table-column
-        prop="salt"
-        label="salt">
-      </el-table-column>
+
       <el-table-column
         prop="idNo"
-        label="idNo">
+        label="身份证号码">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="name">
+        label="姓名">
       </el-table-column>
       <el-table-column
         prop="branchId"
-        label="branchId">
+        label="机构">
       </el-table-column>
       <el-table-column
         prop="departmentId"
-        label="departmentId">
+        label="部门">
       </el-table-column>
       <el-table-column
         prop="stationId"
-        label="stationId">
+        label="岗位">
       </el-table-column>
       <el-table-column
         prop="status"
-        label="status">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        label="isDel">
+        label="状态">
       </el-table-column>
       <el-table-column
         prop="createTime"
-        label="createTime">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="updateTime">
+        label="创建时间">
       </el-table-column>
       <el-table-column
         prop="createUserId"
-        label="createUserId">
-      </el-table-column>
-      <el-table-column
-        prop="updateUserId"
-        label="updateUserId">
+        label="创建人">
       </el-table-column>
 
       <el-table-column
@@ -89,6 +70,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="toAssign(scope.$index, scope.row)">分派角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,107 +87,56 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="username" prop="username">
-          <el-input v-model="dataForEdit.username" placeholder="请输入"></el-input>
+        <el-form-item label="用户名" prop="username"  :label-width="labelWidth">
+          <el-input disabled v-model="dataForEdit.username" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="password" prop="password">
-          <el-input v-model="dataForEdit.password" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="salt" prop="salt">
-          <el-input v-model="dataForEdit.salt" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="idNo" prop="idNo">
+        <el-form-item label="身份证号码" prop="idNo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.idNo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="name" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="branchId" prop="branchId">
+        <el-form-item label="机构" prop="branchId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.branchId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="departmentId" prop="departmentId">
+        <el-form-item label="部门" prop="departmentId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.departmentId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="stationId" prop="stationId">
+        <el-form-item label="岗位" prop="stationId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.stationId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="status" prop="status">
+        <el-form-item label="状态" prop="status" :label-width="labelWidth">
           <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="isDel" prop="isDel">
-          <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime">
-          <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime">
-          <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId">
-          <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId">
-          <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
-        </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogShow = false">取 消</el-button>
         <el-button type="primary" @click="updateData()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="username" prop="username">
-          <el-input v-model="dataForAdd.username" placeholder="请输入"></el-input>
+    <el-dialog title="分配角色" :visible.sync="assignDialogShow" :before-close="handleAssignClose">
+      <el-form ref="assignForm" :rules="rules"  :model="dataForAssign">
+        <el-form-item label="用户名" prop="username"  :label-width="labelWidth">
+          <el-input disabled v-model="dataForAssign.username"></el-input>
         </el-form-item>
-        <el-form-item label="password" prop="password">
-          <el-input v-model="dataForAdd.password" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="salt" prop="salt">
-          <el-input v-model="dataForAdd.salt" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="idNo" prop="idNo">
-          <el-input v-model="dataForAdd.idNo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="name" prop="name">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="branchId" prop="branchId">
-          <el-input v-model="dataForAdd.branchId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="departmentId" prop="departmentId">
-          <el-input v-model="dataForAdd.departmentId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="stationId" prop="stationId">
-          <el-input v-model="dataForAdd.stationId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="status" prop="status">
-          <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="isDel" prop="isDel">
-          <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime">
-          <el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime">
-          <el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId">
-          <el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId">
-          <el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>
+        <el-form-item label="角色" prop="roleList" :label-width="labelWidth">
+          <el-select v-model="dataForAssign.roleList" multiple placeholder="请选择" style="width: 100%;">
+            <el-option
+              v-for="role in roleList"
+              :key="role.id"
+              :label="role.name"
+              :value="role.id">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
+        <el-button @click="handleAssignColose">取 消</el-button>
+        <el-button type="primary" @click="commitAssign">确 定</el-button>
       </div>
     </el-dialog>
+
 
     <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
       <el-upload
@@ -236,9 +167,6 @@
     </el-dialog>
 
   </div>
-
-  </div>
-
 </template>
 
 
@@ -248,6 +176,7 @@
   export default {
     data() {
       return {
+        labelWidth: '80px',
         /**
          * 批量导入的错误信息
          */
@@ -277,10 +206,21 @@
          */
         dataForAdd: {},
 
+        roleList: [],
+
         /**
-         * 添加对话框是否显示
+         * 分派角色使用的信息
          */
-        addDialogShow: false,
+        dataForAssign: {
+          roleList: [],
+
+        },
+
+
+        /**
+         * 分配权限对话框是否显示
+         */
+        assignDialogShow: false,
         /**
          * 修改对话框是否显示
          */
@@ -313,7 +253,7 @@
 
         },
 
-        fileList:[],
+        fileList: [],
 
       }
     },
@@ -326,8 +266,11 @@
       findByCondition: async function () {
         let data = await this.http("/user/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        this.tableData = data.list;
-        this.totalCount = data.total;//总记录数目
+        if(data){
+          this.tableData = data.list;
+          this.totalCount = data.total;//总记录数目
+        }
+
       },
 
       /**
@@ -345,10 +288,11 @@
        */
       toAdd() {
         console.log("唤起添加对话框")
-        this.addDialogShow = true;
+        this.editDialogShow = true;
+        this.dataForEdit = {};
       },
 
-      toBatchAdd(){
+      toBatchAdd() {
         console.log("唤起批量导入对话框。。。")
 //        this.$refs.upload.clearFiles();
         this.batchAddErrorMessage = '';
@@ -357,7 +301,7 @@
       /**
        * 批量导入
        */
-      async batchAdd(){
+      async batchAdd() {
         let res = await this.$refs.upload.submit();
         console.log("上传结果： ", res);
       },
@@ -369,6 +313,16 @@
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
+      },
+
+      /**
+       * 唤起分配角色对话框
+       */
+      toAssign(idx, row){
+        console.log("分派角色：：", row)
+        this.dataForEdit = JSON.parse(JSON.stringify(row));
+        this.dataForEditIndex = idx;
+        this.assignDialogShow = true;
       },
       /**
        * 提交更新数据
@@ -457,9 +411,29 @@
       },
 
       /**
+       * 处理分配角色对话框关闭
+       */
+      handleAssignClose(){
+        console.log("分配角色对话框关闭");
+        console.log("this.dataForAssign:::", this.dataForAssign)
+        this.$refs.assignForm.resetFields();
+        this.$refs.assignForm.clearValidate();
+        this.assignDialogShow = false;
+      },
+
+      /**
+       * 提交角色分配信息
+       */
+      async commitAssign(){
+        let res = await this.http("/user/api/assignRole.do?userId=" + this.dataForAssign.id, this.dataForAssign.roleList);
+        if(res){
+          
+        }
+      },
+      /**
        * 批量添加对话框关闭时候执行
        */
-      handleClose(){
+      handleClose() {
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;
       },
@@ -467,7 +441,7 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
-      handleChange(file, fileList){
+      handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
 
@@ -479,11 +453,11 @@
       /**
        * 服务器成功响应并处理后回调
        */
-      handleSuccess(response, file, fileList){
+      handleSuccess(response, file, fileList) {
         console.log("上传结果：", response)
-        if(response.result == false){
+        if (response.result == false) {
           this.batchAddErrorMessage = response.message;
-        }else{
+        } else {
           this.findByCondition();
           this.$refs.upload.clearFiles();
           this.batchAddDialogShow = false;
@@ -495,7 +469,7 @@
           });
         }
       },
-      handleError(err, file, fileList){
+      handleError(err, file, fileList) {
         console.log("上传失败，原因：", err);
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;
@@ -524,6 +498,8 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+      let roleList = await this.http("/role/api/findAll.do");
+      this.roleList = roleList;
     }
   }
 </script>

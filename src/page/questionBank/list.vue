@@ -84,10 +84,10 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="题库名称" prop="name">
+        <el-form-item label="题库名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题库描述" prop="memo">
+        <el-form-item label="题库描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -100,10 +100,10 @@
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
       <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="题库名称" prop="name">
+        <el-form-item label="题库名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题库描述" prop="memo">
+        <el-form-item label="题库描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -125,6 +125,7 @@
   export default {
     data() {
       return {
+        labelWidth: '80px',
         /**
          * 表格数据
          **/

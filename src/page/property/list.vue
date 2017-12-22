@@ -87,17 +87,17 @@
 
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="属性名称" prop="name">
+      <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
+        <el-form-item label="属性名称" prop="name" :label-width="labelWidth">
           <el-input :disabled="true" v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="属性编号" prop="code">
+        <el-form-item label="属性编号" prop="code" :label-width="labelWidth">
           <el-input :disabled="true" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="memo">
+        <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="序号" prop="no">
+        <el-form-item label="序号" prop="no" :label-width="labelWidth">
           <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
 
@@ -108,7 +108,7 @@
         <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
 
-        <el-form-item label="属性信息" required>
+        <el-form-item label="属性信息" required >
           <el-table :data="dataForEdit.itemList"
                     border
                     style="width: 100%">
@@ -152,17 +152,17 @@
     </el-dialog>
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="属性名称" prop="name">
+      <el-form ref="addForm" :rules="rules" label-position="right" :model="dataForAdd">
+        <el-form-item label="属性名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
         <!--<el-form-item label="属性编号" prop="code">-->
         <!--<el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
-        <el-form-item label="描述" prop="memo">
+        <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="序号" prop="no">
+        <el-form-item label="序号" prop="no" :label-width="labelWidth">
           <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
         </el-form-item>
 
@@ -251,6 +251,7 @@
         }
       };
       return {
+        labelWidth: '80px',
         /**
          * 表格数据
          **/

@@ -85,22 +85,22 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="机构名称" prop="name">
+        <el-form-item label="机构名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="机构编号" prop="code">
+        <el-form-item label="机构编号" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
+        <el-form-item label="地址" prop="address" :label-width="labelWidth">
           <el-input v-model="dataForEdit.address" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="级别" prop="level">
+        <el-form-item label="级别" prop="level" :label-width="labelWidth">
           <el-input v-model="dataForEdit.level" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="上级机构" prop="superiorId">
+        <el-form-item label="上级机构" prop="superiorId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.superiorId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item label="状态" prop="status" :label-width="labelWidth">
           <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -113,19 +113,19 @@
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
       <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="机构名称" prop="name">
+        <el-form-item label="机构名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="机构编号" prop="code">
+        <el-form-item label="机构编号" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
+        <el-form-item label="地址" prop="address" :label-width="labelWidth">
           <el-input v-model="dataForAdd.address" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="级别" prop="level">
+        <el-form-item label="级别" prop="level" :label-width="labelWidth">
           <el-input v-model="dataForAdd.level" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="上级机构" prop="superiorId">
+        <el-form-item label="上级机构" prop="superiorId" :label-width="labelWidth">
           <el-input v-model="dataForAdd.superiorId" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -175,6 +175,7 @@
   export default {
     data() {
       return {
+        labelWidth: '80px',
         /**
          * 批量导入的错误信息
          */

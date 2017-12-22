@@ -73,13 +73,13 @@
 
     <el-dialog title="编辑" :visible.sync="dialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="角色名称" prop="name">
+        <el-form-item label="角色名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="角色编码" prop="code">
+        <el-form-item label="角色编码" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="memo">
+        <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -120,6 +120,7 @@
   export default {
     data() {
       return {
+        labelWidth: '80px',
         defaultProps: {
           children: 'children',
           label: 'name',

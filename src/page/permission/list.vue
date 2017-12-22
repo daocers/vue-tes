@@ -93,28 +93,28 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="code" prop="code">
+        <el-form-item label="code" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="name" prop="name">
+        <el-form-item label="name" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="controller" prop="controller">
+        <el-form-item label="controller" prop="controller" :label-width="labelWidth">
           <el-input v-model="dataForEdit.controller" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="action" prop="action">
+        <el-form-item label="action" prop="action" :label-width="labelWidth">
           <el-input v-model="dataForEdit.action" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="httpMethod" prop="httpMethod">
+        <el-form-item label="httpMethod" prop="httpMethod" :label-width="labelWidth">
           <el-input v-model="dataForEdit.httpMethod" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="no" prop="no">
+        <el-form-item label="no" prop="no" :label-width="labelWidth">
           <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="memo" prop="memo">
+        <el-form-item label="memo" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="type" prop="type">
+        <el-form-item label="type" prop="type" :label-width="labelWidth">
           <el-input v-model="dataForEdit.type" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -136,6 +136,7 @@
   export default {
     data() {
       return {
+        labelWidth: '80px',
         /**
          * 表格数据
          **/

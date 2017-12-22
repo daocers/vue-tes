@@ -119,28 +119,28 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="题目" prop="title">
+        <el-form-item label="题目" prop="title" :label-width="labelWidth">
           <el-input v-model="dataForEdit.title" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="答案" prop="answer">
+        <el-form-item label="答案" prop="answer" :label-width="labelWidth">
           <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="内容" prop="content">
+        <el-form-item label="内容" prop="content" :label-width="labelWidth">
           <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="附加信息" prop="extraInfo">
+        <el-form-item label="附加信息" prop="extraInfo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题型" prop="questionTypeId">
+        <el-form-item label="题型" prop="questionTypeId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.questionTypeId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题库" prop="questionBankId">
+        <el-form-item label="题库" prop="questionBankId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.questionBankId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="属性信息" prop="propertyItemInfo">
+        <el-form-item label="属性信息" prop="propertyItemInfo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.propertyItemInfo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="是否私有" prop="privaryType">
+        <el-form-item label="是否私有" prop="privaryType" :label-width="labelWidth">
           <el-input v-model="dataForEdit.privaryType" placeholder="请输入"></el-input>
         </el-form-item>
       </el-form>
@@ -153,7 +153,7 @@
 
     <el-dialog title="添加" :visible.sync="addDialogShow">
       <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="题型" prop="questionTypeId">
+        <el-form-item label="题型" prop="questionTypeId" :label-width="labelWidth">
           <el-select v-model="dataForAdd.questionTypeId" placeholder="请选择">
             <el-option
               v-for="type in questionTypeList"
@@ -163,7 +163,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="题库" prop="questionBankId">
+        <el-form-item label="题库" prop="questionBankId" :label-width="labelWidth">
           <el-select v-model="dataForAdd.questionBankId" placeholder="请选择">
             <el-option
               v-for="bank in questionBankList"
@@ -174,10 +174,10 @@
           </el-select>
           <!--<el-input v-model="dataForAdd.questionBankId" placeholder="请输入"></el-input>-->
         </el-form-item>
-        <el-form-item label="题目" prop="title">
+        <el-form-item label="题目" prop="title" :label-width="labelWidth">
           <el-input v-model="dataForAdd.title" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="答案" v-show="dataForAdd.questionTypeId != null" prop="answerItemList">
+        <el-form-item label="答案" v-show="dataForAdd.questionTypeId != null" prop="answerItemList"  :label-width="labelWidth">
           <div v-if="questionTypeMap[dataForAdd.questionTypeId] == 'single'">
             <el-radio v-model="dataForAdd.answerItemList" label="A" border size="medium">A</el-radio>
             <el-radio v-model="dataForAdd.answerItemList" label="B" border size="medium">B</el-radio>
@@ -227,7 +227,7 @@
           </el-table>
           <el-button type="primary" plain @click="addItem()" icon="el-icon-plus" size="mini">添加</el-button>
         </el-form-item>
-        <el-form-item label="附加信息" prop="extraInfo">
+        <el-form-item label="附加信息" prop="extraInfo"  :label-width="labelWidth">
           <el-input v-model="dataForAdd.extraInfo" placeholder="请输入"></el-input>
         </el-form-item>
 
@@ -261,7 +261,7 @@
 
     <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
       <el-form label-position="left" ref="batchForm" :rules="batchAddRules" :model="dataForBatch" label-width="60px">
-        <el-form-item label="题库" prop="questionBankId">
+        <el-form-item label="题库" prop="questionBankId"  :label-width="labelWidth">
           <el-select v-model="dataForBatch.questionBankId" placeholder="请选择题库">
             <el-option v-for="bank in questionBankList"
                        :key="bank.id"
@@ -271,7 +271,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="题型" prop="questionTypeId">
+        <el-form-item label="题型" prop="questionTypeId"  :label-width="labelWidth">
           <el-select v-model="dataForBatch.questionTypeId" placeholder="请选择题型">
             <el-option
               v-for="type in questionTypeList"
@@ -350,6 +350,7 @@
         }
       };
       return {
+        labelWidth: '80px',
         /**
          * 表格数据
          **/

@@ -92,7 +92,7 @@
 
     <el-dialog v-bind:title="this.dataForEdit.id > 0 ? '编辑':'添加'" :visible.sync="dialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="题型" prop="questionTypeId">
+        <el-form-item label="题型" prop="questionTypeId" :label-width="labelWidth">
           <el-select v-model="dataForEdit.questionTypeId" clearable placeholder="请选择">
             <el-option
               v-for="type in questionTypeList"
@@ -101,15 +101,15 @@
               :value="type.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item v-show="dataForEdit.id" label="编号" prop="code">
+        <el-form-item v-show="dataForEdit.id" label="编号" prop="code" :label-width="labelWidth">
           <el-input :disabled="true" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
 
 
-        <el-form-item label="详情" prop="contentList">
+        <el-form-item label="详情" prop="contentList" :label-width="labelWidth">
           <el-table :data="dataForEdit.itemList"
                     border
                     style="width: 100%">
@@ -167,11 +167,11 @@
                     type="warning">
           </el-alert>
         </el-form-item>
-        <el-form-item label="题量" prop="questionCount">
+        <el-form-item label="题量" prop="questionCount" :label-width="labelWidth">
           <el-input type="number" :disabled="true" v-model="getQuestionCount" placeholder="0"></el-input>
         </el-form-item>
 
-        <el-form-item label="私有" prop="privaryType">
+        <el-form-item label="私有" prop="privaryType" :label-width="labelWidth">
           <el-switch v-model="dataForEdit.privaryType" :active-value="2" :inactive-value="1"></el-switch>
         </el-form-item>
       </el-form>
@@ -225,6 +225,8 @@
         callback();
       };
       return {
+
+        labelWidth: '80px',
         contentCheckMessage: "",
         /**
          * 表格数据

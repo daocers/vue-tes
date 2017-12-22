@@ -105,13 +105,13 @@
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
 
-        <el-form-item label="策略名称" prop="name">
+        <el-form-item label="策略名称" prop="name"  :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item v-show="dataForEdit.id" label="试卷策略编码" prop="code">
+        <el-form-item v-show="dataForEdit.id" label="试卷策略编码" prop="code"  :label-width="labelWidth">
           <el-input disabled v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="题型信息" prop="questionTypeIdList">
+        <el-form-item label="题型信息" prop="questionTypeIdList"  :label-width="labelWidth">
           <el-tag style="margin-right: 10px;" v-for="item in questionTypeList" :key="item.id"
                   v-show="dataForEdit.questionTypeIdList.indexOf(parseInt(item.id)) > -1">{{item.name}}
           </el-tag>
@@ -119,7 +119,7 @@
         </el-form-item>
 
 
-        <el-form-item label="策略内容" prop="content">
+        <el-form-item label="策略内容" prop="content"  :label-width="labelWidth">
 
           <el-table ref="contentTable" border :data="dataForEdit.contentItemList"
                     highlight-current-row
@@ -313,6 +313,7 @@
         callback();
       };
       return {
+        labelWidth: '80px',
         /**
          * 试卷策略和对应的分值信息
          */
