@@ -1,99 +1,6 @@
 <template>
   <div id="app">
-    <!--<el-row :gutter=0 class="header">-->
-      <!--<el-col :span=4>-->
-        <!--&lt;!&ndash;logo&ndash;&gt;-->
-        <!--logo-->
-      <!--</el-col>-->
-      <!--<el-col :span=10>-->
-        <!--学员|教师|管理员-->
-        <!--&lt;!&ndash;顶部导航&ndash;&gt;-->
-        <!--&lt;!&ndash;<el-menu default-active="5" class="el-menu-demo" mode="horizontal" @select="">&ndash;&gt;-->
-        <!--&lt;!&ndash;<el-menu-item index="1">学员</el-menu-item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<el-menu-item index="2">我是教师</el-menu-item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<el-menu-item index="3">我是管理员</el-menu-item>&ndash;&gt;-->
-        <!--&lt;!&ndash;</el-menu>&ndash;&gt;-->
-      <!--</el-col>-->
-      <!--<el-col :span=4 :offset=6>-->
-        <!--<div style="text-align: right; font-size: 15px; vertical-align: middle; padding-right: 10px;">-->
-          <!--<el-dropdown>-->
-            <!--<i class="el-icon-menu" style="margin-right: 15px; color: white"></i>-->
-            <!--<el-dropdown-menu slot="dropdown">-->
-              <!--<el-dropdown-item>查看</el-dropdown-item>-->
-              <!--<el-dropdown-item>新增</el-dropdown-item>-->
-              <!--<el-dropdown-item>删除</el-dropdown-item>-->
-            <!--</el-dropdown-menu>-->
-          <!--</el-dropdown>-->
-          <!--<span>王小虎</span>-->
-        <!--</div>-->
-      <!--</el-col>-->
-    <!--</el-row>-->
-    <!--<el-row :gutter=0>-->
-      <!--<el-col :span=4>-->
-        <!--&lt;!&ndash;:xl="3" :lg="3" :md="4" :sm="3" :xs="3"&ndash;&gt;-->
-        <!--<el-menu-->
-          <!--:router="true"-->
-          <!--default-active="2"-->
-          <!--v-bind:style="menuClass"-->
-          <!--@open="handleOpen"-->
-          <!--@close="handleClose"-->
-          <!--background-color="#545c64"-->
-          <!--text-color="#fff"-->
-          <!--active-text-color="#ffd04b">-->
-          <!--<el-submenu index="1">-->
-            <!--<template slot="title">-->
-              <!--<i class="el-icon-location"></i>-->
-              <!--<span>测试</span>-->
-            <!--</template>-->
-            <!--<el-menu-item-group>-->
-              <!--<template slot="title">分组一</template>-->
-              <!--<el-menu-item index="/scene">场次管理</el-menu-item>-->
-              <!--<el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>-->
-              <!--<el-menu-item index="/property">属性管理</el-menu-item>-->
-              <!--<el-menu-item index="/questionType">题型管理</el-menu-item>-->
-              <!--<el-menu-item index="/questionBank">题库管理</el-menu-item>-->
-              <!--<el-menu-item index="/commonQuestion">常规试题</el-menu-item>-->
-              <!--<el-menu-item index="/paperPolicy">试卷策略</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-            <!--<el-menu-item-group title="分组2">-->
-              <!--<el-menu-item index="/role">角色</el-menu-item>-->
-              <!--<el-menu-item index="/permission">权限</el-menu-item>-->
-              <!--<el-menu-item index="/branch">机构</el-menu-item>-->
-              <!--<el-menu-item index="/department">部门</el-menu-item>-->
-              <!--<el-menu-item index="/station">岗位</el-menu-item>-->
-              <!--<el-menu-item index="/user">用户</el-menu-item>-->
-            <!--</el-menu-item-group>-->
-            <!--<el-submenu index="1-4">-->
-              <!--<template slot="title">选项4</template>-->
-              <!--<el-menu-item index="/commonQuestion">常规试题</el-menu-item>-->
-              <!--<el-menu-item index="/department">部门</el-menu-item>-->
-            <!--</el-submenu>-->
-            <!--<el-submenu index="1-5">-->
-              <!--<template slot="title">选项5</template>-->
-              <!--<el-menu-item index="/department">部门</el-menu-item>-->
-              <!--<el-menu-item index="/exam">考试</el-menu-item>-->
-              <!--<el-menu-item index="/scene/myJoin">我参加的</el-menu-item>-->
-              <!--<el-menu-item index="/scene/myOpen">我开场的</el-menu-item>-->
-            <!--</el-submenu>-->
-          <!--</el-submenu>-->
-          <!--<el-menu-item index="2">-->
-            <!--<i class="el-icon-menu"></i>-->
-            <!--<span slot="title">导航二</span>-->
-          <!--</el-menu-item>-->
-          <!--<el-menu-item index="3">-->
-            <!--<i class="el-icon-setting"></i>-->
-            <!--<span slot="title">导航三</span>-->
-          <!--</el-menu-item>-->
-        <!--</el-menu>-->
-      <!--</el-col>-->
-      <!--<el-col :span="20">-->
-        <!--&lt;!&ndash;:xl="21" :lg="21" :md="20" :sm="21" :xs="21"&ndash;&gt;-->
-        <!--&lt;!&ndash;视图区&ndash;&gt;-->
-        <!--<router-view class="view"></router-view>-->
-      <!--</el-col>-->
-    <!--</el-row>-->
-
-    <router-view class="view"></router-view>
+    <router-view></router-view>
 
   </div>
 </template>
@@ -177,32 +84,32 @@
   /*}*/
 
   /* 主内容区 */
-  main {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    min-height: 800px;
-    border: solid 40px #E9ECF1;
-    background-color: #FCFCFC;
-  }
+  /*main {*/
+    /*display: -webkit-box;*/
+    /*display: -ms-flexbox;*/
+    /*display: flex;*/
+    /*min-height: 800px;*/
+    /*border: solid 40px #E9ECF1;*/
+    /*background-color: #FCFCFC;*/
+  /*}*/
 
-  main .main-left {
-    text-align: center;
-    width: 200px;
-    float: left;
-  }
+  /*main .main-left {*/
+    /*text-align: center;*/
+    /*width: 200px;*/
+    /*float: left;*/
+  /*}*/
 
-  main .main-right {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    background-color: #fff;
-    /*padding: 50px 70px;*/
-  }
+  /*main .main-right {*/
+    /*-webkit-box-flex: 1;*/
+    /*-ms-flex: 1;*/
+    /*flex: 1;*/
+    /*background-color: #fff;*/
+    /*!*padding: 50px 70px;*!*/
+  /*}*/
 
-  main .el-menu {
-    background-color: transparent !important;
-  }
+  /*main .el-menu {*/
+    /*background-color: transparent !important;*/
+  /*}*/
 
   /*.header {*/
     /*background-color: #545C64;*/
@@ -210,8 +117,5 @@
     /*height: 50px;*/
   /*}*/
 
-  .view {
-    padding: 10px;
-  }
 </style>
 
