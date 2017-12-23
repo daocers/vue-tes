@@ -91,7 +91,8 @@
     </el-dialog>
 
 
-    <el-dialog title="授权" :visible.sync="authDialogShow">
+    <el-dialog title="授权" :visible.sync="authDialogShow" :before-close="handleAuthClose">
+      <el-input v-model="dataForEdit.name" disabled style="margin-bottom: 20px;"></el-input>
       <el-tree
         :data="treeData"
         show-checkbox
@@ -120,14 +121,15 @@
   export default {
     data() {
       return {
+        _tree : null,
         labelWidth: '80px',
         defaultProps: {
           children: 'children',
           label: 'name',
         },
+        defaultChecked: [],
         authDialogShow: false,
         treeData: [],
-        defaultChecked: [],
 
         /**
          * 被授权的角色id
@@ -161,7 +163,9 @@
         /**
          * 修改对话框数据
          */
-        dataForEdit: {},
+        dataForEdit: {
+          permissionIdList: [],
+        },
 
         /**
          * 修改对话框数据索引值
@@ -222,10 +226,27 @@
         this.dialogShow = true;
       },
 
-      toAuth(idx, row) {
+      /**
+       * 到授权页面
+       */
+      async toAuth(idx, row) {
         console.log("授权")
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.authRoleId = row.id;
+        let permissionIdList = await this.http("/permission/api/findPermissionIdListByRoleId.do?roleId=" + row.id);
+        if(permissionIdList){
+          console.log(":::::", permissionIdList)
+          this.dataForEdit.permissionIdList = permissionIdList;
+          this.defaultChecked = permissionIdList;
+          this.$set(this.defaultChecked, permissionIdList);
+        }else {
+          console.log("获取角色权限信息失败")
+          this.defaultChecked = [];
+        }
+        if(this._tree){
+          this._tree.setCheckedKeys(permissionIdList);
+        }
+
         this.dataForEditIndex = idx;
         this.authDialogShow = true;
       },
@@ -240,8 +261,6 @@
       },
 
       cancelAuth: function () {
-        //            设置勾选，清空所有已选
-        this.$refs.tree.setCheckedKeys([], false);
         this.authDialogShow = false;
       },
 
@@ -344,6 +363,17 @@
             type: 'warning'
           });
         }
+      },
+
+      /**
+       * 授权对话框关闭
+       */
+      handleAuthClose(){
+        console.log("before close:::::")
+        this.dataForEdit = {};
+        this._tree = this.$refs.tree;
+//        this.$refs.tree.setCheckedKeys([])
+        this.authDialogShow = false;
       },
 
       handleSizeChange(val) {

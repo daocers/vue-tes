@@ -1,6 +1,6 @@
 <template>
   <div id="add">
-    <el-row :gutter="20">
+    <el-row :gutter="0">
       <el-col :span="8" style="border: 1px solid gainsboro">
         <el-tree
           ref="tree"
@@ -80,7 +80,8 @@
           </el-form-item>
 
           <el-form-item label="描述" prop="memo">
-            <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
+            <el-input type="textarea"
+                      :autosize="{minRows: 2, maxRows: 4}" v-model="dataForEdit.memo" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="序号" prop="no">
             <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>

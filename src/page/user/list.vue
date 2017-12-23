@@ -34,7 +34,7 @@
       </el-table-column>
 
       <el-table-column
-        prop="idNo"
+        prop="idNo" width="160"
         label="身份证号码">
       </el-table-column>
       <el-table-column
@@ -65,7 +65,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="createTime"
+        prop="createTime" width="160"
         label="创建时间">
       </el-table-column>
       <el-table-column
@@ -76,11 +76,11 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="90">
+        width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
-          <el-button type="text" size="small" @click="toAssign(scope.$index, scope.row)">分派角色</el-button>
+          <el-button type="primary" size="mini" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="success" size="mini" @click="toAssign(scope.$index, scope.row)">分派角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -543,5 +543,10 @@
 
   button.btn-prev {
     border-left: 1px solid gainsboro;
+  }
+
+  tbody button.el-button.el-button--mini{
+    padding: 6px;
+    margin: 2px;
   }
 </style>
