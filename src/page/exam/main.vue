@@ -171,8 +171,16 @@
       },
     },
     created: async function () {
+//      场次id，如果找不到，取消
+      let sceneId = this.$route.query.id;
+      if(sceneId){
+        this.sceneId = sceneId;
+      }else{
+        this.$router.replace("/exam")
+        return false;
+      }
       console.log("created");
-      let questionList = await this.http("/exam/api/getQuestionList.do?paperId=" + this.paperId);
+      let questionList = await this.http("/exam/api/getQuestionList.do?sceneId=" + this.sceneId);
       if (questionList) {
         this.questionList = questionList;
       } else {

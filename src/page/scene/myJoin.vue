@@ -1,11 +1,11 @@
 <template>
   <div class="myJoin">
-    <el-tabs type="border-card">
-      <el-tab-pane>
-        <span slot="label"><i class="el-icon-date"></i> 我的行程</span>
-        我的行程
-      </el-tab-pane>
-      <el-tab-pane label="全部" tab-click="getSceneList(1)">
+    <el-tabs type="border-card" @tab-click="handleTabClick">
+      <!--<el-tab-pane>-->
+      <!--<span slot="label"><i class="el-icon-date"></i> 我的行程</span>-->
+      <!--我的行程-->
+      <!--</el-tab-pane>-->
+      <el-tab-pane label="全部" tab-click="getSceneList()">
 
       </el-tab-pane>
       <el-tab-pane label="已开场" tab-click="getSceneList(2)"></el-tab-pane>
@@ -21,7 +21,7 @@
       </el-form>
 
       <el-table
-        :data="sceneList"
+        :data="tableData"
         border
         style="width: 100%">
         <el-table-column
@@ -148,8 +148,9 @@
   export default {
     data() {
       return {
-        sceneList: [],
+        tableData: [],
         queryForm: {
+          name: '',
           pageNum: 1,
           pageSize: 10,
           status: null,
@@ -160,14 +161,29 @@
     },
     methods: {
       /**
+       * tab页点击事件
+       */
+      handleTabClick(tab) {
+        console.log("tab:::", tab.index);
+        let idx = tab.index;
+        if (idx == 0) {
+          this.queryForm.status = null;
+        } else if (idx == 1) {
+          this.queryForm.status = 2;
+        } else if (idx == 2) {
+          this.queryForm.status = 3;
+        }
+        this.findByCondition();
+      },
+      /**
        * 获取场次信息
        * @param status
        * @returns {Promise.<void>}
        */
-      getSceneList: async function (status) {
-        this.queryForm.status = status;
-        let data = await this.http("/scene/api/myJoin.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize
-          + "&status=" + status);
+      findByCondition: async function () {
+        let data = await this.http("/scene/api/myJoin.do?pageNum=" +
+          this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        console.log("data:::", data);
         if (data) {
           this.tableData = data.list;
           this.totalCount = data.total;//总记录数目
@@ -179,16 +195,16 @@
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         console.log(`每页 ${val} 条`);
-        this.getSceneList(this.queryForm.status);
+        this.findByCondition(this.queryForm.status);
       },
       handleCurrentChange(val) {
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
-        this.getSceneList(this.queryForm.status);
+        this.findByCondition(this.queryForm.status);
       }
     },
     created: function () {
-
+      this.findByCondition();
     }
 
   }

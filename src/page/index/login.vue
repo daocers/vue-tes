@@ -126,7 +126,7 @@
           if(valid){
             let res = await this.http('/user/api/signIn.do', this.login);
             if(res){
-              this.$router.replace("/index/");
+              this.$router.replace("/");
             }else{
               this.$message.error("用户名/密码错误");
             }

@@ -51,70 +51,76 @@ import Login from '../page/index/login.vue'
 
 export default [
   {path: '/login', component: Login},
-  {path: '/', component: Index},
+  // {path: '/index', component: Index},
   {
     //  配置路由，当路径为'/activePublic'，使用组件activePublic
     //   path: '/activePublic', component: activePublic
     path: '/leftMenu', component: leftMenu,
     // path: '/scene/setting', component: sceneSetting
   },
+  {
+    path: '/',
+    component: Index,
+    children: [
+      {path: '/role', component: RoleIndex},
+      {path: '/station', component: StationIndex},
+      {path: '/branch', component: BranchIndex},
+      {path: '/branch/manage', component: BranchAdd},
+      {path: '/permission', component: PermissionIndex},
+      {path: '/permission/manage', component: PermissionManage},
+      {path: '/property', component: PropertyIndex},
+      {path: '/role/add', component: RoleAdd},
+      // {path:'', component: },
+      {path: '/department', component: DepartmentIndex},
+      {path: '/department/add', component: DepartmentAdd},
+      {path: '/commonQuestion', component: CommonQuestionIndex},
+      {path: '/commonQuestion/add', component: CommonQuestionAdd},
+      {path: '/scene/list', component: SceneList},
+      {
+        path: '/scene',
+        component: Scene,
+        children: [
+          {path: '', component: SceneSetting},
+          {path: 'paper', component: ScenePaper},
+          {path: 'user', component: SceneUser},
+          {path: 'review', component: SceneReview}
+        ]
+      },
+      {
+        path: '/questionPolicy',
+        component: QuestionPolicyIndex,
+        children: [
+          {path: '', component: QuestionPolicyIndex},
+          {path: '/edit', component: QuestionPolicyEdit},
+        ]
+      },
+
+      {
+        path: '/step',
+        component: Step,
+        children: [
+          {path: '', component: Step1},
+          {path: 'step2', component: Step2},
+          {path: 'step3', component: Step3}
+        ]
+
+      },
+      {path: '/questionType', component: QuestionTypeIndex},
+      {path: '/questionBank', component: QuestionBankIndex},
+      {path: '/paperPolicy', component: PaperPolicyIndex},
+
+      //考试
+      {path: '/exam', component: ExamIndex},
+      {path: '/exam/entrance', component: ExamEntrance},
+      {path: '/exam/notice', component: ExamNotice},
+      {path: '/exam/main', component: ExamMain},
+
+      {path: '/scene/myJoin', component: SceneMyJoin},
+      {path: '/scene/myOpen', component: SceneMyOpen},
+      {path: '/user/', component: UserIndex},
+    ]
+  },
   {path: '/test', component: Test},
-  {path: '/role', component: RoleIndex},
-  {path: '/station', component: StationIndex},
-  {path: '/branch', component: BranchIndex},
-  {path: '/branch/manage', component: BranchAdd},
-  {path: '/permission', component: PermissionIndex},
-  {path: '/permission/manage', component: PermissionManage},
-
-  {path: '/property', component: PropertyIndex},
-  {path: '/role/add', component: RoleAdd},
-  // {path:'', component: },
-  {path: '/department', component: DepartmentIndex},
-  {path: '/department/add', component: DepartmentAdd},
-  {path: '/commonQuestion', component: CommonQuestionIndex},
-  {path: '/commonQuestion/add', component: CommonQuestionAdd},
-  {path: '/scene/list', component: SceneList},
-  {
-    path: '/scene',
-    component: Scene,
-    children: [
-      {path: '', component: SceneSetting},
-      {path: 'paper', component: ScenePaper},
-      {path: 'user', component: SceneUser},
-      {path: 'review', component: SceneReview}
-    ]
-  },
-  {
-    path: '/questionPolicy',
-    component: QuestionPolicyIndex,
-    children: [
-      {path: '', component: QuestionPolicyIndex},
-      {path: '/edit', component: QuestionPolicyEdit},
-    ]
-  },
-
-  {
-    path: '/step',
-    component: Step,
-    children: [
-      {path: '', component: Step1},
-      {path: 'step2', component: Step2},
-      {path: 'step3', component: Step3}
-    ]
-
-  },
-  {path: '/questionType', component: QuestionTypeIndex},
-  {path: '/questionBank', component: QuestionBankIndex},
-  {path: '/paperPolicy', component: PaperPolicyIndex},
-  {path: '/exam', component: ExamEntrance},
-  {path: '/exam/index', component: ExamIndex},
-  {path: '/exam/notice', component: ExamNotice},
-  {path: '/exam/main', component: ExamMain},
-  {path: '/scene/myJoin', component: SceneMyJoin},
-  {path: '/scene/myOpen', component: SceneMyOpen},
-  {path: '/user/', component: UserIndex},
-
-
 
 
   // {path: '/scene/setting', component: sceneSetting}

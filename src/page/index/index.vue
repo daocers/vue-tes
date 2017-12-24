@@ -89,7 +89,7 @@
       <el-col :span="20">
         <!--:xl="21" :lg="21" :md="20" :sm="21" :xs="21"-->
         <!--视图区-->
-        <router-view class="view"></router-view>
+        <router-view ref="main" class="main"></router-view>
       </el-col>
     </el-row>
 
@@ -123,6 +123,7 @@
     },
     methods: {
       handleOpen(key, keyPath) {
+        console.log(">>>>")
         console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
@@ -206,6 +207,10 @@
     background-color: #545C64;
     text-color: "#fff";
     height: 50px;
+  }
+
+  .main{
+    padding: 10px;
   }
 
 </style>

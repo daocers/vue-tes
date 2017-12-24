@@ -22,7 +22,7 @@
   export default {
     data(){
       return {
-
+        sceneId: null,
       }
     },
     methods:{
@@ -30,11 +30,17 @@
         this.$router.push("/");
       },
       toExam(){
-        this.$router.push("/exam/main");
+        this.$router.push("/exam/main?id=" + this.sceneId);
       }
     },
     created: function () {
       console.log("created")
+      let sceneId = this.$route.query.id;
+      if(sceneId){
+        this.sceneId = sceneId;
+      }else{
+        this.$router.replace("/exam")
+      }
     }
   }
 </script>

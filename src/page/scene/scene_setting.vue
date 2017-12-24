@@ -20,6 +20,7 @@
         <el-form-item label="结束时间">
           <el-date-picker
             v-model="getEndTime"
+            format="yyyy-MM-dd HH:mm:00"
             type="datetime"
             :disabled=true
             placeholder="选择日期时间">
@@ -94,7 +95,7 @@
           callback();
         }
       };
-      var checkAuthcode = (rule, value, callback) => {
+      var checkAuthCode = (rule, value, callback) => {
         if (!value || value == '' || value == undefined) {
           callback(new Error("请输入10位场次识别码"));
         } else {
@@ -102,6 +103,20 @@
           if (!reg.test(value)) {
             value = '';
             callback(new Error("非法字符，请输入十位字母或数字"));
+          } else {
+            callback();
+          }
+        }
+      };
+
+      var checkOpenTime = (rule, value, callback) => {
+        console.log("openTime:::", value);
+        if (!value) {
+          callback(new Error("请设置开场时间"));
+        } else {
+          let now = new Date();
+          if (value.getTime() < now.getTime()) {
+            callback(new Error("开场时间要大于当前时间"));
           } else {
             callback();
           }
@@ -124,7 +139,8 @@
             {min: 2, max: 16, message: '场次名称在2到16个字之间', trigger: 'blur'}
           ],
           openTime: [
-            {type: 'date', required: true, message: '请设置开场时间', trigger: 'change'}
+//            {type: 'date', required: true, message: '请设置开场时间', trigger: 'change'},
+            {validator: checkOpenTime, trigger: 'blur'}
           ],
           duration: [
             {validator: checkDuration, required: true, trigger: 'change'}
@@ -143,7 +159,7 @@
           ],
           authCode: [
             {required: true, message: '请输入场次识别码', trigger: 'blur'},
-            {validator: checkAuthcode, trigger: 'blur'},
+            {validator: checkAuthCode, trigger: 'blur'},
           ]
 
         }
@@ -166,8 +182,15 @@
           openTime = this.scene.openTime.getTime();
         }
         let duration = this.scene.duration;
+        let delay = this.scene.delay;
+        if(!delay){
+          delay = 0;
+        }else{
+          delay = parseInt(delay);
+        }
+        console.log("delay:::", delay);
         if (openTime && duration) {
-          openTime = openTime + duration * 60 * 1000;
+          openTime = openTime + duration * 60 * 1000 + delay * 60 * 1000;
           return new Date(openTime)
         }
       },

@@ -51,9 +51,13 @@ Vue.prototype.http = async function (url, queryData, timeout) {
         res = data.data;
       }else{
         console.log("请求成功，数据处理失败");
+        let msg = data.message;
+        if(!msg || msg == ''){
+          msg = "服务处理失败";
+        }
         this.$notify.error({
           title: '错误',
-          message: '服务处理失败'
+          message: msg
         });
         res = null;
       }

@@ -21,15 +21,29 @@
     data() {
       return {
         authCode: '',
+        sceneId: null,
       }
     },
     methods: {
-      toNotice(){
-        this.$router.push("/exam/notice");
+      async toNotice() {
+        let data = await this.http("/exam/api/checkAuthCode.do?authCode=" + this.authCode + "&sceneId=" + this.sceneId);
+        if(data){
+          this.$router.push("/exam/notice?id=" + this.sceneId);
+        }else{
+//          this.$message.error("场次授权码输入错误");
+          return false;
+        }
       }
     },
     created: function () {
-
+      let sceneId = this.$route.query.id;
+      console.log("sceneId:::", sceneId);
+      if(sceneId){
+        this.sceneId = sceneId;
+      }else{
+        console.error("无法获取到场次id");
+        this.$router.replace("/exam/");
+      }
     }
   }
 
@@ -37,7 +51,7 @@
 
 
 <style>
-  .box-card{
+  .box-card {
     margin: 80px;
     padding: 80px;
   }
