@@ -50,6 +50,11 @@ Vue.prototype.http = async function (url, queryData, timeout) {
       if(data.result){
         res = data.data;
       }else{
+        if(data.code = '-2'){
+          console.log("ajax请求session超时，先登录！")
+          window.href.location = "/login";
+          return false;
+        }
         console.log("请求成功，数据处理失败");
         let msg = data.message;
         if(!msg || msg == ''){
