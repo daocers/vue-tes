@@ -126,6 +126,13 @@
           if(valid){
             let res = await this.http('/user/api/signIn.do', this.login);
             if(res){
+              console.log("res:::", res);
+              let token = res.token;
+              let urls = res.urls;
+
+              sessionStorage.setItem("urls", urls);
+              //保存条目
+              sessionStorage.setItem("token", token);
               this.$router.replace("/");
             }else{
               this.$message.error("用户名/密码错误");
@@ -448,4 +455,6 @@
   .footer.f2 {
     border-top: 0 none
   }
+
+
 </style>

@@ -38,6 +38,7 @@ import ExamMain from '../page/exam/main.vue'
 
 import SceneMyJoin from '../page/scene/myJoin.vue'
 import SceneMyOpen from '../page/scene/myOpen.vue'
+import SceneLive from '../page/scene/sceneLive'
 import UserIndex from '../page/user/list.vue'
 import Index from '../page/index/index.vue'
 
@@ -118,6 +119,7 @@ export default [
       {path: '/scene/myJoin', component: SceneMyJoin},
       {path: '/scene/myOpen', component: SceneMyOpen},
       {path: '/user/', component: UserIndex},
+      {path: '/scene/live/:sceneId', component: SceneLive}
     ]
   },
   {path: '/test', component: Test},

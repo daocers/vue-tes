@@ -121,6 +121,7 @@
           label="操作"
           width="90">
           <template slot-scope="scope">
+            <el-button type="success" size="small" @click="showScene(scope.$index, scope.row)">查看考场</el-button>
             <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -156,6 +157,16 @@
 
     },
     methods: {
+
+      /**
+       * 查看考试现场
+       */
+      showScene(idx, row){
+        console.log("idx::", idx);
+        console.log("row.id::", row.id);
+
+        this.$router.push({path: `/scene/live/${row.id}`})
+      },
       /**
        * tab页点击事件
        */

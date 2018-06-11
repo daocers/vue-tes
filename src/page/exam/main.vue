@@ -84,6 +84,7 @@
 
 <script>
   export default {
+    ws: null,
     data() {
       return {
         scene: {
@@ -169,6 +170,53 @@
 
         this.endTime = new Date(new Date().getTime() + this.timeLeft);
       },
+    },
+
+
+    //加载之后执行
+    mounted: function(){
+
+      /**
+       * 以下是websocket处理，用来处理强制交卷信息
+       * */
+      this.ws = new WebSocket("ws://localhost:8090/ws/my.ws");
+      console.log("初始化");
+      ws.onopen = function () {
+        console.log("open。。。")
+      }
+
+      ws.onmessage = function (event) {
+        console.log("event", event);
+        var data = event.data;
+        console.log("收到服务器消息：", data);
+
+        var res = "";
+        try {
+          res = JSON.parse(data);
+        } catch (err) {
+          console.log("解析消息失败: ", err);
+        }
+        if (res != '') {
+          var type = res.type;
+          if (type == "4") {
+            swal("", "教师强制提交试卷", "info");
+            zeroModal.loading(3);
+            commitPaper();
+//                    $("#changePaper").trigger("click");
+          }
+        }
+      }
+
+      ws.onclose = function (event) {
+        console.log("event:", event);
+        console.log("close...")
+      }
+    },
+
+    beforeDestroy: function(){
+      console.log("准备关闭websocket...")
+      this.ws.onclose();
+      console.log("ws关闭了")
     },
     created: async function () {
 //      场次id，如果找不到，取消

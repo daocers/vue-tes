@@ -24,11 +24,13 @@ Vue.prototype.http = async function (url, queryData, timeout) {
     if(null == timeout || timeout == undefined || isNaN(timeout)){
       timeout = 5000;
     }
+    let token = sessionStorage.getItem("token");
+    console.log("cookie", document.cookie);
     response = await axios({
         /**
          * 此处必须使用application/json，不能使用text/json
          * */
-        headers: {"Content-Type": 'application/json;charset=UTF-8'},
+        headers: {"Content-Type": 'application/json;charset=UTF-8', "token": token, 'Cookie' : document.cookie},
         method: 'post',
         url: host + url,
         data: JSON.stringify(queryData),
@@ -52,7 +54,8 @@ Vue.prototype.http = async function (url, queryData, timeout) {
       }else{
         if(data.code = '-2'){
           console.log("ajax请求session超时，先登录！")
-          window.href.location = "/login";
+          // window.href.location = "/login";
+          this.$router.push({"path": "/login"});
           return false;
         }
         console.log("请求成功，数据处理失败");
