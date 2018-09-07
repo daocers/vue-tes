@@ -121,7 +121,7 @@
 
     created: function () {
       console.log("created")
-      // this.findByCondition();
+      this.findByCondition();
     }
   }
 </script>

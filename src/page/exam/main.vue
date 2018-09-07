@@ -199,8 +199,7 @@
         if (res != '') {
           var type = res.type;
           if (type == "4") {
-            swal("", "教师强制提交试卷", "info");
-            zeroModal.loading(3);
+            console("教师强制提交试卷");
             commitPaper();
 //                    $("#changePaper").trigger("click");
           }
@@ -242,7 +241,7 @@
 //      end.setMinutes(59);
 //      this.endTime = end;
 
-      this.endTime = new Date(2017, 11, 14);
+      this.endTime = new Date(2018, 11, 14);
 //      定时器
       let _this = this;
       setInterval(function () {
@@ -269,26 +268,26 @@
 
 
 <style>
-  input.el-input__inner {
-    color: cornflowerblue;
-    background-color: rgba(64, 158, 255, 0.32);
-  }
+  /*input.el-input__inner {*/
+    /*color: cornflowerblue;*/
+    /*background-color: rgba(64, 158, 255, 0.32);*/
+  /*}*/
 
-  .title {
-    margin-bottom: 10px;
-  }
+  /*.title {*/
+    /*margin-bottom: 10px;*/
+  /*}*/
 
-  .content {
-    min-height: 300px;
-    max-height: 600px;
-    margin-left: 15px;
-  }
+  /*.content {*/
+    /*min-height: 300px;*/
+    /*max-height: 600px;*/
+    /*margin-left: 15px;*/
+  /*}*/
 
-  .content-item {
-    margin-bottom: 5px;
-  }
+  /*.content-item {*/
+    /*margin-bottom: 5px;*/
+  /*}*/
 
-  .answer {
+  /*.answer {*/
 
-  }
+  /*}*/
 </style>

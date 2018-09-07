@@ -30,7 +30,8 @@ Vue.prototype.http = async function (url, queryData, timeout) {
         /**
          * 此处必须使用application/json，不能使用text/json
          * */
-        headers: {"Content-Type": 'application/json;charset=UTF-8', "token": token, 'Cookie' : document.cookie},
+        headers: {"Content-Type": 'application/json;charset=UTF-8', "token": token},
+        // headers: {"Content-Type": 'application/json;charset=UTF-8', "token": token, 'Cookie' : document.cookie},
         method: 'post',
         url: host + url,
         data: JSON.stringify(queryData),
