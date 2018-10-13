@@ -25,7 +25,7 @@ Vue.prototype.http = async function (url, queryData, timeout) {
       timeout = 5000;
     }
     let token = sessionStorage.getItem("token");
-    console.log("cookie", document.cookie);
+    // console.log("cookie", document.cookie);
     response = await axios({
         /**
          * 此处必须使用application/json，不能使用text/json
