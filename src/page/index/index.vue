@@ -18,13 +18,12 @@
         </div>
       </div>
     </el-row>
-    <el-row :gutter=0>
-      <div class="lrcon-idx" style="display: flex">
+    <el-row :gutter=0 class="elrow-main">
+      <div class="lrcon-idx">
         <div>
           <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
                    @select="handleSelect" :unique-opened="true" :router="false"
                    :collapse="isCollapse" :style="menuClass">
-
             <el-menu-item index="oprBtn">
               <i class="el-icon-menu"></i>
               <span slot="title">展开&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -43,7 +42,6 @@
               <el-menu-item index="/paperPolicy">试卷策略</el-menu-item>
 
             </el-submenu>
-
             <el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-document"></i>
@@ -51,7 +49,6 @@
               </template>
               <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
             </el-submenu>
-
             <el-submenu index="3">
               <template slot="title">
                 <i class="el-icon-location"></i>
@@ -64,7 +61,6 @@
               <el-menu-item index="/station">岗位</el-menu-item>
               <el-menu-item index="/user">用户</el-menu-item>
             </el-submenu>
-
             <el-submenu index="4">
               <template slot="title">
                 <i class="el-icon-edit-outline"></i>
@@ -76,21 +72,13 @@
               <el-menu-item index="/scene/myOpen">我开场的</el-menu-item>
             </el-submenu>
           </el-menu>
-
-
         </div>
-        <div style="display: flex; width: 100%;">
-
+        <div class="main">
           <!--以下是右边的数据-->
-          <router-view ref="main" class="main"></router-view>
-
+          <router-view ref="main" style="padding-left: 8px; padding-top: 10px;"></router-view>
         </div>
-
-
       </div>
-
     </el-row>
-
   </div>
 </template>
 
@@ -100,15 +88,6 @@
   import 'element-ui/lib/theme-chalk/index.css'
 
   Vue.use(Element);
-
-  function changeHeight() {
-//     let height = document.documentElement.clientHeight;
-//     console.log("height:::", height);
-// //      this.heightInfo = parseInt(height) - 50;
-//     let res = parseInt(height) - 60 + 'px';
-//     console.log("res:::", res);
-//     this.menuClass.height = res;
-  };
 
   export default {
     name: 'app',
@@ -178,6 +157,12 @@
   body {
     margin: 0;
   }
+  /*   #main-content{
+      width: 1000px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    } */
 
   /*#app {*/
   /*min-width: 1200px;*/
@@ -208,32 +193,6 @@
   }
 
   /* 主内容区 */
-  main {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    min-height: 800px;
-    border: solid 40px #E9ECF1;
-    background-color: #FCFCFC;
-  }
-
-  main .main-left {
-    text-align: center;
-    width: 200px;
-    float: left;
-  }
-
-  main .main-right {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    background-color: #fff;
-    /*padding: 50px 70px;*/
-  }
-
-  main .el-menu {
-    background-color: transparent !important;
-  }
 
   .header {
     background-color: #545C64;
@@ -241,11 +200,6 @@
     height: 50px;
   }
 
-  .main {
-    padding: 10px 0px 10px 10px;
-    flex-direction: inherit;
-    width: 100%;
-  }
 
   /*header 样式*/
 
@@ -261,12 +215,36 @@
 
   .lrcon-idx {
     width: 1002px;
-    /*width: 100%;*/
     margin: 0 auto;
-    padding: 0px;
+    display: -webkit-box;
     /*background: url(../../assets/img/bg_login.png) #fff center 70px no-repeat*/
   }
+  .main {
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    min-height: 800px;
+    background-color: #FCFCFC;
+  }
+  .main>div{
+    width: 100%;
+  }
+  .main .main-left {
+    text-align: center;
+    width: 200px;
+  }
 
+  .main .main-right {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background-color: #fff;
+    /*padding: 50px 70px;*/
+  }
+
+  .main .el-menu {
+    background-color: transparent !important;
+  }
   .lrcon .lrbox {
     width: 760px;
     margin: 0 auto;
