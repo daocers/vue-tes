@@ -34,12 +34,12 @@
                 <span>基础信息</span>
               </template>
 
-              <el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>
-              <el-menu-item index="/property">属性管理</el-menu-item>
-              <el-menu-item index="/questionType">题型管理</el-menu-item>
+              <!--<el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>-->
+              <!--<el-menu-item index="/property">属性管理</el-menu-item>-->
+              <!--<el-menu-item index="/questionType">题型管理</el-menu-item>-->
               <el-menu-item index="/questionBank">题库管理</el-menu-item>
-              <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
-              <el-menu-item index="/paperPolicy">试卷策略</el-menu-item>
+
+              <!--<el-menu-item index="/paperPolicy">试卷策略</el-menu-item>-->
 
             </el-submenu>
             <el-submenu index="2">
@@ -48,6 +48,9 @@
                 <span>试题管理</span>
               </template>
               <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
+              <el-menu-item index="/single">单选题</el-menu-item>
+              <el-menu-item index="/multi">多选题</el-menu-item>
+              <el-menu-item index="/judge">判断题</el-menu-item>
             </el-submenu>
             <el-submenu index="3">
               <template slot="title">

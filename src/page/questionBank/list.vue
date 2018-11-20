@@ -49,10 +49,6 @@
         label="状态">
       </el-table-column>
       <el-table-column
-        prop="isDel"
-        label="删除标识">
-      </el-table-column>
-      <el-table-column
         prop="createUserId"
         label="创建人">
       </el-table-column>
@@ -182,8 +178,8 @@
           memo:
             [
 //              {required: true, message: '请输入memo', trigger: 'blur'},
-              {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
-            ],
+            {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
+          ],
         }
 
       }
@@ -195,7 +191,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/questionBank/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/questionBank/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -217,6 +213,7 @@
       toAdd() {
         console.log("唤起添加对话框")
         this.addDialogShow = true;
+        this.dataForEdit = {};
       },
       /**
        * 唤起编辑对话框
@@ -239,7 +236,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/questionBank/api/update.do', this.dataForEdit, 1000);
+            var res = await this.http('/questionBank/api/save', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -267,7 +264,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/questionBank/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/questionBank/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -299,7 +296,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/questionBank/api/delete.do?id=" + row.id);
+        let data = await this.http("/questionBank/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

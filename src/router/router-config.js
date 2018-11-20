@@ -44,11 +44,12 @@ import Index from '../page/index/index.vue'
 
 
 import Login from '../page/index/login.vue'
-// import  from '../page/station/list.vue'
-// import Station from '../page/station/list.vue'
-// import Station from '../page/station/list.vue'
-// import Station from '../page/station/list.vue'
-// import Station from '../page/station/list.vue'
+
+// const Login = (r) => require(['../page/index/login.vue'])
+
+import Single from '../page/single/list'
+import Multi from '../page/multi/list'
+import Judge from '../page/judge/list'
 
 export default [
   {path: '/login', component: Login},
@@ -63,6 +64,9 @@ export default [
     path: '/',
     component: Index,
     children: [
+      {path: '/single', component: Single},
+      {path: '/multi', component: Multi},
+      {path: '/judge', component: Judge},
       {path: '/role', component: RoleIndex},
       {path: '/station', component: StationIndex},
       {path: '/branch', component: BranchIndex},
