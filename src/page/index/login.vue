@@ -124,7 +124,8 @@
          let _router = this.$router;
         this.$refs.loginForm.validate(async (valid) => {
           if(valid){
-            let res = await this.http('/user/api/signIn.do', this.login);
+            let res = await this.postParam('/user/api/login', this.login);
+            console.log("结果：", res);
             if(res){
               console.log("res:::", res);
               let token = res.token;
