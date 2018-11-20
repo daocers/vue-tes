@@ -3,7 +3,8 @@
     <el-row style="margin-bottom: 30px;">
       <el-form>
         <el-form-item label="题库">
-          <el-select v-model="$parent.$data.scene.questionBankId" placeholder="请指定本场考试所用题库" size="medium" @change="handleBankChange">
+          <el-select v-model="$parent.$data.scene.questionBankId" placeholder="请指定本场考试所用题库" size="medium"
+                     @change="handleBankChange">
             <el-option v-for="bank in questionBankList" :key="bank.id" :value="bank.id" :label="bank.name">
             </el-option>
           </el-select>
@@ -12,13 +13,18 @@
       </el-form>
 
 
-      <el-row  style="margin-top: 10px;">
+      <el-row style="margin-top: 10px;">
         <el-tag style="margin-right: 30px;">已选策略</el-tag>
         <!--<span style="color: red;" v-show="paperPolicyAvailable == false">当前试题策略无法生成试卷</span>-->
-        <el-tag type="danger"  v-show="$parent.$data.paperPolicyAvailable == false"><i class="el-icon-error"></i> 当前试题策略无法生成试卷</el-tag>
-        <el-tag type="success" style="color: green;" v-show="$parent.$data.paperPolicyAvailable == true"><i class="el-icon-success"></i>当前策略可用</el-tag>
+        <el-tag type="danger" v-show="$parent.$data.paperPolicyAvailable == false"><i class="el-icon-error"></i>
+          当前试题策略无法生成试卷
+        </el-tag>
+        <el-tag type="success" style="color: green;" v-show="$parent.$data.paperPolicyAvailable == true"><i
+          class="el-icon-success"></i>当前策略可用
+        </el-tag>
         <el-button v-show="$parent.$data.scene.questionBankId && $parent.$data.scene.paperPolicyId"
-                   type="warning" @click="checkPaperPolicy" style="float: right" size="medium">校验试题策略</el-button>
+                   type="warning" @click="checkPaperPolicy" style="float: right" size="medium">校验试题策略
+        </el-button>
       </el-row>
 
 
@@ -199,11 +205,11 @@
           let res = await this.http("/paperPolicy/api/checkPaperPolicy.do?paperPolicyId=" +
             paperPolicyId + "&questionBankId=" + questionBankId);
           console.log("校验：：：", res);
-          if(res == true){
+          if (res == true) {
             this.$parent.$data.paperPolicyAvailable = true;
-          }else if(res == false){
+          } else if (res == false) {
             this.$parent.$data.paperPolicyAvailable = false;
-          }else{
+          } else {
             this.$parent.$data.paperPolicyAvailable = null;
           }
 
@@ -213,7 +219,7 @@
       /**
        * 处理题库变更
        */
-      handleBankChange(bankId){
+      handleBankChange(bankId) {
         console.log("题库变更");
         this.$parent.$data.paperPolicyAvailable = null;
       },
@@ -247,6 +253,7 @@
         this.$parent.$data.scene.checkedPaperPolicy = [currentRow];
 
         this.$parent.$data.scene.paperPolicyId = currentRow.id;
+        $parent.$data.paperPolicyAvailable = null;
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
