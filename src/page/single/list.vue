@@ -164,6 +164,48 @@
     </el-dialog>
 
 
+    <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
+      <el-form label-position="left" ref="batchForm" :rules="batchAddRules" :model="dataForBatch" label-width="60px">
+        <el-form-item label="题库" prop="questionBankId" :label-width="labelWidth">
+          <el-select v-model="dataForBatch.questionBankId" placeholder="请选择题库">
+            <el-option v-for="bank in questionBankList"
+                       :key="bank.id"
+                       :label="bank.name"
+                       :value="bank.id">
+
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+      </el-form>
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        :limit="1"
+        :data="dataForBatch"
+        action="http://localhost:8080/single/api/batchAdd"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-change="handleChange"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :file-list="fileList"
+        :auto-upload="false">
+
+        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <div style="display: inline-block; margin-left: 20px;">
+          没有模板？<a type="success" href="#" @click="download">下载模板</a>
+        </div>
+        <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
+      </el-upload>
+
+      <el-alert v-show="batchAddErrorMessage != ''"
+                v-bind:title='batchAddErrorMessage'
+                type="error">
+      </el-alert>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -191,6 +233,8 @@
          * 查询参数校验规则
          **/
         queryRules: {},
+        //题库列表
+        questionBankList: {},
         /**
          * 查询参数
          **/
@@ -200,19 +244,30 @@
           pageNum: 1,
         },
         /**
-         * 修改对话框是否显示
+         * 修改对话框是否显示 修改对话框数据, 索引值
          */
         editDialogShow: false,
-
-        /**
-         * 修改对话框数据
-         */
         dataForEdit: {},
+        dataForEditIndex: null,
 
         /**
-         * 修改对话框数据索引值
-         */
-        dataForEditIndex: null,
+         * 批量添加
+         * */
+        batchAddErrorMessage: '',
+        batchAddDialogShow: false,
+        batchAddRules: {
+          questionBankId: [
+            {type: 'number', required: true, message: '请选择题库', trigger: 'change'}
+          ]
+        },
+        // 批量上传下载模板时候的参数信息
+        dataForBatch: {
+          questionBankId: null,
+        },
+        //上传文件列表
+        fileList: [],
+        //是否可以上传
+        uploadFlag: false,
 
         /**
          * 校验规则
@@ -239,7 +294,6 @@
             ],
 
 
-
           publicFlag:
             [
               // {required: true, message: '请输入publicFlag', trigger: 'blur'},
@@ -254,9 +308,63 @@
 
 
     methods: {
+      /**
+       * 批量添加对话框关闭时候执行
+       */
+      handleClose() {
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+      },
+
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+        fileList.shift(file);
+        this.uploadFlag = fileList.length > 0 ? true: false;
+        console.log("fileList", this.fileList)
+      },
+      handleChange(file, fileList) {
+        console.info("change file: ", file);
+        console.info("change fileList: ", fileList);
+        this.uploadFlag = fileList.length > 0 ? true: false;
+
+      },
+      handlePreview(file) {
+        console.log("导入结果：", file.response);
+      },
+
+      /**
+       * 服务器成功响应并处理后回调
+       */
+      handleSuccess(response, file, fileList) {
+        console.log("上传结果：", response)
+        if (response.result == false) {
+          this.batchAddErrorMessage = response.message;
+        } else {
+          this.findByCondition();
+          this.$refs.upload.clearFiles();
+          this.batchAddDialogShow = false;
+          this.$notify({
+            title: '成功',
+            message: '批量导入单选试题成功',
+            type: 'success',
+            duration: 0
+          });
+        }
+      },
+      handleError(err, file, fileList) {
+        console.log("上传失败，原因：", err);
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+        this.$notify({
+          title: '失败',
+          message: '批量导入单选试题失败',
+          type: 'error',
+          duration: 0
+        });
+      },
       download() {
         this.batchAddErrorMessage = '';
-        window.location.href = "http://localhost:8080/single/downloadModel";
+        window.location.href = "http://localhost:8080/single/api/downloadModel";
       },
 
       toBatchAdd() {
@@ -264,6 +372,7 @@
 //        this.$refs.upload.clearFiles();
         this.batchAddErrorMessage = '';
         this.batchAddDialogShow = true;
+        this.findQuestionBanks();
       },
       /**
        * 批量导入
@@ -279,6 +388,14 @@
           }
         });
 
+      },
+
+      /*
+      * 查找所有题库信息
+      * */
+      findQuestionBanks: async function () {
+        let data = await  this.postParam("/questionBank/api/findAll");
+        this.questionBankList = data;
       },
 
       /**
