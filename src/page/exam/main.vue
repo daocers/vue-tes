@@ -153,7 +153,7 @@
        */
       async commitPaper() {
         console.log("提交试卷！");
-        let res = await this.http("/exam/api/commitPaper.do?paperId=" + this.paperId, this.questionList);
+        let res = await this.http("/exam/api/commitPaper?paperId=" + this.paperId, this.questionList);
         if (res) {
           this.$notify.success({
             title: "成功",
@@ -227,7 +227,7 @@
         return false;
       }
       console.log("created");
-      let questionList = await this.http("/exam/api/getQuestionList.do?sceneId=" + this.sceneId);
+      let questionList = await this.http("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (questionList) {
         this.questionList = questionList;
       } else {

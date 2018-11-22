@@ -323,7 +323,7 @@
        */
       async findByCondition() {
         console.log("开始分页查询")
-        let data = await this.http("/questionPolicy/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/questionPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -381,10 +381,10 @@
           } else {
             let url, addFlag;
             if(this.dataForEdit.id > 0){
-              url = "/questionPolicy/api/update.do";
+              url = "/questionPolicy/api/update";
               addFlag = false;
             }else{
-              url = "/questionPolicy/api/save.do";
+              url = "/questionPolicy/api/save";
               addFlag = true;
             }
             var res = await this.http(url, this.dataForEdit, 1000);
@@ -429,7 +429,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/questionPolicy/api/delete.do?id=" + row.id);
+        let data = await this.http("/questionPolicy/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -481,10 +481,10 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let questionTypeInfo = await this.http("/questionType/api/getQuestionTypeInfo.do");
+      let questionTypeInfo = await this.http("/questionType/api/getQuestionTypeInfo");
       console.log("questionTypeInfo: ", questionTypeInfo);
       this.questionTypeInfo = questionTypeInfo;
-      let questionTypeList = await this.http("/questionType/api/findAll.do");
+      let questionTypeList = await this.http("/questionType/api/findAll");
       this.questionTypeList = questionTypeList;
     },
     computed: {

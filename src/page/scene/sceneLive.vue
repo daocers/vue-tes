@@ -74,7 +74,7 @@
        */
       forceCommit: async function (userId) {
         console.log("userId:::", userId)
-        let data = await this.http("/paper/api/forceCommit.do?sceneId=" + this.sceneId + "&userId=" + userId);
+        let data = await this.http("/paper/api/forceCommit?sceneId=" + this.sceneId + "&userId=" + userId);
         if (data) {
           console.log("强制提交试卷成功");
         }
@@ -86,7 +86,7 @@
        */
       findByCondition: async function () {
         console.log("queryForm:::", this.queryForm);
-        let data = await this.http("/paper/api/findSceneLiveData.do?sceneId=" + this.sceneId + "&pageNum=" +
+        let data = await this.http("/paper/api/findSceneLiveData?sceneId=" + this.sceneId + "&pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {

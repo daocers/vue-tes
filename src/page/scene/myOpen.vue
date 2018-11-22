@@ -189,7 +189,7 @@
        */
       findByCondition: async function () {
         console.log("queryForm:::", this.queryForm);
-        let data = await this.http("/scene/api/myOpen.do?pageNum=" +
+        let data = await this.http("/scene/api/myOpen?pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {

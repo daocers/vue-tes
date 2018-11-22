@@ -247,7 +247,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/paperPolicy/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/paperPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -302,7 +302,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/paperPolicy/api/save.do', this.dataForEdit, 3000);
+            var res = await this.http('/paperPolicy/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
 //                修改
@@ -355,7 +355,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/paperPolicy/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/paperPolicy/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -390,7 +390,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/paperPolicy/api/delete.do?id=" + row.id);
+        let data = await this.http("/paperPolicy/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -471,7 +471,7 @@
        * 获取试题策略列表
        */
       async getQuestionPolicyList() {
-        let questionPolicyList = await this.http("/questionPolicy/api/findByCondition.do?pageNum="
+        let questionPolicyList = await this.http("/questionPolicy/api/findByCondition?pageNum="
           + this.policyQueryForm.pageNum + "&pageSize=" + this.policyQueryForm.pageSize, this.policyQueryForm);
         if (questionPolicyList) {
           this.questionPolicyList = questionPolicyList.list;
@@ -487,7 +487,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let questionTypeList = await  this.http("/questionType/api/findAll.do");
+      let questionTypeList = await  this.http("/questionType/api/findAll");
       if (questionTypeList) {
         this.questionTypeList = questionTypeList;
         for (let i = 0; i < questionTypeList.length; i++) {

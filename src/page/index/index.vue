@@ -4,15 +4,15 @@
       <div class="header">
         <div class="nag">
           <div class="in">
-            <a href="/index.do"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
+            <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
                                      alt="布谷培训"></a>
             <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
 
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">TES考试系统</span>
             <p class="nlink n2">
-              <a href="/index.do">首页</a>
-              <a href="/help/index.do" target="_blank">帮助中心</a>
+              <a href="/index">首页</a>
+              <a href="/help/index" target="_blank">帮助中心</a>
             </p>
           </div>
         </div>
@@ -318,7 +318,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px dotted #ddd
+    border-top: 1pxtted #ddd
   }
 
   .en .lrcon .lr_lf {

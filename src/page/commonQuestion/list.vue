@@ -288,7 +288,7 @@
         ref="upload"
         :limit="1"
         :data="dataForBatch"
-        action="http://localhost:8090/commonQuestion/api/batchAdd.do"
+        action="http://localhost:8090/commonQuestion/api/batchAdd"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
@@ -300,7 +300,7 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="#" @click="download">下载模板</a>
+          没有模板？<a type="success" href="#" @click=wnload">下载模板</a>
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
@@ -498,12 +498,12 @@
 
 
     methods: {
-      download() {
+     wnload() {
         if (this.dataForBatch.questionTypeId == null) {
           this.batchAddErrorMessage = "请选择题型";
         } else {
           this.batchAddErrorMessage = '';
-          window.location.href = "http://localhost:8090/commonQuestion/downloadModel.do?questionTypeId=" + this.dataForBatch.questionTypeId;
+          wiw.location.href = "http://localhost:8090/commonQuestionwnloadModel?questionTypeId=" + this.dataForBatch.questionTypeId;
         }
       },
 
@@ -533,7 +533,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/commonQuestion/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/commonQuestion/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -577,7 +577,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/commonQuestion/api/update.do', this.dataForEdit, 1000);
+            var res = await this.http('/commonQuestion/api/update', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -605,7 +605,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/commonQuestion/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/commonQuestion/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -637,7 +637,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/commonQuestion/api/delete.do?id=" + row.id);
+        let data = await this.http("/commonQuestion/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -752,7 +752,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let questionTypeList = await this.http("/questionType/api/findAll.do");
+      let questionTypeList = await this.http("/questionType/api/findAll");
       this.questionTypeList = questionTypeList;
       console.log("题型信息： ", questionTypeList)
       if (questionTypeList != null) {
@@ -762,9 +762,9 @@
         }
         console.log("questionTypeMap: {}", this.questionTypeMap)
       }
-      let questionBankList = await this.http("/questionBank/api/findAll.do");
+      let questionBankList = await this.http("/questionBank/api/findAll");
       this.questionBankList = questionBankList;
-      let propertyList = await this.http("/property/api/findAll.do");
+      let propertyList = await this.http("/property/api/findAll");
       this.propertyList = propertyList;
     },
     computed: {}

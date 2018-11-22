@@ -14,7 +14,7 @@
     <div class="tree">
       <el-tree
         :data="treeData"
-        :check-strictly="doNotRelation"
+        :check-strictly=NotRelation"
         show-checkbox
         default-expand-all
         :default-checked-keys="defaultChecked"
@@ -61,7 +61,7 @@
         /**
          * 父子是否不进行关联勾选
          */
-        doNotRelation: true,
+       NotRelation: true,
         /**
          * tree组件的属性配置
          */
@@ -92,7 +92,7 @@
          * 已选择的信息
          * type:List<Obj>
          */
-//        checkedObjInfo: {},
+//        checkbjInfo: {},
 
         /**
          * 已选择的id信息
@@ -121,11 +121,11 @@
         let treeData;
         console.log("查询tree data...")
         if (this.userSelectType == 1) {
-          treeData = await this.http("/branch/api/getBranchTree.do");
+          treeData = await this.http("/branch/api/getBranchTree");
         } else if (this.userSelectType == 2) {
-          treeData = await  this.http("/department/api/findAll.do");
+          treeData = await  this.http("/department/api/findAll");
         } else if (this.userSelectType == 3) {
-          treeData = await this.http("/station/api/findAll.do");
+          treeData = await this.http("/station/api/findAll");
         }
         if (!treeData) {
           treeData = [];
@@ -156,8 +156,8 @@
             data['typeName'] = "岗位";
             data['type'] == 3;
           }
-//          if (!this.checkedObjInfo[type]) {
-//            this.checkedObjInfo[type] = [];
+//          if (!this.checkbjInfo[type]) {
+//            this.checkbjInfo[type] = [];
 //          }
           if (!this.checkedIdInfo[type]) {
             this.checkedIdInfo[type] = [];
@@ -166,7 +166,7 @@
           if (idx > -1) {
             console.log("已经存在");
           } else {
-//            this.checkedObjInfo[type].push(data);
+//            this.checkbjInfo[type].push(data);
             this.checkedIdInfo[type].push(data.id);
             this.checkedList.push(data);
             this.checkedKeyList.push(key);
@@ -174,19 +174,19 @@
 
 
 //          console.log("checkedIdInfo:@@@", this.checkedIdInfo);
-//          console.log("checkedObjInfo:@@@", this.checkedObjInfo);
+//          console.log("checkbjInfo:@@@", this.checkbjInfo);
 //          console.log("checkedList:@@", this.checkedList);
         } else {
           console.log("cancel^&^^^^^^^^^^^^")
 //          console.log("checkedIdInfo:@@@**", this.checkedIdInfo);
-//          console.log("checkedObjInfo:@@@**", this.checkedObjInfo);
+//          console.log("checkbjInfo:@@@**", this.checkbjInfo);
 //          console.log("checkedList:@@**", this.checkedList);
 
           let idx = this.checkedIdInfo[type].indexOf(data.id);
           console.log("idx: ", idx);
           if (idx > -1) {
             this.checkedIdInfo[type].splice(idx, 1);
-//            this.checkedObjInfo[type].splice(idx, 1);
+//            this.checkbjInfo[type].splice(idx, 1);
           }
           let objIdx = this.checkedKeyList.indexOf(key);
           console.log("objIdx: ", objIdx);
@@ -198,7 +198,7 @@
           }
 
 //          console.log("checkedIdInfo:@@@****", this.checkedIdInfo);
-//          console.log("checkedObjInfo:@@@****", this.checkedObjInfo);
+//          console.log("checkbjInfo:@@@****", this.checkbjInfo);
 //          console.log("checkedList:@@****", this.checkedList);
         }
 //        this.$set(this.$parent.$data.scene.checkedList, this.checkedList);
@@ -221,7 +221,7 @@
       this.checkedList = this.$parent.$data.scene.checkedList;
       this.checkedKeyList = this.$parent.$data.scene.checkedKeyList;
       this.checkedIdInfo = this.$parent.$data.scene.checkedIdInfo;
-//      this.checkedObjInfo = this.$parent.$data.scene.checkedObjInfo;
+//      this.checkbjInfo = this.$parent.$data.scene.checkbjInfo;
     }
   }
 </script>

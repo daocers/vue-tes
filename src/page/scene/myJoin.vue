@@ -181,7 +181,7 @@
        * @returns {Promise.<void>}
        */
       findByCondition: async function () {
-        let data = await this.http("/scene/api/myJoin.do?pageNum=" +
+        let data = await this.http("/scene/api/myJoin?pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {

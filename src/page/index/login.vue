@@ -7,15 +7,15 @@
     <div class="header">
       <div class="nag">
         <div class="in">
-          <a href="/index.do"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
+          <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
                                    alt="布谷培训"></a>
           <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
 
           <span class="gp" style="display:"></span>
           <span class="tl" style="display:">欢迎登录</span>
           <p class="nlink n2">
-            <a href="/index.do">首页</a>
-            <a href="/help/index.do" target="_blank">帮助中心</a>
+            <a href="/index">首页</a>
+            <a href="/help/index" target="_blank">帮助中心</a>
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@
 
           <div class="lr_p">
             还不是会员？<a tabindex="7" class="a2"
-                     href="/register.do">免费注册</a>
+                     href="/register">免费注册</a>
           </div>
           <div class="mind">
             温馨提示：为了避免耽误您的考试，遇到问题请及时联系管理教师。 <a tabindex="8" class="a" target="_blank"
@@ -238,7 +238,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px dotted #ddd
+    border-top: 1pxtted #ddd
   }
   .en .lrcon .lr_lf {
     width: 197px;

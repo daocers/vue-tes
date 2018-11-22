@@ -153,7 +153,7 @@
         class="upload-demo"
         ref="upload"
         :limit="1"
-        action="http://localhost:8090/user/api/batchAdd.do"
+        action="http://localhost:8080/user/api/batchAdd"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
@@ -164,7 +164,7 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="http://localhost:8090/user/downloadModel.do">下载模板</a>
+          没有模板？<a type="success" href="http://localhost:8080/user/api/downloadModel">下载模板</a>
           <!--<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>-->
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
@@ -275,7 +275,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/user/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/user/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -329,12 +329,14 @@
       /**
        * 唤起分配角色对话框
        */
-      toAssign(idx, row) {
+      async toAssign(idx, row) {
         console.log("分派角色：：", row)
         this.dataForAssign = JSON.parse(JSON.stringify(row));
         console.log("this.dataForAssign:::", this.dataForAssign);
+        let roleIds = await this.http("/role/api/findByUserId?userId=" + this.dataForAssign.id);
         this.dataForEditIndex = idx;
         this.assignDialogShow = true;
+        this.dataForAssign.roleIdList = roleIds;
       },
       /**
        * 提交更新数据
@@ -348,7 +350,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/user/api/update.do', this.dataForEdit, 1000);
+            var res = await this.http('/user/api/update', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -376,7 +378,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/user/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/user/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -408,7 +410,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/user/api/delete.do?id=" + row.id);
+        let data = await this.http("/user/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -437,7 +439,7 @@
        * 提交角色分配信息
        */
       async commitAssign() {
-        let res = await this.http("/user/api/assignRole.do?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
+        let res = await this.http("/user/api/assignRole?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
         if (res) {
           Vue.set(this.tableData, this.dataForEditIndex, this.dataForAssign);
           this.$notify({
@@ -523,7 +525,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let roleList = await this.http("/role/api/findAll.do");
+      let roleList = await this.http("/role/api/findAll");
       this.roleList = roleList;
     },
   }

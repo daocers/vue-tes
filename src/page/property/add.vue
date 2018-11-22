@@ -34,7 +34,7 @@
                                             <el-form-item label="updateTime" prop="updateTime">
                             <el-input v-model="property.updateTime" placeholder="请输入"></el-input>
                         </el-form-item>
-                    
+
                     <el-form-item>
                         <el-button type="primary" @click="add">保存</el-button>
                         <el-button type="info" plain @click="goBack">取消</el-button>
@@ -114,7 +114,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        let res = await this.http("/property/api/save.do", this.property);
+                        let res = await this.http("/property/api/save", this.property);
                         if (res == true) {
                             this.$confirm('继续添加?查看列表?', '提示', {
                                 confirmButtonText: '继续添加',

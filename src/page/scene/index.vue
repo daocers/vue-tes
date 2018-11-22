@@ -3,7 +3,7 @@
     <div class="steps">
       <el-steps :active="step" simple>
         <el-step title="信息设置" icon="el-icon-setting"></el-step>
-        <el-step title="试卷生成" class="paper" icon="el-icon-document"></el-step>
+        <el-step title="试卷生成" class="paper" icon="el-iconcument"></el-step>
         <el-step title="选择考生" class="user" icon="el-icon-picture"></el-step>
         <el-step title="场次预览" icon="el-icon-view"></el-step>
       </el-steps>
@@ -78,7 +78,7 @@
            * 已选择的信息
            * type:List<Obj>
            */
-//          checkedObjInfo: {},
+//          checkbjInfo: {},
 
           /**
            * 已选择的id信息
@@ -164,7 +164,7 @@
           }
 
         } else if (this.step == 4) {
-          let data = this.http("/scene/api/save.do", this.scene);
+          let data = this.http("/scene/api/save", this.scene);
           if (data) {
             console.log("保存成功");
           } else {
@@ -199,7 +199,7 @@
       save: async function () {
         console.log("保存。。。");
         console.log("scene:::::#### ", this.scene);
-        let res = await this.http("/scene/api/save.do", this.scene);
+        let res = await this.http("/scene/api/save", this.scene);
         if (res) {
           if (res == -1) {
             this.$notify({

@@ -141,7 +141,7 @@
         class="upload-demo"
         ref="upload"
         :limit="1"
-        action="http://localhost:8090/branch/api/batchAdd.do"
+        action="http://localhost:8090/branch/api/batchAdd"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
@@ -152,8 +152,8 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="http://localhost:8090/branch/downloadModel.do">下载模板</a>
-          <!--<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>-->
+          没有模板？<a type="success" href="http://localhost:8090/branchwnloadModel">下载模板</a>
+          <!--<el-button  size="small" type="success" plain @click=wnloadModel">下载模板</el-button>-->
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
@@ -276,7 +276,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/branch/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/branch/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -338,7 +338,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/branch/api/update.do', this.dataForEdit, 1000);
+            var res = await this.http('/branch/api/update', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -366,7 +366,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/save.do", this.dataForAdd, 1000);
+            let res = await this.http("/branch/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -398,7 +398,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/branch/api/delete.do?id=" + row.id);
+        let data = await this.http("/branch/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

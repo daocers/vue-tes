@@ -201,7 +201,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/role/api/findByCondition.do?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.http("/role/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -233,7 +233,7 @@
         console.log("授权")
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.authRoleId = row.id;
-        let permissionIdList = await this.http("/permission/api/findPermissionIdListByRoleId.do?roleId=" + row.id);
+        let permissionIdList = await this.http("/permission/api/findPermissionIdListByRoleId?roleId=" + row.id);
         if(permissionIdList){
           console.log(":::::", permissionIdList)
           this.dataForEdit.permissionIdList = permissionIdList;
@@ -269,7 +269,7 @@
         if (!checkedIds || checkedIds.length == 0) {
           this.$message.warning("请选择权限菜单");
         } else {
-          let res = await this.http("/role/api/authorize.do?roleId=" + this.authRoleId, checkedIds);
+          let res = await this.http("/role/api/authorize?roleId=" + this.authRoleId, checkedIds);
           if (res) {
             this.dataForEdit.permissionIdList = checkedIds;
             this.$message.success("授权成功");
@@ -302,10 +302,10 @@
           } else {
             let res, addFlag;
             if (this.dataForEdit.id) {
-              res = await this.http("/role/api/update.do", this.dataForEdit);
+              res = await this.http("/role/api/update", this.dataForEdit);
               addFlag = false;
             } else {
-              res = await this.http("/role/api/save.do", this.dataForEdit);
+              res = await this.http("/role/api/save", this.dataForEdit);
               addFlag = true;
             }
             if (res) {
@@ -351,7 +351,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/role/api/delete.do?id=" + row.id);
+        let data = await this.http("/role/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -393,7 +393,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let treeData = await this.http("/permission/api/getPermissionTree.do", null);
+      let treeData = await this.http("/permission/api/getPermissionTree", null);
       if (treeData) {
         this.treeData = treeData;
       }

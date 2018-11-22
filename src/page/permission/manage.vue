@@ -230,13 +230,16 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/permission/api/save.do", this.dataForAdd);
-            if (res != null && res != undefined) {
+            let res = await this.http("/permission/api/save", this.dataForAdd);
+            if (res) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
 
 //              子节点，加入到对应的子节点中
               if (currentNode) {
+                if(!currentNode.children){
+                  currentNode.children = [];
+                }
                 currentNode.children.push(JSON.parse(JSON.stringify(this.dataForAdd)));
               } else {
 //                添加的根节点，直接添加到树组件数据中
@@ -273,7 +276,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/permission/api/update.do", this.dataForEdit);
+            let res = await this.http("/permission/api/update", this.dataForEdit);
             if (res == true) {
               console.log("this.dataForEdit:::", this.dataForEdit)
               var node = this.$refs['tree'].getCurrentNode();
@@ -321,7 +324,7 @@
 
     },
     created: async function () {
-      let data = await this.http("/permission/api/getPermissionTree.do", null);
+      let data = await this.http("/permission/api/getPermissionTree", null);
       if (data == null || data == undefined) {
         data = [];
       }

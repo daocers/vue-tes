@@ -197,7 +197,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/save.do", this.dataForAdd);
+            let res = await this.http("/branch/api/save", this.dataForAdd);
             if(res != null && res != undefined){
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
@@ -228,7 +228,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/update.do", this.dataForEdit);
+            let res = await this.http("/branch/api/update", this.dataForEdit);
             if(res == true){
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
@@ -267,7 +267,7 @@
 
     },
     created: async function () {
-      let data = await this.http("/branch/api/getBranchTree.do", null);
+      let data = await this.http("/branch/api/getBranchTree", null);
       if(data == null || data == undefined){
         data  = [];
       }
