@@ -157,6 +157,10 @@
 
     },
     methods: {
+      toEdit(idx, scene){
+        console.log("scene:", scene);
+        this.$router.push({path: '/scene/open?id=' + scene.id})
+      },
 
       /**
        * 查看考试现场

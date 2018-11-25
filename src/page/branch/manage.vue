@@ -201,6 +201,9 @@
             if(res != null && res != undefined){
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
+              if(!currentNode.children){
+                currentNode.children = [];
+              }
               currentNode.children.push(this.dataForAdd);
               this.addBtnShow = true;
               this.addFormShow = false;
@@ -228,7 +231,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/update", this.dataForEdit);
+            let res = await this.http("/branch/api/save", this.dataForEdit);
             if(res == true){
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
@@ -257,7 +260,7 @@
       handleNodeClick(node) {
         console.log("节点被点击： ", node);
         if (this.addFormShow) {
-          console.log("add ... ", node);
+          console.log("manage ... ", node);
           this.setAddData();
         } else if (this.editFormShow) {
           console.log("edit ... ", node);

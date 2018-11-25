@@ -69,6 +69,7 @@
                 <i class="el-icon-edit-outline"></i>
                 <span>考试管理</span>
               </template>
+              <el-menu-item index="/scene/open">快速开场</el-menu-item>
               <el-menu-item index="/scene">场次管理</el-menu-item>
               <el-menu-item index="/exam">考试</el-menu-item>
               <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>

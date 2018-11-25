@@ -19,7 +19,7 @@ import CommonQuestionAdd from '../page/commonQuestion/add.vue'
 import DepartmentIndex from '../page/department/list.vue'
 import DepartmentAdd from '../page/department/add.vue'
 import BranchIndex from '../page/branch/list.vue'
-import BranchAdd from '../page/branch/add.vue'
+import BranchManage from '../page/branch/manage.vue'
 import StationIndex from '../page/station/list.vue'
 import PropertyIndex from '../page/property/list.vue'
 import Test from '../page/test.vue'
@@ -40,6 +40,7 @@ import SceneMyJoin from '../page/scene/myJoin.vue'
 import SceneMyOpen from '../page/scene/myOpen.vue'
 import SceneLive from '../page/scene/sceneLive'
 import UserIndex from '../page/user/list.vue'
+import FastOpen from '../page/scene/fast_open'
 import Index from '../page/index/index.vue'
 
 
@@ -70,7 +71,7 @@ export default [
       {path: '/role', component: RoleIndex},
       {path: '/station', component: StationIndex},
       {path: '/branch', component: BranchIndex},
-      {path: '/branch/manage', component: BranchAdd},
+      {path: '/branch/manage', component: BranchManage},
       {path: '/permission', component: PermissionIndex},
       {path: '/permission/manage', component: PermissionManage},
       {path: '/property', component: PropertyIndex},
@@ -81,6 +82,8 @@ export default [
       {path: '/commonQuestion', component: CommonQuestionIndex},
       {path: '/commonQuestion/add', component: CommonQuestionAdd},
       {path: '/scene/list', component: SceneList},
+      {path: '/scene/open', component: FastOpen},
+
       {
         path: '/scene',
         component: Scene,
