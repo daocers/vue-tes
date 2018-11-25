@@ -29,8 +29,14 @@
       exit(){
         this.$router.push("/");
       },
-      toExam(){
-        this.$router.push("/exam/main?id=" + this.sceneId);
+      async toExam(){
+        console.log("准备考试生成试卷")
+        let res = this.postParam("/exam/api/generatePaper", {sceneId: this.sceneId}, 10000);
+        if(res){
+          this.$router.push("/exam/main?id=" + this.sceneId);
+        }else{
+          this.$alert("生成试卷失败，请重试");
+        }
       }
     },
     created: function () {

@@ -1,7 +1,7 @@
 <template>
   <div class="entrance">
     <el-row>
-      <el-col :span="16">
+      <el-col :span="20">
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <el-input placeholder="请输入场次授权码" v-model="authCode" class="input-with-select">

@@ -55,7 +55,7 @@
     },
     methods: {
       findByCondition: async function () {
-        let data = await this.http("/exam/api/list?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize);
+        let data = await this.http("/exam/api/findReadyScene?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize);
         if (data) {
           this.tableData = data.list;
           this.totalCount = data.total;//总记录数目

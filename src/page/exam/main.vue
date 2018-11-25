@@ -179,7 +179,7 @@
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
-      this.ws = new WebSocket("ws://localhost:8090/ws/my.ws");
+      this.ws = new WebSocket("ws://localhost:8080/ws/hn.ws");
       console.log("初始化");
       ws.onopen = function () {
         console.log("open。。。")
