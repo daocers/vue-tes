@@ -20,21 +20,21 @@
 
 <script>
   export default {
-    data(){
+    data() {
       return {
         sceneId: null,
       }
     },
-    methods:{
-      exit(){
+    methods: {
+      exit() {
         this.$router.push("/");
       },
-      async toExam(){
+      async toExam() {
         console.log("准备考试生成试卷")
-        let res = this.postParam("/exam/api/generatePaper", {sceneId: this.sceneId}, 10000);
-        if(res){
-          this.$router.push("/exam/main?id=" + this.sceneId);
-        }else{
+        let paperId = await this.postParam("/exam/api/getPaper", {sceneId: this.sceneId}, 10000);
+        if (paperId) {
+          this.$router.push("/exam/main?id=" + this.sceneId + "&paperId=" + paperId);
+        } else {
           this.$alert("生成试卷失败，请重试");
         }
       }
@@ -42,9 +42,9 @@
     created: function () {
       console.log("created")
       let sceneId = this.$route.query.id;
-      if(sceneId){
+      if (sceneId) {
         this.sceneId = sceneId;
-      }else{
+      } else {
         this.$router.replace("/exam")
       }
     }

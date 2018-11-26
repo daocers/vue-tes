@@ -36,7 +36,7 @@
     </el-form-item>
 
     <el-form-item label="顺延时间" prop="delay">
-      <el-select v-model="scene.delay" placeholder="迟到多久不准进场">
+      <el-select v-model="scene.delayMinute" placeholder="迟到多久不准进场">
         <el-option label="15分钟" value="15"></el-option>
         <el-option label="30分钟" value="30"></el-option>
       </el-select>
@@ -68,6 +68,12 @@
 
     <el-form-item label="识别码" prop="authCode">
       <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
+    </el-form-item>
+
+    <el-form-item label="使用题库" prop="questionBankId">
+      <el-select v-model="scene.questionBankId" placeholder="请选择本场使用的题库">
+        <el-option v-for="item in questionBankList" :label="item.name" :key="item.id" :value="item.id"></el-option>
+      </el-select>
     </el-form-item>
 
     <el-form-item label="出卷模式" prop="paperModel">
@@ -166,6 +172,8 @@
         }
       };
       return {
+        /*题库id*/
+        questionBankList: [],
 
         pickerOptions: {
           /*
@@ -198,7 +206,7 @@
           duration: [
             {validator: checkDuration, required: true, trigger: 'change'}
           ],
-          delay: [
+          delayMinute: [
             {required: true, message: '请选择顺延时间', trigger: 'change'}
           ],
           changePaper: [
@@ -213,6 +221,9 @@
           authCode: [
             {required: true, message: '请输入场次识别码', trigger: 'blur'},
             {validator: checkAuthCode, trigger: 'blur'},
+          ],
+          questionBankId: [
+            {required: true, message: '请选择本场考试使用的题库', trigger: 'change'}
           ]
 
         }
@@ -243,6 +254,13 @@
       } else {
         console.log("查询无数据")
       }
+
+      //  获取题库列表
+      let bankList = await this.http("/questionBank/api/findAll");
+      if (bankList) {
+        this.questionBankList = bankList;
+      }
+      console.log("bankList: ", this.questionBankList);
     },
 
     methods: {

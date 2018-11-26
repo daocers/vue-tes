@@ -24,32 +24,24 @@
     <el-row>
       <el-col :span="18">
         <el-card style="margin-bottom: 10px; font-size: 18px; margin-right: 10px;">
-          <div class="title">我国最大的银行是？</div>
+          <div class="title">{{currentQuestion.title}}</div>
           <div class="content">
-            <div class="content-item">A: 工商；</div>
-            <div class="content-item">B: 农业银行；</div>
-            <div class="content-item">C: 交通银行；</div>
-            <div class="content-item">D: 建行；</div>
+            <div class="content-item" v-for="item in currentQuestion.items">{{item}}</div>
           </div>
 
           <div class="answer">
-            <el-radio-group v-show="currentQuestion.typeCode == 'single'" v-model="singleAnswer">
-              <el-radio label="A">A</el-radio>
-              <el-radio label="B">B</el-radio>
-              <el-radio label="C">C</el-radio>
-              <el-radio label="D">D</el-radio>
+            <el-radio-group @change="handleAnswer" v-show="currentQuestion.questionType == '1'" v-model="checkedItems">
+              <el-radio v-for="value in currentChoiceItems" :label="value" :key="value">{{value}}</el-radio>
             </el-radio-group>
-            <el-checkbox-group v-show="currentQuestion.typeCode == 'multi'"
-                               v-model="multiAnswer">
-              <el-checkbox label="A">A</el-checkbox>
-              <el-checkbox label="B">B</el-checkbox>
-              <el-checkbox label="C">C</el-checkbox>
-              <el-checkbox label="D">D</el-checkbox>
-              <el-checkbox label="E">E</el-checkbox>
+
+            <el-checkbox-group @change="handleAnswer" v-show="currentQuestion.questionType == '2'"
+                               v-model="checkedItems">
+              <el-checkbox v-for="item in currentChoiceItems" :label="item" :key="item">{{item}}</el-checkbox>
             </el-checkbox-group>
 
-            <el-checkbox-group v-show="currentQuestion.typeCode == 'judge'"
-                               v-model="judgeAnswer">
+            <el-checkbox-group @change="handleAnswer" v-show="currentQuestion.questionType == '3'"
+                               :max="1"
+                               v-model="checkedItems">
               <el-checkbox label="T">正确</el-checkbox>
               <el-checkbox label="F">错误</el-checkbox>
             </el-checkbox-group>
@@ -63,18 +55,38 @@
         <el-table
           :data="questionList"
           border
-          style="width: 100%;max-height: 800px;">
+          height="500px"
+          max-height="600px"
+          :row-class-name="setRowClass"
+          style="width: 100%;">
           <el-table-column
-            prop="no"
+            type="index"
             label="序号"
-            width="180">
+            width="60">
+            <template slot-scope="scope">
+              <a @click="jumpTo(scope.$index)" href="#" class="no"><div style="height: 100%;width: 100%;">{{scope.$index + 1}}</div></a>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="answer"
+            prop="questionType"
+            label="题型"
+            width="70">
+            <template slot-scope="scope">
+              {{scope.row.questionType == 1 ? "单选题": ''}}
+              {{scope.row.questionType == 2 ? "多选题": ''}}
+              {{scope.row.questionType == 3 ? "判断题": ''}}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="realAnswer"
             label="作答信息"
-            width="180">
+            width="70">
+            <template slot-scope="scope">
+              {{scope.row.realAnswer ? scope.row.realAnswer: ''}}
+            </template>
           </el-table-column>
         </el-table>
+
       </el-col>
     </el-row>
 
@@ -87,15 +99,10 @@
     ws: null,
     data() {
       return {
-        scene: {
-          name: '测试',
-        },
-        currentQuestion: {
-          typeCode: 'single',
-        },
-        singleAnswer: '',
-        multiAnswer: [],
-        judgeAnswer: [],
+        /*被选中的选项*/
+        checkedItems: [],
+        scene: {},
+
 //        剩余时间，单位：秒
         timeLeft: 1000,
 //        定时器上显示的信息
@@ -103,12 +110,15 @@
 
         endTime: new Date(),
 
-        questionList: [
-          {no: '单选第一题', id: '', answer: ''},
-          {no: '单选第二题', id: '', answer: ''},
-          {no: '单选第三题', id: '', answer: ''},
-          {no: '多选第一题', id: '', answer: ''},
-        ]
+        //  试题列表
+        questionList: [],
+        //  试题序号
+        currentQuestionIdx: -1,
+        //   当前试题
+        currentQuestion: {},
+
+        //   当前选项集合
+        currentChoiceItems: [],
       }
     },
     methods: {
@@ -121,13 +131,13 @@
           m = Math.floor(t / 1000 / 60 % 60);
           s = Math.floor(t / 1000 % 60);
 
-          if(h < 10){
+          if (h < 10) {
             h = '0' + h;
           }
-          if(m < 10){
+          if (m < 10) {
             m = '0' + m;
           }
-          if(s < 10){
+          if (s < 10) {
             s = '0' + s;
           }
           this.timerInfo = h + ':' + m + ':' + s;
@@ -136,17 +146,36 @@
 
 
       },
+
+      setRowClass(row) {
+        if (row.rowIndex == this.currentQuestionIdx) {
+          return "current-row"
+        }
+      },
+
+      jumpTo(idx) {
+        console.log("准备跳转到第几题：", idx);
+        this.handleQuestionChange(idx);
+      },
       /**
        * 下一题
        */
       toNext() {
-
+        if (this.currentQuestionIdx == this.questionList.length - 1) {
+          console.log("已经是最后一题了")
+          return false;
+        }
+        this.handleQuestionChange(this.currentQuestionIdx + 1);
       },
       /**
        * 上一题
        */
       toPrev() {
-
+        if (this.currentQuestionIdx == 0) {
+          console.log("已经是第一题了")
+          return false;
+        }
+        this.handleQuestionChange(this.currentQuestionIdx - 1);
       },
       /**
        * 提交试卷
@@ -170,16 +199,87 @@
 
         this.endTime = new Date(new Date().getTime() + this.timeLeft);
       },
+
+      /*处理答案*/
+      handleAnswer(checked) {
+        if (this.checkedItems instanceof Array) {
+          this.checkedItems = this.checkedItems.sort(function (x, y) {
+            if (x < y) {
+              return -1;
+            } else if (x > y) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+          this.currentQuestion.realAnswer = this.checkedItems.join("");
+        } else {
+          this.currentQuestion.realAnswer = this.checkedItems;
+        }
+      },
+
+      /* 处理试题变化 */
+      handleQuestionChange(targetQuestionIdx) {
+        console.log("处理试题")
+        console.log("idx;", this.currentQuestionIdx);
+        console.log("checkedItems:", this.checkedItems);
+
+        //如果正在答题，把答案和剩余时间保存一下
+        if (this.currentQuestionIdx > -1) {
+          this.currentQuestion.leftTimeInfo = this.timerInfo;
+          if (this.checkedItems instanceof Array) {
+            this.currentQuestion.realAnswer = this.checkedItems.join("");
+          } else {
+            this.currentQuestion.realAnswer = this.checkedItems;
+          }
+          this.checkedItems = [];
+          console.log("realAnswer:", this.currentQuestion.realAnswer);
+        }
+
+        this.currentQuestionIdx = targetQuestionIdx;
+        this.currentQuestion = this.questionList[targetQuestionIdx];
+
+        let content = this.currentQuestion.content;
+        if (content) {
+          let items = JSON.parse(content);
+          let chars = 'ABCDEFG'
+          let choiceItems = [];
+          for (var idx = 0; idx < items.length; idx++) {
+            console.log("idx:", idx);
+            choiceItems.push(chars.charAt(idx));
+          }
+          this.currentQuestion.items = items;
+          this.currentChoiceItems = choiceItems;
+        }
+
+        // 跳转后，设置以前的答案
+        let realAnswer = this.currentQuestion.realAnswer;
+        console.log("realAnswer", realAnswer);
+        if (!realAnswer) {
+
+        }
+        if (realAnswer) {
+          let type = this.currentQuestion.questionType;
+          if (type == 1) {
+            this.checkedItems = realAnswer;
+          } else {
+            this.checkedItems = realAnswer.split("");
+          }
+        }
+      }
     },
 
 
     //加载之后执行
-    mounted: function(){
+    mounted: function () {
+      sessionStorage.setItem("userId", 1);
 
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
-      this.ws = new WebSocket("ws://localhost:8080/ws/hn.ws");
+      let userId = sessionStorage.getItem("userId");
+      let ws = new WebSocket("ws://localhost:8080/ws/hn.ws?userId=" + userId);
+      this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {
         console.log("open。。。")
@@ -212,7 +312,7 @@
       }
     },
 
-    beforeDestroy: function(){
+    beforeDestroy: function () {
       console.log("准备关闭websocket...")
       this.ws.onclose();
       console.log("ws关闭了")
@@ -220,34 +320,48 @@
     created: async function () {
 //      场次id，如果找不到，取消
       let sceneId = this.$route.query.id;
-      if(sceneId){
+      if (sceneId) {
         this.sceneId = sceneId;
-      }else{
+      } else {
         this.$router.replace("/exam")
         return false;
       }
       console.log("created");
       let questionList = await this.http("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (questionList) {
+        console.log("questionList:", questionList)
+        // 获取列表，设置初始化的数据
         this.questionList = questionList;
+        // this.currentQuestionIdx = 0;
+        // this.currentQuestion = questionList[0];
+        this.handleQuestionChange(0);
       } else {
         this.$notify.error({
           title: '错误',
           message: '获取试题信息失败',
           duration: 0
         })
+        return false;
       }
-//      let end = new Date();
-//      end.setMinutes(59);
-//      this.endTime = end;
 
-      this.endTime = new Date(2018, 11, 14);
+      let scene = await  this.http("/scene/api/findById?id=" + sceneId);
+      if (scene) {
+        this.scene = scene;
+        let time = new Date();
+        this.endTime = new Date(time.getTime() + scene.duration * 60000);
+      } else {
+        this.$notify.error(({
+          title: '错误',
+          message: '没有找到该场次'
+        }))
+        return false;
+      }
 //      定时器
       let _this = this;
-      setInterval(function () {
-        if(_this.endTime.getTime() > new Date().getTime()){
+      setInterval(() => {
+        if (_this.endTime.getTime() > new Date().getTime()) {
           _this.changeTime();
-        }else{
+        } else {
 //          清除定时器
           clearInterval();
 //          提交试卷
@@ -268,26 +382,30 @@
 
 
 <style>
-  /*input.el-input__inner {*/
-    /*color: cornflowerblue;*/
-    /*background-color: rgba(64, 158, 255, 0.32);*/
-  /*}*/
+  .content {
+    margin-top: 15px;
+    min-height: 300px;
+    max-height: 600px;
+  }
 
-  /*.title {*/
-    /*margin-bottom: 10px;*/
-  /*}*/
+  .content-item {
+    margin-bottom: 5px;
+  }
 
-  /*.content {*/
-    /*min-height: 300px;*/
-    /*max-height: 600px;*/
-    /*margin-left: 15px;*/
-  /*}*/
+  .current-row {
+    background-color: dodgerblue;
+    color: red;
+  }
 
-  /*.content-item {*/
-    /*margin-bottom: 5px;*/
-  /*}*/
+  .no {
+    text-decoration: none;
+    /*padding: 10px;*/
+  }
 
-  /*.answer {*/
+  .title {
+    font-weight: 600;
+    background-color: aliceblue;
+    padding: 10px;
+  }
 
-  /*}*/
 </style>
