@@ -64,7 +64,9 @@
             label="序号"
             width="60">
             <template slot-scope="scope">
-              <a @click="jumpTo(scope.$index)" href="#" class="no"><div style="height: 100%;width: 100%;">{{scope.$index + 1}}</div></a>
+              <a @click="jumpTo(scope.$index)" href="#" class="no">
+                <div style="height: 100%;width: 100%;">{{scope.$index + 1}}</div>
+              </a>
             </template>
           </el-table-column>
           <el-table-column
@@ -119,6 +121,9 @@
 
         //   当前选项集合
         currentChoiceItems: [],
+
+        //定时器引用
+        timer: null,
       }
     },
     methods: {
@@ -182,7 +187,8 @@
        */
       async commitPaper() {
         console.log("提交试卷！");
-        let res = await this.http("/exam/api/commitPaper?paperId=" + this.paperId, this.questionList);
+        let paperId = sessionStorage.getItem("paperId");
+        let res = await this.http("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
           this.$notify.success({
             title: "成功",
@@ -266,6 +272,12 @@
             this.checkedItems = realAnswer.split("");
           }
         }
+      },
+
+      closeTimer() {
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
       }
     },
 
@@ -285,7 +297,7 @@
         console.log("open。。。")
       }
 
-      ws.onmessage = function (event) {
+      ws.onmessage = event => {
         console.log("event", event);
         var data = event.data;
         console.log("收到服务器消息：", data);
@@ -298,10 +310,9 @@
         }
         if (res != '') {
           var type = res.type;
-          if (type == "4") {
-            console("教师强制提交试卷");
-            commitPaper();
-//                    $("#changePaper").trigger("click");
+          if (type == "3") {
+            console.log("教师强制提交试卷");
+            this.commitPaper();
           }
         }
       }
@@ -314,6 +325,10 @@
 
     beforeDestroy: function () {
       console.log("准备关闭websocket...")
+      let info = {};
+      info.type = "5";
+
+      this.ws.send(JSON.stringify(info));
       this.ws.onclose();
       console.log("ws关闭了")
     },
@@ -358,20 +373,18 @@
       }
 //      定时器
       let _this = this;
-      setInterval(() => {
+      this.timer = setInterval(() => {
         if (_this.endTime.getTime() > new Date().getTime()) {
           _this.changeTime();
         } else {
 //          清除定时器
-          clearInterval();
+          this.closeTimer();
 //          提交试卷
           _this.$alert('考试时间用完，提交试卷', '时间到！', {
             confirmButtonText: '确定',
             callback: action => {
-//              this.$message({
-//                type: 'info',
-//                message: `action: ${ action }`
-//              });
+
+              this.$router.push("/scene/myJoin");
             }
           });
         }
@@ -402,10 +415,11 @@
     /*padding: 10px;*/
   }
 
-  .title {
+  .title, .answer {
     font-weight: 600;
     background-color: aliceblue;
     padding: 10px;
   }
+
 
 </style>

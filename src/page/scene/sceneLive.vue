@@ -9,7 +9,7 @@
         width="80">
       </el-table-column>
       <el-table-column
-        prop="username"
+        prop="name"
         label="考生"
         width="180">
       </el-table-column>
@@ -17,17 +17,19 @@
         label="试卷状态">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status == 1" size="small">正常</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 2" size="small">换卷</el-tag>
+          <!--<el-tag type="success" v-if="scope.row.status == 2" size="small">换卷</el-tag>-->
           <el-tag type="success" v-if="scope.row.status == 3" size="small">作废</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 4" size="small">已提交</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 5" size="small">已判分</el-tag>
+          <el-tag type="success" v-if="scope.row.status == 2" size="small">已提交</el-tag>
+          <el-tag type="success" v-if="scope.row.status == 4" size="small">已判分</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        label="考生状态">
+        label="考生状态"
+        prop="userStatus"
+      >
         <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.online == 1" size="small">考试中</el-tag>
-          <el-tag type="info" v-if="scope.row.online == 2" size="small">已离场</el-tag>
+          <el-tag type="success" v-if="scope.row.userStatus == 1" size="small">考试中</el-tag>
+          <el-tag type="info" v-if="scope.row.userStatus == 2" size="small">离线</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -73,11 +75,20 @@
        * 强制交卷
        */
       forceCommit: async function (userId) {
-        console.log("userId:::", userId)
-        let data = await this.http("/paper/api/forceCommit?sceneId=" + this.sceneId + "&userId=" + userId);
-        if (data) {
-          console.log("强制提交试卷成功");
-        }
+        this.$confirm('确认要强制提交该用户试卷吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async event => {
+          console.log("userId:::", userId)
+          let data = await this.http("/exam/api/forceCommit?sceneId=" + this.sceneId + "&userId=" + userId);
+          if (data) {
+            console.log("强制提交试卷成功");
+          }
+        }).catch(evnet => {
+
+        })
+
       },
       /**
        * 获取考场信息，包括试卷提交与否
@@ -86,7 +97,7 @@
        */
       findByCondition: async function () {
         console.log("queryForm:::", this.queryForm);
-        let data = await this.http("/paper/api/findSceneLiveData?sceneId=" + this.sceneId + "&pageNum=" +
+        let data = await this.http("/exam/api/live?sceneId=" + this.sceneId + "&pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {
