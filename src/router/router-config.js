@@ -52,6 +52,8 @@ import Single from '../page/single/list'
 import Multi from '../page/multi/list'
 import Judge from '../page/judge/list'
 
+import Summary from '../page/index/summary'
+
 export default [
   {path: '/login', component: Login},
   // {path: '/index', component: Index},
@@ -65,6 +67,7 @@ export default [
     path: '/',
     component: Index,
     children: [
+      {path: '/', component: Summary},
       {path: '/single', component: Single},
       {path: '/multi', component: Multi},
       {path: '/judge', component: Judge},

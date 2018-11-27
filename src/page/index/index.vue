@@ -79,7 +79,9 @@
         </div>
         <div class="main">
           <!--以下是右边的数据-->
-          <router-view ref="main" style="padding-left: 8px; padding-top: 10px;"></router-view>
+          <router-view ref="main" style="padding-left: 8px; padding-top: 10px;">
+
+          </router-view>
         </div>
       </div>
     </el-row>
