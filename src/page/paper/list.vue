@@ -25,64 +25,61 @@
       </el-table-column>
 
       <el-table-column
-        prop="code"
-        label="code">
+        v-if="false"
+        prop="userId"
+        label="用户ID">
       </el-table-column>
+
       <el-table-column
-        prop="answerFlag"
-        label="answerFlag">
+        prop="userName"
+        label="考生">
       </el-table-column>
-      <el-table-column
-        prop="beginTime"
-        label="beginTime">
-      </el-table-column>
-      <el-table-column
-        prop="endTime"
-        label="endTime">
-      </el-table-column>
+
       <el-table-column
         prop="originalScore"
-        label="originalScore">
+        label="原始得分">
       </el-table-column>
       <el-table-column
         prop="score"
-        label="score">
+        label="百分制得分">
+      </el-table-column>
+
+      <el-table-column
+        prop="code"
+        label="试卷编号">
+
       </el-table-column>
       <el-table-column
-        prop="sceneId"
-        label="sceneId">
+        prop="answerFlag"
+        label="做答标志">
+        <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.answerFlag == 1" size="small">未作答</el-tag>
+          <el-tag type="success" v-if="scope.row.answerFlag == 2" size="small">已作答</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="userId"
-        label="userId">
+        prop="beginTime"
+        label="入场时间">
       </el-table-column>
       <el-table-column
-        prop="questionTypeInfo"
-        label="questionTypeInfo">
+        prop="endTime"
+        label="交卷时间">
       </el-table-column>
+
+      <el-table-column
+        prop="sceneName"
+        label="场次名称">
+      </el-table-column>
+
       <el-table-column
         prop="status"
-        label="status">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        label="isDel">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="createTime">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
-        label="createUserId">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="updateTime">
-      </el-table-column>
-      <el-table-column
-        prop="updateUserId"
-        label="updateUserId">
+        label="状态">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.status == 1" size="small">正常</el-tag>
+          <el-tag type="success" v-if="scope.row.status == 3" size="small">作废</el-tag>
+          <el-tag type="success" v-if="scope.row.status == 2" size="small">已提交</el-tag>
+          <el-tag type="success" v-if="scope.row.status == 4" size="small">已判分</el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -105,116 +102,44 @@
                    :total="totalCount">
     </el-pagination>
 
-
-    <el-dialog title="编辑" :visible.sync="editDialogShow">
+    <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="code" prop="code">
+        <el-form-item label="code" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="answerFlag" prop="answerFlag">
+        <el-form-item label="answerFlag" prop="answerFlag" :label-width="labelWidth">
           <el-input v-model="dataForEdit.answerFlag" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="beginTime" prop="beginTime">
+        <el-form-item label="beginTime" prop="beginTime" :label-width="labelWidth">
           <el-input v-model="dataForEdit.beginTime" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="endTime" prop="endTime">
+        <el-form-item label="endTime" prop="endTime" :label-width="labelWidth">
           <el-input v-model="dataForEdit.endTime" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="originalScore" prop="originalScore">
+        <el-form-item label="originalScore" prop="originalScore" :label-width="labelWidth">
           <el-input v-model="dataForEdit.originalScore" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="score" prop="score">
+        <el-form-item label="score" prop="score" :label-width="labelWidth">
           <el-input v-model="dataForEdit.score" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="sceneId" prop="sceneId">
+        <el-form-item label="sceneId" prop="sceneId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.sceneId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="userId" prop="userId">
+        <el-form-item label="userId" prop="userId" :label-width="labelWidth">
           <el-input v-model="dataForEdit.userId" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-          <el-input v-model="dataForEdit.questionTypeInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="status" prop="status">
+        <el-form-item label="status" prop="status" :label-width="labelWidth">
           <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="isDel" prop="isDel">
-          <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime">
-          <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId">
-          <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime">
-          <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId">
-          <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
-        </el-form-item>
+
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button @click="cancelCommit">取 消</el-button>
+        <el-button type="primary" @click="commitData()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="code" prop="code">
-          <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="answerFlag" prop="answerFlag">
-          <el-input v-model="dataForAdd.answerFlag" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="beginTime" prop="beginTime">
-          <el-input v-model="dataForAdd.beginTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="endTime" prop="endTime">
-          <el-input v-model="dataForAdd.endTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="originalScore" prop="originalScore">
-          <el-input v-model="dataForAdd.originalScore" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="score" prop="score">
-          <el-input v-model="dataForAdd.score" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="sceneId" prop="sceneId">
-          <el-input v-model="dataForAdd.sceneId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="userId" prop="userId">
-          <el-input v-model="dataForAdd.userId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-          <el-input v-model="dataForAdd.questionTypeInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="status" prop="status">
-          <el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="isDel" prop="isDel">
-          <el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime">
-          <el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId">
-          <el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime">
-          <el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId">
-          <el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
-      </div>
-    </el-dialog>
 
   </div>
 
@@ -227,6 +152,9 @@
   export default {
     data() {
       return {
+        /**
+         * 对话框的label宽度
+         */
         labelWidth: '80px',
         /**
          * 表格数据
@@ -244,19 +172,11 @@
          * 查询参数
          **/
         queryForm: {
+          sceneId: null,
           name: null,
           pageSize: 10,
           pageNum: 1,
         },
-        /**
-         * 添加对话框数据
-         */
-        dataForAdd: {},
-
-        /**
-         * 添加对话框是否显示
-         */
-        addDialogShow: false,
         /**
          * 修改对话框是否显示
          */
@@ -316,11 +236,6 @@
               {required: true, message: '请输入userId', trigger: 'blur'},
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-          questionTypeInfo:
-            [
-              {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
           status:
             [
               {required: true, message: '请输入status', trigger: 'blur'},
@@ -364,8 +279,13 @@
       findByCondition: async function () {
         let data = await this.http("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-        this.tableData = data.list;
-        this.totalCount = data.total;//总记录数目
+        if (data) {
+          this.tableData = data.list;
+          this.totalCount = data.total;//总记录数目
+        } else {
+          this.tableData = [];
+          this.totalCount = 0;
+        }
       },
 
       /**
@@ -383,7 +303,8 @@
        */
       toAdd() {
         console.log("唤起添加对话框")
-        this.addDialogShow = true;
+        this.editDialogShow = true;
+        this.dataForEdit = {};
       },
       /**
        * 唤起编辑对话框
@@ -394,10 +315,11 @@
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
       },
+
       /**
        * 提交更新数据
        */
-      updateData: async function () {
+      commitData: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -406,78 +328,91 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/paper/api/update', this.dataForEdit, 1000);
+            var res = await this.http('/paper/api/save', this.dataForEdit, 3000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-              //        以下代码变动无法触发页面渲染
-              //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-              //          console.log(this.tableData)
+              if (this.dataForEdit.id) {
+                //                修改
+                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+                //        以下代码变动无法触发页面渲染
+                //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
+                //          console.log(this.tableData)
+                //        关闭对话框
+                this.editDialogShow = false;
+              } else {
+                //                新增
+                this.$confirm('继续添加?查看列表?', '提示', {
+                  confirmButtonText: '继续添加',
+                  cancelButtonText: '查看列表',
+                  type: 'success',
+                  center: true
+                }).then(() => {
+                  this.dataForEdit = {
+                    count: 0,
+                    questionTypeIdList: [],
+                    contentItemList: [],
+                  };
+                  //                  this.$refs['addForm'].resetFields()
+                  ;
+                }).catch(() => {
+                  this.findByCondition();
+                  //        关闭对话框
+                  this.addDialogShow = false;
+                });
+              }
+
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
               console.error("请求失败")
             }
             //        关闭对话框
-            this.editDialogShow = false;
-          }
-        });
-      },
-      /**
-       * 提交添加数据
-       */
-      addData: async function () {
-        console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
-
-        this.$refs['addForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.http("/paper/api/save", this.dataForAdd, 1000);
-            if (res == true) {
-              this.$confirm('继续添加?查看列表?', '提示', {
-                confirmButtonText: '继续添加',
-                cancelButtonText: '查看列表',
-                type: 'success',
-                center: true
-              }).then(() => {
-                this.$refs['addForm'].resetFields();
-              }).catch(() => {
-                this.findByCondition();
-//        关闭对话框
-                this.addDialogShow = false;
-              });
-            }
+            //            this.editDialogShow = false;
           }
         });
       },
 
       /**
-       * 取消添加
+       * 取消
        */
-      cancelAdd: async function () {
-        this.findByCondition();
-        this.addDialogShow = false;
+      cancelCommit: async function () {
+        this.$refs["editForm"].resetFields();
+        if (!this.dataForEdit.id) {
+          this.findByCondition();
+        }
+        this.editDialogShow = false;
       },
 
       /**
        * 删除数据
        */
       async toRemove(idx, row) {
-        console.log("删除：", idx, row)
-        let data = await this.http("/paper/api/delete?id=" + row.id);
-        if (data == true) {
-          this.tableData.splice(idx, 1);
-          this.tableData = this.tableData;
-        } else if (data == false) {
-          console.log("删除失败");
-          this.$notify({
-            title: '警告',
-            message: "删除失败",
-            type: 'warning'
-          });
-        }
+
+        this.$confirm('数据删除后无法找回, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+
+          console.log("删除：", idx, row)
+          let data = await this.http("/paper/api/delete?id=" + row.id);
+          if (data == true) {
+            this.tableData.splice(idx, 1);
+            this.tableData = this.tableData;
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          } else if (data == false) {
+            console.log("删除失败");
+            this.$notify({
+              title: '警告',
+              message: "删除失败",
+              type: 'warning'
+            });
+          }
+        }).catch(() => {
+          //  解决uncaught cancel的异常
+        });
       },
 
       handleSizeChange(val) {
@@ -495,6 +430,10 @@
      * 页面初始化时候执行
      **/
     created: async function () {
+      let sceneId = this.$route.query.sceneId;
+      if (sceneId) {
+        this.queryForm.sceneId = sceneId;
+      }
       console.log("created....")
       this.findByCondition();
     }

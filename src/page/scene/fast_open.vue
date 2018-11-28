@@ -266,6 +266,7 @@
     methods: {
       //开场
       openScene: async function () {
+        let _this = this;
         this.$refs['sceneForm'].validate(async (valid) => {
           if (!valid) {
             console.log("参数校验不通过，请处理");
@@ -285,10 +286,16 @@
 
             let data = await this.postEntity("/scene/api/save", this.scene);
             if (data && data > 0) {
-              this.$alert("开场成功！", '提示', {
+              let msg = '';
+              if (this.scene.id) {
+                msg = "修改成功！";
+              } else {
+                msg = "开场成功!";
+              }
+              this.$alert(msg, '提示', {
                 confirmButtonText: "确定",
                 callback: action => {
-
+                  this.$router.push({path: '/scene/myOpen'})
                 }
               })
             } else {

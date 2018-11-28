@@ -42,6 +42,7 @@ import SceneLive from '../page/scene/sceneLive'
 import UserIndex from '../page/user/list.vue'
 import FastOpen from '../page/scene/fast_open'
 import Index from '../page/index/index.vue'
+import Paper from '../page/paper/list'
 
 
 import Login from '../page/index/login.vue'
@@ -106,16 +107,7 @@ export default [
         ]
       },
 
-      {
-        path: '/step',
-        component: Step,
-        children: [
-          {path: '', component: Step1},
-          {path: 'step2', component: Step2},
-          {path: 'step3', component: Step3}
-        ]
-
-      },
+      {path: '/paper', component: Paper},
       {path: '/questionType', component: QuestionTypeIndex},
       {path: '/questionBank', component: QuestionBankIndex},
       {path: '/paperPolicy', component: PaperPolicyIndex},

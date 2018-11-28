@@ -190,6 +190,7 @@
         let paperId = sessionStorage.getItem("paperId");
         let res = await this.http("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
+          this.closeTimer();
           this.$notify.success({
             title: "成功",
             message: '交卷成功',

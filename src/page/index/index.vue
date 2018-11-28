@@ -5,7 +5,7 @@
         <div class="nag">
           <div class="in">
             <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
-                                     alt="布谷培训"></a>
+                                  alt="布谷培训"></a>
             <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
 
             <span class="gp" style="display:"></span>
@@ -70,6 +70,7 @@
                 <span>考试管理</span>
               </template>
               <el-menu-item index="/scene/open">快速开场</el-menu-item>
+              <el-menu-item index="/paper">成绩查询</el-menu-item>
               <el-menu-item index="/scene">场次管理</el-menu-item>
               <el-menu-item index="/exam">考试</el-menu-item>
               <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>
@@ -163,6 +164,7 @@
   body {
     margin: 0;
   }
+
   /*   #main-content{
       width: 1000px;
       display: flex;
@@ -206,7 +208,6 @@
     height: 50px;
   }
 
-
   /*header 样式*/
 
   .clearfix:before, .clearfix:after {
@@ -225,6 +226,7 @@
     display: -webkit-box;
     /*background: url(../../assets/img/bg_login.png) #fff center 70px no-repeat*/
   }
+
   .main {
     flex: 1;
     display: -webkit-box;
@@ -232,9 +234,11 @@
     min-height: 800px;
     background-color: #FCFCFC;
   }
-  .main>div{
+
+  .main > div {
     width: 100%;
   }
+
   .main .main-left {
     text-align: center;
     width: 200px;
@@ -251,6 +255,7 @@
   .main .el-menu {
     background-color: transparent !important;
   }
+
   .lrcon .lrbox {
     width: 760px;
     margin: 0 auto;
@@ -321,7 +326,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1pxtted #ddd
+    border-top: 1 pxtted #ddd
   }
 
   .en .lrcon .lr_lf {

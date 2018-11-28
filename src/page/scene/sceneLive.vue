@@ -16,11 +16,11 @@
       <el-table-column
         label="试卷状态">
         <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.status == 1" size="small">正常</el-tag>
+          <el-tag type="success" v-if="scope.row.paperStatus == 1" size="small">正常</el-tag>
           <!--<el-tag type="success" v-if="scope.row.status == 2" size="small">换卷</el-tag>-->
-          <el-tag type="success" v-if="scope.row.status == 3" size="small">作废</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 2" size="small">已提交</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 4" size="small">已判分</el-tag>
+          <el-tag type="success" v-if="scope.row.paperStatus == 3" size="small">作废</el-tag>
+          <el-tag type="success" v-if="scope.row.paperStatus == 2" size="small">已提交</el-tag>
+          <el-tag type="success" v-if="scope.row.paperStatus == 4" size="small">已判分</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -37,7 +37,7 @@
         label="操作"
         width="90">
         <template slot-scope="scope">
-          <el-button type="warning" size="small" @click="forceCommit(1)">强制交卷</el-button>
+          <el-button type="warning" size="small" :disabled="scope.row.userStatus == 2"  @click="forceCommit(scope.row.userId)"> 强制交卷</el-button>
           <!--<el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
         </template>
       </el-table-column>

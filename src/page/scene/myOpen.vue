@@ -119,11 +119,24 @@
         <el-table-column
           fixed="right"
           label="操作"
-          width="90">
+          width="100px"
+        >
           <template slot-scope="scope">
-            <el-button type="success" size="small" @click="showScene(scope.$index, scope.row)">查看考场</el-button>
-            <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+            <!--只有考试中才能看在线人数-->
+            <el-button style="margin-left: 0" type="primary" plain :disabled="scope.row.status != 2" size="mini"
+                       @click="showScene(scope.$index, scope.row)">查看考场
+            </el-button>
+            <!--只有已经封场才能看成绩-->
+            <el-button style="margin-left: 0" type="primary" :disabled="scope.row.status != 3" size="mini"
+                       @click="showScore(scope.$index, scope.row)">查看成绩
+            </el-button>
+            <!--只有就绪状态可以编辑-->
+            <el-button style="margin-left: 0" type="success" plain :disabled="scope.row.status != 1" size="mini"
+                       @click="toEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button style="margin-left: 0" type="danger" plain :disabled="scope.row.status != 2" size="mini"
+                       @click="forceClose(scope.$index, scope.row)">强制封场
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,15 +170,24 @@
 
     },
     methods: {
-      toEdit(idx, scene){
+      //强制封场
+      forceClose(idx, scene) {
+        this.$alert("本功能暂不开放");
+      },
+      toEdit(idx, scene) {
         console.log("scene:", scene);
         this.$router.push({path: '/scene/open?id=' + scene.id})
+      },
+
+      // 查看本场考试成绩
+      showScore(idx, row) {
+        this.$router.push({path: '/paper?sceneId=' + row.id});
       },
 
       /**
        * 查看考试现场
        */
-      showScene(idx, row){
+      showScene(idx, row) {
         console.log("idx::", idx);
         console.log("row.id::", row.id);
 

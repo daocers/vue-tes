@@ -28,9 +28,6 @@
                                             <el-form-item label="userId" prop="userId">
                             <el-input v-model="paper.userId" placeholder="请输入"></el-input>
                         </el-form-item>
-                                            <el-form-item label="questionTypeInfo" prop="questionTypeInfo">
-                            <el-input v-model="paper.questionTypeInfo" placeholder="请输入"></el-input>
-                        </el-form-item>
                                             <el-form-item label="status" prop="status">
                             <el-input v-model="paper.status" placeholder="请输入"></el-input>
                         </el-form-item>
@@ -49,7 +46,7 @@
                                             <el-form-item label="updateUserId" prop="updateUserId">
                             <el-input v-model="paper.updateUserId" placeholder="请输入"></el-input>
                         </el-form-item>
-
+                    
                     <el-form-item>
                         <el-button type="primary" @click="add">保存</el-button>
                         <el-button type="info" plain @click="goBack">取消</el-button>
@@ -109,11 +106,6 @@
                         {required: true, message: '请输入userId', trigger: 'blur'},
                         {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
                     ],
-                                    questionTypeInfo:
-                    [
-                        {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
-                        {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-                    ],
                                     status:
                     [
                         {required: true, message: '请输入status', trigger: 'blur'},
@@ -154,7 +146,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        let res = await this.http("/paper/api/save", this.paper);
+                        let res = await this.http("/paper/v1/save", this.paper);
                         if (res == true) {
                             this.$confirm('继续添加?查看列表?', '提示', {
                                 confirmButtonText: '继续添加',
