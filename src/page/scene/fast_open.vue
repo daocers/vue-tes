@@ -248,7 +248,7 @@
         this.scene = data;
         let single = {type: '单选题', count: data.singleCount, score: data.singleScore};
         let multi = {type: '多选题', count: data.multiCount, score: data.multiScore};
-        let judge = {type: '判断题', count: data.judgeCount, score: data.judgeCount};
+        let judge = {type: '判断题', count: data.judgeCount, score: data.judgeScore};
         let arr = [single, multi, judge];
         this.simpleModel = arr;
       } else {
