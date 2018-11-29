@@ -47,6 +47,8 @@ import Paper from '../page/paper/list'
 
 import Login from '../page/index/login.vue'
 
+import Help from '../page/help/index';
+
 // const Login = (r) => require(['../page/index/login.vue'])
 
 import Single from '../page/single/list'
@@ -121,7 +123,8 @@ export default [
       {path: '/scene/myJoin', component: SceneMyJoin},
       {path: '/scene/myOpen', component: SceneMyOpen},
       {path: '/user/', component: UserIndex},
-      {path: '/scene/live/:sceneId', component: SceneLive}
+      {path: '/scene/live/:sceneId', component: SceneLive},
+      {path: '/help', component: Help},
     ]
   },
   {path: '/test', component: Test},

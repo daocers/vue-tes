@@ -17,8 +17,10 @@
     "element-ui": "latest",
     "element-ui/packages/col/src/col": "latest",
     "element-ui/packages/row/src/row": "latest",
+    "jquery": "^3.3.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vue-schart": "^1.0.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

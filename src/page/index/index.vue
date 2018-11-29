@@ -11,8 +11,12 @@
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">TES考试系统</span>
             <p class="nlink n2">
-              <a href="/index">首页</a>
-              <a href="/help/index" target="_blank">帮助中心</a>
+              <!--<a href="#/help">首页</a>-->
+              <!--<router-link to="/help">帮助中心</router-link>-->
+              <!--<router-link to="/">首页</router-link>-->
+              <a href="#" @click="toHelp">帮助中心</a>
+              <a href="#" @click="toIndex">首页</a>
+              <!--<a href="/help" target="_blank">帮助中心</a>-->
             </p>
           </div>
         </div>
@@ -21,12 +25,12 @@
     <el-row :gutter=0 class="elrow-main">
       <div class="lrcon-idx">
         <div>
-          <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+          <el-menu :default-active="anchor" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
                    @select="handleSelect" :unique-opened="true" :router="false"
                    :collapse="isCollapse" :style="menuClass">
             <el-menu-item index="oprBtn">
               <i class="el-icon-menu"></i>
-              <span slot="title">展开&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span slot="title">{{isCollapse ? "展开": "收起"}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </el-menu-item>
             <el-submenu index="1">
               <template slot="title">
@@ -47,7 +51,6 @@
                 <i class="el-icon-document"></i>
                 <span>试题管理</span>
               </template>
-              <el-menu-item index="/commonQuestion">常规试题</el-menu-item>
               <el-menu-item index="/single">单选题</el-menu-item>
               <el-menu-item index="/multi">多选题</el-menu-item>
               <el-menu-item index="/judge">判断题</el-menu-item>
@@ -71,7 +74,7 @@
               </template>
               <el-menu-item index="/scene/open">快速开场</el-menu-item>
               <el-menu-item index="/paper">成绩查询</el-menu-item>
-              <el-menu-item index="/scene">场次管理</el-menu-item>
+              <!--<el-menu-item index="/scene">场次管理</el-menu-item>-->
               <el-menu-item index="/exam">考试</el-menu-item>
               <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>
               <el-menu-item index="/scene/myOpen">我开场的</el-menu-item>
@@ -80,7 +83,7 @@
         </div>
         <div class="main">
           <!--以下是右边的数据-->
-          <router-view ref="main" style="padding-left: 8px; padding-top: 10px;">
+          <router-view ref="main" style="margin-left: 8px; margin-top: 10px;">
 
           </router-view>
         </div>
@@ -100,6 +103,8 @@
     name: 'app',
     data: function () {
       return {
+        //地址栏锚点信息
+        anchor: null,
         isCollapse: false,
         heightInfo: 500,
         active: true,
@@ -110,51 +115,61 @@
       }
     },
     methods: {
-
+      //展开菜单栏
       handleOpen(key, keyPath) {
         console.log("open...")
         if (key == 'oprBtn') {
           this.isCollapse = !this.isCollapse;
           return;
         }
-        console.log(">>>>")
-        console.log(key, keyPath);
-        // changeHeight();
       },
+      //收起菜单栏
       handleClose(key, keyPath) {
-        console.log("close...")
-        console.log(key, keyPath);
         if (key == 'oprBtn') {
           this.isCollapse = !this.isCollapse;
           return;
         }
-        // changeHeight();
       },
+
+      //菜单点击事件
       handleSelect(key, keyPath) {
-        // console.log("before:", this.isCollapse);
-        // this.isCollapse = !this.isCollapse;
-        // console.log("after", this.isCollapse);
         if (key == 'oprBtn') {
           console.log("open");
           this.isCollapse = !this.isCollapse;
           return;
         }
-        console.log(key, keyPath)
+        // todo  登录后把用户能处理的信息放到sessionStorage中，点击事件后做校验
         this.$router.push({path: key})
+      },
+
+      toHelp(e) {
+        e.preventDefault();
+        this.anchor = "1";
+        this.$router.push({path: "/help"})
+      },
+      toIndex(e) {
+        e.preventDefault();
+        this.anchor = '1';
+        this.$router.push({path: "/"})
       }
 
     },
     created: function () {
+
+
       let height = document.documentElement.clientHeight;
-      // console.log("height:::", height);
-//      this.heightInfo = parseInt(height) - 50;
       let res = parseInt(height) - 58 + 'px';
-      // console.log("res:::", res);
       this.menuClass.height = res;
       let token = sessionStorage.getItem("token");
-      console.log("token", token)
       if (token == null || token.length == 0) {
         this.$router.push({path: "/login"});
+      } else {
+        //修改默认进入时候的样式信息
+        let url = window.location.href;
+        let idx = url.indexOf("#");
+        if (idx > 0) {
+          this.anchor = url.substr(idx + 1);
+        }
       }
     }
   }
@@ -326,7 +341,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1 pxtted #ddd
+    border-top: 1 pxtted #ddd;
   }
 
   .en .lrcon .lr_lf {
@@ -435,7 +450,7 @@
   }
 
   .header a:hover {
-    color: #ff6000 !important
+    color: #409EFF !important
   }
 
   .header .in {

@@ -1,14 +1,8 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="考生号" prop="username">
+      <el-form-item label="名称" prop="name">
         <el-input v-model="queryForm.username" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="queryForm.userName" placeholder="请输入"></el-input>
-      </el-form-item>
-      <el-form-item label="场次编码" prop="sceneCode">
-        <el-input v-model="queryForm.sceneCode" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
@@ -178,11 +172,8 @@
          * 查询参数
          **/
         queryForm: {
-          sceneCode: '',
-          username: '',
           sceneId: null,
-          //用户名
-          userName: null,
+          name: null,
           pageSize: 10,
           pageNum: 1,
         },
