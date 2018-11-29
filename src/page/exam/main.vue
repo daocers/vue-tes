@@ -194,8 +194,9 @@
           this.$notify.success({
             title: "成功",
             message: '交卷成功',
-            duration: 0,
+            duration: 10,
           });
+          this.$router.push({path: '/'})
         } else {
           this.$notify.error({
             title: "失败",
@@ -241,8 +242,18 @@
           }
           this.checkedItems = [];
           console.log("realAnswer:", this.currentQuestion.realAnswer);
+          //有答案，直接提交
+          if(this.currentQuestion.realAnswer.length > 0){
+            //有答案，直接发送信息
+            let msg = {};
+            msg.type = 1;
+            msg.content = this.currentQuestion;
+            this.ws.send(JSON.stringify(msg))
+          }
         }
 
+
+        //调到指定题目
         this.currentQuestionIdx = targetQuestionIdx;
         this.currentQuestion = this.questionList[targetQuestionIdx];
 
@@ -334,6 +345,8 @@
       console.log("ws关闭了")
     },
     created: async function () {
+      console.log("created");
+
 //      场次id，如果找不到，取消
       let sceneId = this.$route.query.id;
       if (sceneId) {
@@ -342,7 +355,17 @@
         this.$router.replace("/exam")
         return false;
       }
-      console.log("created");
+
+      //校验场次状态
+      let canAccess = await  this.http("/exam/api/canAccess?sceneId=" + this.scenei);
+      if(!canAccess){
+        this.$alert("不在考试时间内", "提示", {
+          confirmButtonText: '确定',
+          callback: res => {
+            this.$router.push("/exam")
+          }
+        })
+      }
       let questionList = await this.http("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (questionList) {
         console.log("questionList:", questionList)
@@ -360,7 +383,7 @@
         return false;
       }
 
-      let scene = await  this.http("/scene/api/findById?id=" + sceneId);
+      let scene = await this.http("/scene/api/findById?id=" + sceneId);
       if (scene) {
         this.scene = scene;
         let time = new Date();

@@ -238,25 +238,26 @@
       console.log("created...");
       let sceneId = this.$route.query.id;
       console.log("sceneId:", sceneId);
-      if (!sceneId) {
-        return;
+      if (sceneId) {
+        let data = await this.http("/scene/api/findById?id=" + sceneId);
+        if (data) {
+          console.log("data:", data);
+          data.paperModel = data.paperPolicyId < 1 ? 1 : 2
+          this.scene = data;
+          let single = {type: '单选题', count: data.singleCount, score: data.singleScore};
+          let multi = {type: '多选题', count: data.multiCount, score: data.multiScore};
+          let judge = {type: '判断题', count: data.judgeCount, score: data.judgeScore};
+          let arr = [single, multi, judge];
+          this.simpleModel = arr;
+        } else {
+          console.log("查询无数据")
+        }
       }
-      let data = await this.http("/scene/api/findById?id=" + sceneId);
-      if (data) {
-        console.log("data:", data);
-        data.paperModel = data.paperPolicyId < 1 ? 1 : 2
-        this.scene = data;
-        let single = {type: '单选题', count: data.singleCount, score: data.singleScore};
-        let multi = {type: '多选题', count: data.multiCount, score: data.multiScore};
-        let judge = {type: '判断题', count: data.judgeCount, score: data.judgeScore};
-        let arr = [single, multi, judge];
-        this.simpleModel = arr;
-      } else {
-        console.log("查询无数据")
-      }
+
 
       //  获取题库列表
       let bankList = await this.http("/questionBank/api/findAll");
+      console.log("bankList:", bankList);
       if (bankList) {
         this.questionBankList = bankList;
       }

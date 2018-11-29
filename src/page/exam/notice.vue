@@ -11,7 +11,7 @@
         </div>
 
         <el-button type="danger" plain @click="exit()">退出咨询</el-button>
-        <el-button type="primary" @click="toExam()">进入考试</el-button>
+        <el-button type="primary" @click="enterCode()">进入考试</el-button>
       </el-card>
     </el-col>
   </div>
@@ -28,6 +28,9 @@
     methods: {
       exit() {
         this.$router.push("/");
+      },
+      enterCode(){
+        this.$router.push("/exam/entrance?id=" + this.sceneId)
       },
       async toExam() {
         console.log("准备考试生成试卷")
