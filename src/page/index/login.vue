@@ -138,6 +138,7 @@
               //获取菜单信息
               let menus = this.postParam("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
+                sessionStorage.setItem("menuList", JSON.stringify(res));
               }).catch(e => {
                 console.log("获取权限失败", e)
               })

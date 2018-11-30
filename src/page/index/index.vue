@@ -32,19 +32,22 @@
               <i class="el-icon-menu"></i>
               <span slot="title">{{isCollapse ? "展开": "收起"}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </el-menu-item>
+
+
+            <el-submenu v-for="menu in menuList" :key="menu.id" :index="menu.id">
+              <template slot="title">
+                <i class="el-icon-setting"></i>
+                <span>{{menu.name}}</span>
+              </template>
+              <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url">{{subItem.name}}</el-menu-item>
+            </el-submenu>
+
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-setting"></i>
                 <span>基础信息</span>
               </template>
-
-              <!--<el-menu-item index="/questionPolicy">试题策略管理</el-menu-item>-->
-              <!--<el-menu-item index="/property">属性管理</el-menu-item>-->
-              <!--<el-menu-item index="/questionType">题型管理</el-menu-item>-->
               <el-menu-item index="/questionBank">题库管理</el-menu-item>
-
-              <!--<el-menu-item index="/paperPolicy">试卷策略</el-menu-item>-->
-
             </el-submenu>
             <el-submenu index="2">
               <template slot="title">
@@ -111,7 +114,8 @@
         menuClass: {
           // width: '240px',
           height: '500px',
-        }
+        },
+        menuList:[],
       }
     },
     methods: {
@@ -155,6 +159,9 @@
 
     },
     created: function () {
+      let menuList = sessionStorage.getItem("menuList");
+      this.menuList = JSON.parse(menuList);
+      console.log("menuList:", this.menuList);
 
 
       let height = document.documentElement.clientHeight;
