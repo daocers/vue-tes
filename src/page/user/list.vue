@@ -12,7 +12,7 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toAdd()">添加</el-button>
+        <el-button type="primary" @click="toEdit('add')">添加</el-button>
         <el-button type="primary" @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
@@ -57,28 +57,28 @@
         prop="status"
         label="状态">
         <template slot-scope="scope">
-          <el-tag size="small" v-if="scope.row.status == 1">启用</el-tag>
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
           <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
           <el-tag size="small" v-if="scope.row.status == 3">缺考</el-tag>
           <el-tag size="small" type="warning" v-if="scope.row.status == 4">审核中</el-tag>
           <el-tag size="small" type="danger" v-if="scope.row.status == 5">作弊</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="createTime" width="160"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="createUserName"
-        label="创建人">
-      </el-table-column>
+      <!--<el-table-column-->
+      <!--prop="createTime" width="160"-->
+      <!--label="创建时间">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column-->
+      <!--prop="createUserName"-->
+      <!--label="创建人">-->
+      <!--</el-table-column>-->
 
       <el-table-column
         fixed="right"
         label="操作"
         width="160">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="toEdit('edit', scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="toRemove(scope.$index, scope.row)">删除</el-button>
           <el-button type="success" size="mini" @click="toAssign(scope.$index, scope.row)">分派角色</el-button>
         </template>
@@ -98,7 +98,7 @@
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
         <el-form-item label="用户名" prop="username" :label-width="labelWidth">
-          <el-input disabled v-model="dataForEdit.username" placeholder="请输入"></el-input>
+          <el-input :disabled="dataForEdit.id" v-model="dataForEdit.username" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idNo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.idNo" placeholder="请输入"></el-input>
@@ -107,21 +107,42 @@
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="机构" prop="branchId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.branchId" placeholder="请输入"></el-input>
+          <!--<el-select v-model="dataForEdit.branchId">-->
+          <!--<el-option v-for="item in "-->
+          <!--</el-select>-->
+          <span @click="showBranchBox" v-model="dataForEdit.branchId">{{dataForEdit.branchName ? dataForEdit.branchName: '未选择'}}</span>
+          <!--<el-input v-model="dataForEdit.branchId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="部门" prop="departmentId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.departmentId" placeholder="请输入"></el-input>
+          <el-select v-model="dataForEdit.departmentId">
+            <el-option v-for="department in departmentList" :key="department.id"
+                       :label="department.name" :value="department.id">
+
+            </el-option>
+          </el-select>
+          <!--<el-input v-model="dataForEdit.departmentId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="岗位" prop="stationId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.stationId" placeholder="请输入"></el-input>
+          <el-select v-model="dataForEdit.stationId">
+            <el-option v-for="station in stationList" :key="station.id"
+                       :label="station.name" :value="station.id">
+
+            </el-option>
+          </el-select>
+          <!--<el-input v-model="dataForEdit.stationId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="状态" prop="status" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
+          <el-select v-model="dataForEdit.status">
+            <el-option v-for="item in statusInfo" :key="item.code" :value="item.code" :label="item.name">
+
+            </el-option>
+
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -176,6 +197,28 @@
       </el-alert>
     </el-dialog>
 
+    <el-dialog title="选择机构" :visible.sync="branchTreeShow" :before-close="closeBranchTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+
+      <el-tree
+        class="filter-tree"
+        :data="branchList"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+        default-expand-all
+        :filter-node-method="filterNode"
+        ref="tree2">
+      </el-tree>
+
+      <div slot="footer" class="dialog-footer">
+        <!--<el-button @click="branchTreeShow = false">取 消</el-button>-->
+        <el-button type="primary" @click="branchTreeShow = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -186,6 +229,24 @@
   export default {
     data() {
       return {
+        statusInfo: [
+          {code: 1, name: '正常'},
+          {code: 2, name: '禁用'},
+          {code: 3, name: '缺考'},
+          {code: 4, name: '审核中'},
+          {code: 5, name: '作弊'},
+        ],
+        branchTreeShow: false,
+        branchList: [],
+        filterText: '',
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+
+        stationList: [],
+        departmentList: [],
+
         labelWidth: '90px',
         /**
          * 批量导入的错误信息
@@ -207,7 +268,7 @@
          * 查询参数
          **/
         queryForm: {
-          name: null,
+          name: '',
           username: '',
           pageSize: 10,
           pageNum: 1,
@@ -269,8 +330,29 @@
       }
     },
 
-
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      }
+    },
     methods: {
+      showBranchBox() {
+        this.branchTreeShow = true;
+      },
+      closeBranchTree() {
+        this.branchTreeShow = false;
+      },
+      filterNode(value, data) {
+        console.log("过滤")
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      handleNodeClick(node) {
+        console.log("节点被点击： ", node);
+        this.dataForEdit.branchId = node.id;
+        // this.formShow = true;
+        this.dataForEdit.branchName = node.name;
+      },
       /**
        * 查询
        */
@@ -294,14 +376,6 @@
       getDetail(row) {
         console.log("查看详情：", row)
       },
-      /**
-       * 跳转到添加数据页面
-       */
-      toAdd() {
-        console.log("唤起添加对话框")
-        this.editDialogShow = true;
-        this.dataForEdit = {};
-      },
 
       toBatchAdd() {
         console.log("唤起批量导入对话框。。。")
@@ -319,11 +393,46 @@
       /**
        * 唤起编辑对话框
        */
-      toEdit(idx, row) {
+      async toEdit(type, idx, row) {
+
         console.log("编辑：", row)
-        this.dataForEdit = JSON.parse(JSON.stringify(row));
-        this.dataForEditIndex = idx;
-        this.editDialogShow = true;
+        if (this.departmentList.length == 0) {
+          await this.http("/department/api/findAll").then(res => {
+            console.log("获取部门信息", res);
+            this.departmentList = res;
+          }).catch(e => {
+            console.log("获取部门信息失败", e);
+          })
+
+        }
+        if (this.stationList.length == 0) {
+          this.http("/station/api/findAll").then(res => {
+            console.log("获取岗位信息", res);
+            this.stationList = res;
+          }).catch(e => {
+            console.log("获取岗位信息失败", e);
+          })
+        }
+
+        if (this.branchList.length == 0) {
+          this.http("/branch/api/getBranchTree", null).then(res => {
+            console.log("获取结构信息", res);
+            this.branchList = res;
+          }).catch(e => {
+            console.log("获取机构信息失败", e);
+          })
+        }
+
+        if (type == 'add') {
+          console.log("唤起添加对话框")
+          this.editDialogShow = true;
+          this.dataForEdit = {};
+        } else if (type == 'edit') {
+          this.dataForEdit = JSON.parse(JSON.stringify(row));
+          this.dataForEditIndex = idx;
+          this.editDialogShow = true;
+        }
+
       },
 
       /**
@@ -341,7 +450,7 @@
       /**
        * 提交更新数据
        */
-      updateData: async function () {
+      save: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -350,12 +459,17 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/user/api/update', this.dataForEdit, 1000);
+            let id = this.dataForEdit.id;
+            let res = await this.http('/user/api/save', this.dataForEdit, 1000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-              //        以下代码变动无法触发页面渲染
-              //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-              //          console.log(this.tableData)
+              this.dataForEdit.id = res;
+              if (id) {
+                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+
+              } else {
+                this.findByCondition();
+                // this.tableData.push(this.dataForEdit);
+              }
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
@@ -365,44 +479,6 @@
             this.editDialogShow = false;
           }
         });
-      },
-      /**
-       * 提交添加数据
-       */
-      addData: async function () {
-        console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
-
-        this.$refs['addForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.http("/user/api/save", this.dataForAdd, 1000);
-            if (res == true) {
-              this.$confirm('继续添加?查看列表?', '提示', {
-                confirmButtonText: '继续添加',
-                cancelButtonText: '查看列表',
-                type: 'success',
-                center: true
-              }).then(() => {
-                this.$refs['addForm'].resetFields();
-              }).catch(() => {
-                this.findByCondition();
-//        关闭对话框
-                this.addDialogShow = false;
-              });
-            }
-          }
-        });
-      },
-
-      /**
-       * 取消添加
-       */
-      cancelAdd: async function () {
-        this.findByCondition();
-        this.addDialogShow = false;
       },
 
       /**
@@ -547,7 +623,7 @@
     border-left: 1px solid gainsboro;
   }
 
-  tbody button.el-button.el-button--mini{
+  tbody button.el-button.el-button--mini {
     padding: 6px;
     margin: 2px;
   }

@@ -10,7 +10,7 @@
         <div style="float: right">
           <el-form-item>
             <el-input v-model="timerInfo" disabled style="width: 200px; color: #3091F2">
-              <template slot="prepend">剩余时间</template>
+              <template slot="prepend"><img src="../../assets/img/clock.png"/>剩余时间</template>
             </el-input>
           </el-form-item>
 

@@ -4,7 +4,7 @@
       <el-card class="box-card">
         <div slot="header">
           <span>快速通道</span>
-          <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+          <span style="float: right; padding: 3px 0; color: #66b1ff;" type="text">>></span>
         </div>
         <el-row>
           <el-col span="6">
@@ -31,7 +31,7 @@
       </el-card>
     </el-row>
 
-    <el-collapse accordion style="border: 1px solid #E4E7ED">
+    <el-collapse accordion style="border: 1px solid #E4E7ED; border-radius: 5px;">
       <el-collapse-item>
         <template slot="title">
           <div class="title">登录失败<i class="header-icon el-icon-info"></i></div>
