@@ -233,14 +233,14 @@
         console.log("授权")
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.authRoleId = row.id;
-        let permissionIdList = await this.http("/permission/api/findPermissionIdListByRoleId?roleId=" + row.id);
+        let permissionIdList = await this.http("/permission/api/findPermissionIdList?roleId=" + row.id);
         if(permissionIdList){
           console.log(":::::", permissionIdList)
           this.dataForEdit.permissionIdList = permissionIdList;
           this.defaultChecked = permissionIdList;
           this.$set(this.defaultChecked, permissionIdList);
         }else {
-          console.log("获取角色权限信息失败")
+          console.log("已选择的角色信息为空")
           this.defaultChecked = [];
         }
         if(this._tree){

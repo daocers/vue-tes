@@ -8,7 +8,7 @@
       <div class="nag">
         <div class="in">
           <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
-                                   alt="布谷培训"></a>
+                                alt="布谷培训"></a>
           <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
 
           <span class="gp" style="display:"></span>
@@ -120,22 +120,37 @@
       }
     },
     methods: {
-       signIn(){
-         let _router = this.$router;
+      signIn() {
+        let _router = this.$router;
         this.$refs.loginForm.validate(async (valid) => {
-          if(valid){
+          if (valid) {
             let res = await this.postParam('/user/api/login', this.login);
             console.log("结果：", res);
-            if(res){
+            if (res) {
               console.log("res:::", res);
               let token = res.token;
               let urls = res.urls;
 
               sessionStorage.setItem("urls", urls);
               //保存条目
-              sessionStorage.setItem("token", token);
+              sessionStorage.setItem("token", res);
               this.$router.replace("/");
-            }else{
+              //获取菜单信息
+              let menus = this.postParam("/permission/api/getMenuTree").then(res => {
+                console.log("获取用户菜单信息", res);
+              }).catch(e => {
+                console.log("获取权限失败", e)
+              })
+
+              //获取角色信息
+              // this.postParam("/role/api/findRoleList").then(res => {
+              //   console.log("获取角色列表", res);
+              // }).catch(e => {
+              //   console.log("获取角色列表失败", e)
+              // })
+
+
+            } else {
               this.$message.error("用户名/密码错误");
             }
           }
@@ -238,8 +253,9 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1pxtted #ddd
+    border-top: 1 pxtted #ddd
   }
+
   .en .lrcon .lr_lf {
     width: 197px;
     padding: 50px 21px 0

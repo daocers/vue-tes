@@ -19,7 +19,6 @@
       :data="tableData"
       border
       max-height="800px"
-      height="500px"
       style="width: 100%">
       <el-table-column
         v-if="false"
