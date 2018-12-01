@@ -98,7 +98,7 @@
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
         <el-form-item label="用户名" prop="username" :label-width="labelWidth">
-          <el-input :disabled="dataForEdit.id" v-model="dataForEdit.username" placeholder="请输入"></el-input>
+          <el-input :disabled="dataForEdit.id > 0" v-model="dataForEdit.username" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idNo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.idNo" placeholder="请输入"></el-input>
@@ -515,6 +515,7 @@
        * 提交角色分配信息
        */
       async commitAssign() {
+        console.log("roleIdList:", this.dataForAssign.roleIdList)
         let res = await this.http("/user/api/assignRole?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
         if (res) {
           Vue.set(this.tableData, this.dataForEditIndex, this.dataForAssign);

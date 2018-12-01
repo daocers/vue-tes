@@ -34,7 +34,7 @@
             </el-menu-item>
 
 
-            <el-submenu v-for="menu in menuList" :key="menu.id" :index="menu.id">
+            <el-submenu v-for="menu in menuList" :key="menu.id" :index="menu.url">
               <template slot="title">
                 <i class="el-icon-setting"></i>
                 <span>{{menu.name}}</span>

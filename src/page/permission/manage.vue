@@ -2,6 +2,7 @@
   <div id="add">
     <el-row :gutter="0">
       <el-col :span="8" style="border: 1px solid gainsboro">
+        <el-tag type="success" style="margin-bottom: 10px;">可拖拽节点调整层级和顺序</el-tag>
         <el-tree
           ref="tree"
           :data="permissionTree"
@@ -11,8 +12,20 @@
           default-expand-all
           @node-click="handleNodeClick"
           :expand-on-click-node="false"
+
+          draggable
+          @node-drag-start="handleDragStart"
+          @node-drag-enter="handleDragEnter"
+          @node-drag-leave="handleDragLeave"
+          @node-drag-over="handleDragOver"
+          @node-drag-end="handleDragEnd"
+          @node-drop="handleDrop"
         >
         </el-tree>
+
+        <el-button v-if="saveTreeShow" type="primary" style="margin: 10px" size="small" @click="saveTree">保存更改
+        </el-button>
+
       </el-col>
       <el-col :span="12" :offset="2">
         <el-card class="box-card" style="margin-bottom: 10px;">
@@ -40,6 +53,7 @@
             <el-select v-model="nodeData.type" placeholder="请选择菜单类型" type="number">
               <el-option label="菜单" :value="1"></el-option>
               <el-option label="页面" :value="2"></el-option>
+              <el-option label="API" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="URL" prop="url">
@@ -106,6 +120,7 @@
         callback();
       }
       return {
+        saveTreeShow: false,
 //        添加按钮是否显示
         btnShow: true,
 //        添加表单是否显示
@@ -130,7 +145,7 @@
           url:
             [
               {validator: checkUrl, trigger: 'blur'},
-          ],
+            ],
           code:
             [
               {required: true, message: '请输入编码', trigger: 'blur'},
@@ -163,6 +178,13 @@
         this.btnShow = false;
         this.formShow = true;
 
+      },
+
+      async saveTree() {
+        let res = await this.http("/permission/api/saveTree", this.permissionTree);
+        if (res) {
+          this.saveTreeShow = false;
+        }
       },
 
       /**
@@ -228,7 +250,44 @@
         console.log("节点被点击： ", node);
         this.nodeData = node;
         this.formShow = true;
-      }
+      },
+
+      /**
+       *
+       *拖拽事件处理
+       *
+       **/
+      handleDragStart(node, ev) {
+        // console.log('drag start', node);
+      },
+      handleDragEnter(draggingNode, dropNode, ev) {
+        // console.log('tree drag enter: ', dropNode.label);
+      },
+      handleDragLeave(draggingNode, dropNode, ev) {
+        // console.log('tree drag leave: ', dropNode.label);
+      },
+      handleDragOver(draggingNode, dropNode, ev) {
+        // console.log('tree drag over: ', dropNode.label);
+      },
+      handleDragEnd(draggingNode, dropNode, dropType, ev) {
+        // console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+      },
+      handleDrop(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drop: ', draggingNode.data, dropNode.data, dropType);
+        this.saveTreeShow = true;
+        let draggingData = draggingNode.data;
+        if ("inner" == dropType) {
+          draggingData.superiorId = dropNode.data.id;
+          draggingData.level = dropNode.data.level + 1;
+        } else if ("before" == dropType) {
+          draggingData.superiorId = dropNode.data.superiorId;
+          draggingData.level = dropNode.data.level;
+        } else if ("after" == dropType) {
+          draggingData.superiorId = dropNode.data.superiorId;
+          draggingData.level = dropNode.data.level;
+        }
+        console.log("treeData:", this.branchTree)
+      },
 
     },
     created: async function () {

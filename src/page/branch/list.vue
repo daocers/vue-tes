@@ -40,21 +40,30 @@
       <el-table-column
         prop="level"
         label="级别">
+        <template slot-scope="scope">
+          <el-tag size="small" style="background-color: #F2F6FC;" v-if="scope.row.level == 0"> 总 行</el-tag>
+          <el-tag size="small" style="background-color: #EBEEF5;" v-if="scope.row.level == 1">一级分行</el-tag>
+          <el-tag size="small" style="background-color: #E4E7ED;" v-if="scope.row.level == 2">二级分行</el-tag>
+          <el-tag size="small" style="background-color: #DCDFE6;" v-if="scope.row.level == 3">三级分行</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
+        v-if="false"
         prop="superiorId"
         label="上级机构">
       </el-table-column>
-      <el-table-column
-        prop="isDel"
-        label="删除标识">
-      </el-table-column>
+
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        v-if="false"
+        prop="createUserName"
         label="创建人">
       </el-table-column>
       <el-table-column
@@ -97,42 +106,17 @@
         <el-form-item label="级别" prop="level" :label-width="labelWidth">
           <el-input v-model="dataForEdit.level" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="上级机构" prop="superiorId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.superiorId" placeholder="请输入"></el-input>
-        </el-form-item>
         <el-form-item label="状态" prop="status" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
+          <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
+          <el-select v-model="dataForEdit.status" placeholder="请选择">
+            <el-option v-for="status in statusInfo" :key="status.code" :value="status.code" :label="status.name"/>
+          </el-select>
         </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="机构名称" prop="name" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="机构编号" prop="code" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" prop="address" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.address" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="级别" prop="level" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.level" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="上级机构" prop="superiorId" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.superiorId" placeholder="请输入"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -152,15 +136,15 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="http://localhost:8090/branchwnloadModel">下载模板</a>
+          没有模板？<a type="success" href="http://localhost:8090/branch/downloadModel">下载模板</a>
           <!--<el-button  size="small" type="success" plain @click=wnloadModel">下载模板</el-button>-->
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
 
       <el-alert v-show="batchAddErrorMessage != ''"
-        v-bind:title='batchAddErrorMessage'
-        type="error">
+                v-bind:title='batchAddErrorMessage'
+                type="error">
       </el-alert>
     </el-dialog>
 
@@ -170,11 +154,14 @@
 
 
 <script>
-  import Vue from 'vue'
 
   export default {
     data() {
       return {
+        statusInfo: [
+          {code: 1, name: '正常'},
+          {code: 2, name: '禁用'},
+        ],
         labelWidth: '80px',
         /**
          * 批量导入的错误信息
@@ -200,15 +187,7 @@
           pageSize: 10,
           pageNum: 1,
         },
-        /**
-         * 添加对话框数据
-         */
-        dataForAdd: {},
 
-        /**
-         * 添加对话框是否显示
-         */
-        addDialogShow: false,
         /**
          * 修改对话框是否显示
          */
@@ -235,37 +214,21 @@
         rules: {
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入名称', trigger: 'blur'},
               {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 20, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
+
           address:
             [
-              {required: true, message: '请输入address', trigger: 'blur'},
-              {min: 3, max: 100, message: '长度在3-100个字符', trigger: 'blur'}
-            ],
-          level:
-            [
-              {required: true, message: '请输入level', trigger: 'change'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          superiorId:
-            [
-              {required: true, message: '请输入superiorId', trigger: 'change'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {max: 100, message: '100个字符以内', trigger: 'blur'}
             ],
           status:
             [
-              {required: true, message: '请输入status', trigger: 'change'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {required: true, message: '请设置状态', trigger: 'change'},
             ],
         },
 
-        fileList:[],
+        fileList: [],
 
       }
     },
@@ -292,19 +255,19 @@
       getDetail(row) {
         console.log("查看详情：", row)
       },
-      /**
-       * 跳转到添加数据页面
-       */
-      toAdd() {
-        console.log("唤起添加对话框")
-        this.addDialogShow = true;
-      },
 
-      toManage(){
+      toManage() {
         console.log("去往管理页面");
         this.$router.push("/branch/manage");
       },
-      toBatchAdd(){
+      toBatchAdd() {
+        this.$alert("需要根据行内实际需要处理，请先使用单条添加!", "提示", {
+          confirmButtonText: '确定',
+          callback: action => {
+
+          }
+        })
+        return false;
         console.log("唤起批量导入对话框。。。")
 //        this.$refs.upload.clearFiles();
         this.batchAddErrorMessage = '';
@@ -313,7 +276,7 @@
       /**
        * 批量导入
        */
-      async batchAdd(){
+      async batchAdd() {
         let res = await this.$refs.upload.submit();
         console.log("上传结果： ", res);
       },
@@ -329,7 +292,7 @@
       /**
        * 提交更新数据
        */
-      updateData: async function () {
+      save: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -338,9 +301,9 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/branch/api/update', this.dataForEdit, 1000);
+            var res = await this.http('/branch/api/save', this.dataForEdit, 1000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+              this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
               //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
               //          console.log(this.tableData)
@@ -354,45 +317,6 @@
           }
         });
       },
-      /**
-       * 提交添加数据
-       */
-      addData: async function () {
-        console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
-
-        this.$refs['addForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.http("/branch/api/save", this.dataForAdd, 1000);
-            if (res == true) {
-              this.$confirm('继续添加?查看列表?', '提示', {
-                confirmButtonText: '继续添加',
-                cancelButtonText: '查看列表',
-                type: 'success',
-                center: true
-              }).then(() => {
-                this.$refs['addForm'].resetFields();
-              }).catch(() => {
-                this.findByCondition();
-//        关闭对话框
-                this.addDialogShow = false;
-              });
-            }
-          }
-        });
-      },
-
-      /**
-       * 取消添加
-       */
-      cancelAdd: async function () {
-        this.findByCondition();
-        this.addDialogShow = false;
-      },
-
       /**
        * 删除数据
        */
@@ -415,7 +339,7 @@
       /**
        * 批量添加对话框关闭时候执行
        */
-      handleClose(){
+      handleClose() {
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;
       },
@@ -423,7 +347,7 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
-      handleChange(file, fileList){
+      handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
 
@@ -435,11 +359,11 @@
       /**
        * 服务器成功响应并处理后回调
        */
-      handleSuccess(response, file, fileList){
+      handleSuccess(response, file, fileList) {
         console.log("上传结果：", response)
-        if(response.result == false){
+        if (response.result == false) {
           this.batchAddErrorMessage = response.message;
-        }else{
+        } else {
           this.findByCondition();
           this.$refs.upload.clearFiles();
           this.batchAddDialogShow = false;
@@ -451,7 +375,7 @@
           });
         }
       },
-      handleError(err, file, fileList){
+      handleError(err, file, fileList) {
         console.log("上传失败，原因：", err);
         this.$refs.upload.clearFiles();
         this.batchAddDialogShow = false;

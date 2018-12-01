@@ -33,20 +33,21 @@
         label="部门编号">
       </el-table-column>
       <el-table-column
-        prop="isDel"
-        label="删除标志">
-      </el-table-column>
-      <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="createTime"
         label="创建时间">
       </el-table-column>
       <el-table-column
+        v-if="false"
         prop="createUserId"
-        label="创建时间">
+        label="创建用户id">
       </el-table-column>
 
       <el-table-column
@@ -72,75 +73,29 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="部门名称" prop="name"  :label-width="labelWidth">
+        <el-form-item label="部门名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="部门编号" prop="code" :label-width="labelWidth">
-          <el-input :disabled="true" v-model="dataForEdit.code" placeholder="请输入"></el-input>
+        <el-form-item v-if="dataForEdit.id > 0" label="部门编号" prop="code" :label-width="labelWidth">
+          <el-input disabled v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <!--<el-form-item label="superiorId" prop="superiorId">-->
-          <!--<el-input v-model="dataForEdit.superiorId" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForEdit.superiorId" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="isDel" prop="isDel">-->
-          <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
+        <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
         <!--</el-form-item>-->
-        <el-form-item label="状态" prop="status"  :label-width="labelWidth">
-          <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
+        <el-form-item label="状态" prop="status" :label-width="labelWidth">
+          <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
+          <el-select v-model="dataForEdit.status" placeholder="请选择">
+            <el-option v-for="status in statusInfo" :key="status.code" :value="status.code" :label="status.name"/>
+          </el-select>
         </el-form-item>
-        <!--<el-form-item label="createTime" prop="createTime">-->
-          <!--<el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="createUserId" prop="createUserId">-->
-          <!--<el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateTime" prop="updateTime">-->
-          <!--<el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateUserId" prop="updateUserId">-->
-          <!--<el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogShow = false">取 消</el-button>
         <el-button type="primary" @click="updateData()">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="left" :model="dataForAdd">
-        <el-form-item label="部门名称" prop="name" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <!--<el-form-item label="部门编号" prop="code">-->
-          <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="superiorId" prop="superiorId">-->
-          <!--<el-input v-model="dataForAdd.superiorId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="isDel" prop="isDel">-->
-          <!--<el-input v-model="dataForAdd.isDel" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="status" prop="status">-->
-          <!--<el-input v-model="dataForAdd.status" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="createTime" prop="createTime">-->
-          <!--<el-input v-model="dataForAdd.createTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="createUserId" prop="createUserId">-->
-          <!--<el-input v-model="dataForAdd.createUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateTime" prop="updateTime">-->
-          <!--<el-input v-model="dataForAdd.updateTime" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="updateUserId" prop="updateUserId">-->
-          <!--<el-input v-model="dataForAdd.updateUserId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -150,11 +105,14 @@
 
 
 <script>
-  import Vue from 'vue'
 
   export default {
     data() {
       return {
+        statusInfo: [
+          {code: 1, name: '正常'},
+          {code: 2, name: '禁用'},
+        ],
         labelWidth: '80px',
         /**
          * 表格数据
@@ -176,15 +134,8 @@
           pageSize: 10,
           pageNum: 1,
         },
-        /**
-         * 添加对话框数据
-         */
-        dataForAdd: {},
 
-        /**
-         * 添加对话框是否显示
-         */
-        addDialogShow: false,
+
         /**
          * 修改对话框是否显示
          */
@@ -209,46 +160,6 @@
               {required: true, message: '请输入name', trigger: 'blur'},
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-//          superiorId:
-//            [
-//              {required: true, message: '请输入superiorId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          isDel:
-//            [
-//              {required: true, message: '请输入isDel', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          status:
-//            [
-//              {required: true, message: '请输入status', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          createTime:
-//            [
-//              {required: true, message: '请输入createTime', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          createUserId:
-//            [
-//              {required: true, message: '请输入createUserId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          updateTime:
-//            [
-//              {required: true, message: '请输入updateTime', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
-//          updateUserId:
-//            [
-//              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//            ],
         }
 
       }
@@ -276,13 +187,7 @@
       getDetail(row) {
         console.log("查看详情：", row)
       },
-      /**
-       * 跳转到添加数据页面
-       */
-      toAdd() {
-        console.log("唤起添加对话框")
-        this.addDialogShow = true;
-      },
+
       /**
        * 唤起编辑对话框
        */
@@ -290,6 +195,10 @@
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.dataForEditIndex = idx;
+        this.editDialogShow = true;
+      },
+      toAdd() {
+        this.dataForEdit = {};
         this.editDialogShow = true;
       },
       /**
@@ -304,12 +213,14 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/department/api/update', this.dataForEdit, 1000);
+            let id = this.dataForEdit.id;
+            var res = await this.http('/department/api/save', this.dataForEdit, 1000);
             if (res) {
-              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-              //        以下代码变动无法触发页面渲染
-              //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-              //          console.log(this.tableData)
+              if (id) {
+                this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+              } else {
+                this.findByCondition();
+              }
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
@@ -319,45 +230,6 @@
             this.editDialogShow = false;
           }
         });
-      },
-      /**
-       * 提交添加数据
-       */
-      addData: async function () {
-        console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
-
-        this.$refs['addForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.http("/department/api/save", this.dataForAdd, 1000);
-            if (res == true) {
-              this.$confirm('继续添加?查看列表?', '提示', {
-                confirmButtonText: '继续添加',
-                cancelButtonText: '查看列表',
-                type: 'success',
-                center: true
-              }).then(() => {
-                this.$refs['addForm'].resetFields();
-              }).catch(() => {
-                this.$refs['addForm'].resetFields();
-                this.findByCondition();
-//        关闭对话框
-                this.addDialogShow = false;
-              });
-            }
-          }
-        });
-      },
-
-      /**
-       * 取消添加
-       */
-      cancelAdd: async function(){
-        this.findByCondition();
-        this.addDialogShow = false;
       },
 
       /**

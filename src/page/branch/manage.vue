@@ -1,7 +1,8 @@
 <template>
   <div id="add">
     <el-row :gutter="0">
-      <el-col :span="8" style="border: 1px solid gainsboro">
+      <el-col :span="10" style="border: 1px solid gainsboro">
+        <el-tag type="success" style="margin-bottom: 10px;">可拖拽节点调整层级和顺序</el-tag>
         <el-tree
           ref="tree"
           :data="branchTree"
@@ -11,10 +12,21 @@
           default-expand-all
           @node-click="handleNodeClick"
           :expand-on-click-node="false"
+
+          draggable
+          @node-drag-start="handleDragStart"
+          @node-drag-enter="handleDragEnter"
+          @node-drag-leave="handleDragLeave"
+          @node-drag-over="handleDragOver"
+          @node-drag-end="handleDragEnd"
+          @node-drop="handleDrop"
         >
         </el-tree>
+
+        <el-button v-if="saveTreeShow" type="primary" style="margin: 10px" size="small" @click="saveTree">保存更改
+        </el-button>
       </el-col>
-      <el-col :span="8" :offset="2">
+      <el-col :span="10" :offset="2">
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <span>操作提示: 选中机构，新增下级机构/编辑当前机构</span>
@@ -80,6 +92,8 @@
   export default {
     data() {
       return {
+        saveTreeShow: false,
+
 //        添加按钮是否显示
         addBtnShow: true,
 //        添加表单是否显示
@@ -116,7 +130,7 @@
 //          ],
           superiorId:
             [
-              {required: true, message: '请输入superiorId', trigger: 'blur'},
+            {required: true, message: '请输入superiorId', trigger: 'blur'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
           ],
         }
@@ -140,25 +154,25 @@
         if (node == null) {
           this.$message.warning("请选择要编辑的机构");
         } else {
-          this.dataForEdit.id = node.id ;
-          this.dataForEdit.name = node.name ;
-          this.dataForEdit.address = node.address ;
-          this.dataForEdit.code = node.code ;
-          this.dataForEdit.level = node.level ;
+          this.dataForEdit.id = node.id;
+          this.dataForEdit.name = node.name;
+          this.dataForEdit.address = node.address;
+          this.dataForEdit.code = node.code;
+          this.dataForEdit.level = node.level;
         }
       },
       /**
        * 展示添加表单
        */
       toAdd() {
-        if(this.branchTree.length == 0){
+        if (this.branchTree.length == 0) {
           this.dataForAdd.superiorId = null;
           this.dataForAdd.level = 0;
           this.dataForAdd.superiorName = null;
           this.addBtnShow = false;
           this.addFormShow = true;
           this.editFormShow = false;
-        }else{
+        } else {
           var node = this.$refs['tree'].getCurrentNode();
           console.log("当前选中的node: ", node);
           if (node == null) {
@@ -198,10 +212,10 @@
             return false;
           } else {
             let res = await this.http("/branch/api/save", this.dataForAdd);
-            if(res != null && res != undefined){
+            if (res != null && res != undefined) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
-              if(!currentNode.children){
+              if (!currentNode.children) {
                 currentNode.children = [];
               }
               currentNode.children.push(this.dataForAdd);
@@ -232,7 +246,7 @@
             return false;
           } else {
             let res = await this.http("/branch/api/save", this.dataForEdit);
-            if(res == true){
+            if (res == true) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
               currentNode.name = this.dataForEdit.name;
@@ -243,6 +257,14 @@
             }
           }
         });
+      },
+
+      async saveTree() {
+        let res = await  this.http("/branch/api/saveTree", this.branchTree);
+        if (res) {
+          this.$notify.success("保存成功");
+          this.saveTreeShow = false;
+        }
       },
       /**
        * 取消编辑
@@ -266,13 +288,50 @@
           console.log("edit ... ", node);
           this.setEditData();
         }
-      }
+      },
+
+      /**
+       *
+       *拖拽事件处理
+       *
+       **/
+      handleDragStart(node, ev) {
+        // console.log('drag start', node);
+      },
+      handleDragEnter(draggingNode, dropNode, ev) {
+        // console.log('tree drag enter: ', dropNode.label);
+      },
+      handleDragLeave(draggingNode, dropNode, ev) {
+        // console.log('tree drag leave: ', dropNode.label);
+      },
+      handleDragOver(draggingNode, dropNode, ev) {
+        // console.log('tree drag over: ', dropNode.label);
+      },
+      handleDragEnd(draggingNode, dropNode, dropType, ev) {
+        // console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+      },
+      handleDrop(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drop: ', draggingNode.data, dropNode.data, dropType);
+        this.saveTreeShow = true;
+        let draggingData = draggingNode.data;
+        if ("inner" == dropType) {
+          draggingData.superiorId = dropNode.data.id;
+          draggingData.level = dropNode.data.level + 1;
+        } else if ("before" == dropType) {
+          draggingData.superiorId = dropNode.data.superiorId;
+          draggingData.level = dropNode.data.level;
+        } else if ("after" == dropType) {
+          draggingData.superiorId = dropNode.data.superiorId;
+          draggingData.level = dropNode.data.level;
+        }
+        console.log("treeData:", this.branchTree)
+      },
 
     },
     created: async function () {
       let data = await this.http("/branch/api/getBranchTree", null);
-      if(data == null || data == undefined){
-        data  = [];
+      if (data == null || data == undefined) {
+        data = [];
       }
       console.log("data: ", data);
       this.branchTree = data;

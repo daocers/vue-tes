@@ -24,18 +24,29 @@
         label="id"
         width="10">
       </el-table-column>
-
-      <el-table-column
-        prop="code"
-        label="权限编码">
-      </el-table-column>
       <el-table-column
         prop="name"
         label="权限名称">
       </el-table-column>
       <el-table-column
+        prop="code"
+        label="权限编码"
+        width="100px">
+      </el-table-column>
+
+      <el-table-column
+        prop="type"
+        label="类型">
+        <template slot-scope="scope">
+          <el-tag size="small" type="primary" v-if="scope.row.type == '1'">菜单</el-tag>
+          <el-tag size="small" type="success" v-if="scope.row.type == '2'">页面</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.type == '3'">API</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="controller"
-        label="controller">
+        label="controller"
+        width="100px">
       </el-table-column>
       <el-table-column
         prop="action"
@@ -48,23 +59,24 @@
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="no"
-        label="序号">
-      </el-table-column>
+      <!--<el-table-column-->
+      <!--prop="no"-->
+      <!--label="序号">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="memo"
         label="描述">
       </el-table-column>
-      <el-table-column
-        prop="type"
-        label="类型">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
-        label="创建人">
-      </el-table-column>
+
+      <!--<el-table-column-->
+      <!--prop="createUserId"-->
+      <!--label="创建人">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="createTime"
         label="创建时间">
@@ -210,7 +222,7 @@
             [
 //              {required: true, message: '请输入type', trigger: 'blur'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
+          ],
         }
 
       }
@@ -259,7 +271,7 @@
       /**
        * 管理页面
        */
-      toManage(){
+      toManage() {
         this.$router.push("/permission/manage");
       },
       /**

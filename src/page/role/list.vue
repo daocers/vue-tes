@@ -39,14 +39,19 @@
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        prop="createUserName"
         label="创建人">
       </el-table-column>
       <el-table-column
         prop="createTime"
-        label="创建时间">
+        label="创建时间"
+        width="100px">
       </el-table-column>
 
       <el-table-column
@@ -121,7 +126,7 @@
   export default {
     data() {
       return {
-        _tree : null,
+        _tree: null,
         labelWidth: '80px',
         defaultProps: {
           children: 'children',
@@ -234,16 +239,16 @@
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.authRoleId = row.id;
         let permissionIdList = await this.http("/permission/api/findPermissionIdList?roleId=" + row.id);
-        if(permissionIdList){
+        if (permissionIdList) {
           console.log(":::::", permissionIdList)
           this.dataForEdit.permissionIdList = permissionIdList;
           this.defaultChecked = permissionIdList;
           this.$set(this.defaultChecked, permissionIdList);
-        }else {
+        } else {
           console.log("已选择的角色信息为空")
           this.defaultChecked = [];
         }
-        if(this._tree){
+        if (this._tree) {
           this._tree.setCheckedKeys(permissionIdList);
         }
 
@@ -368,7 +373,7 @@
       /**
        * 授权对话框关闭
        */
-      handleAuthClose(){
+      handleAuthClose() {
         console.log("before close:::::")
         this.dataForEdit = {};
         this._tree = this.$refs.tree;
