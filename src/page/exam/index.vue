@@ -19,7 +19,9 @@
           label="场次名称"
           width="180">
           <template  slot-scope="scope">
-            <router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>
+            <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
+            <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
+            <el-button type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -54,6 +56,11 @@
       }
     },
     methods: {
+      toNotice(scene){
+        console.log("scene:", scene);
+        sessionStorage.setItem("scene", JSON.stringify(scene));
+        this.$router.push("/exam/notice?id=" + scene.id);
+      },
       findByCondition: async function () {
         let data = await this.http("/exam/api/findReadyScene?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize);
         if (data) {

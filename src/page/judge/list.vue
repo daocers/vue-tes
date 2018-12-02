@@ -33,6 +33,10 @@
       <el-table-column
         prop="answer"
         label="最佳答案">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.answer == 'T'">正确</el-tag>
+          <el-tag type="warning" v-if="scope.row.answer == 'F'">错误</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         v-if="false"
@@ -40,29 +44,28 @@
         label="附加信息">
       </el-table-column>
       <el-table-column
-        prop="bankId"
-        label="题库id">
+        prop="bankName"
+        label="题库">
       </el-table-column>
-      <el-table-column prop="bankName" label="题库"></el-table-column>
       <el-table-column
-        prop="branchId"
+        prop="branchName"
         label="所属分行">
       </el-table-column>
       <el-table-column
-        prop="departmentId"
+        prop="departmentName"
         label="所属部门">
       </el-table-column>
       <el-table-column
-        prop="stationId"
+        prop="stationName"
         label="所属岗位">
-      </el-table-column>
-      <el-table-column
-        prop="ownerId"
-        label="">
       </el-table-column>
       <el-table-column
         prop="publicFlag"
         label="是否公用">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.publicFlag == 1">公用</el-tag>
+          <el-tag type="warning" v-if="scope.row.publicFlag == 2">私有</el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -115,6 +118,7 @@
                    :total="totalCount">
     </el-pagination>
 
+
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="题干" prop="title" :label-width="labelWidth">
@@ -123,17 +127,23 @@
         <el-form-item label="最佳答案" prop="answer" :label-width="labelWidth">
           <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="选项" prop="content" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
-        </el-form-item>
         <el-form-item label="附加信息" prop="extraInfo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="题库" prop="bankId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.bankId" placeholder="请输入"></el-input>
+          <el-select v-model="dataForEdit.bankId">
+            <el-option v-for="bank in questionBankList" :key="bank.id" :label="bank.name" :value="bank.id"></el-option>
+          </el-select>
+          <!--<el-input v-model="dataForEdit.bankId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="是否公开" prop="publicFlag" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.publicFlag" placeholder="请输入"></el-input>
+          <el-switch
+            v-model="dataForEdit.publicFlag"
+            :active-value=1
+            :inactive-value=2
+            active-text="公开"
+            inactive-text="私有">
+          </el-switch>
         </el-form-item>
         <el-form-item label="attr1" prop="attr1" :label-width="labelWidth">
           <el-input v-model="dataForEdit.attr1" placeholder="请输入"></el-input>
@@ -155,10 +165,9 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
-
 
     <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
       <el-form label-position="left" ref="batchForm" :rules="batchAddRules" :model="dataForBatch" label-width="60px">
@@ -425,7 +434,8 @@
       toAdd() {
         console.log("唤起添加对话框")
         this.editDialogShow = true;
-        this.dataForEdit = {};
+        this.dataForEdit = {publicFlag: 1};
+        this.findQuestionBanks();
       },
       /**
        * 唤起编辑对话框
@@ -435,12 +445,13 @@
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
+        this.findQuestionBanks();
       },
 
       /**
        * 提交更新数据
        */
-      commitData: async function () {
+      save: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 

@@ -1,11 +1,13 @@
 <template>
   <div class="myJoin">
     <el-tabs type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="全部" tab-click="gettableData(1)">
+      <el-tab-pane label="全部" tab-click="gettableData()">
 
       </el-tab-pane>
-      <el-tab-pane label="已开场" tab-click="gettableData(2)"></el-tab-pane>
-      <el-tab-pane label="未开场" tab-click="gettableData(3)"></el-tab-pane>
+      <el-tab-pane label="就绪" tab-click="gettableData(1)"></el-tab-pane>
+      <el-tab-pane label="考试中" tab-click="gettableData(2)"></el-tab-pane>
+      <el-tab-pane label="已封场" tab-click="gettableData(3)"></el-tab-pane>
+      <el-tab-pane label="取消/作废" tab-click="gettableData(4)"></el-tab-pane>
       <el-form :inline="true" ref="queryForm" :model="queryForm" size="small">
         <el-form-item label="名称" prop="name">
           <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
@@ -36,23 +38,18 @@
           label="场次名称">
         </el-table-column>
         <el-table-column
-          prop="ownerType"
-          label="归属类型">
-        </el-table-column>
-        <el-table-column
-          prop="ownerId"
-          label="开场单位">
-        </el-table-column>
-        <el-table-column
           prop="authCode"
           label="授权码">
         </el-table-column>
         <el-table-column
           prop="changePaper"
           label="允许换卷">
+          <template slot-scope="scope">
+            {{scope.row.percentable == 1? "是": "否"}}
+          </template>
         </el-table-column>
         <el-table-column
-          prop="delayTime"
+          prop="delayMinute"
           label="迟到不准入场时间">
         </el-table-column>
         <el-table-column
@@ -60,8 +57,29 @@
           label="作答时间">
         </el-table-column>
         <el-table-column
-          prop="paperPolicyId"
+          prop="questionBankName"
+          label="题库信息">
+        </el-table-column>
+        <el-table-column
+          label="总分">
+          <template slot-scope="scope">
+            {{scope.row.singleCount * scope.row.singleScore + scope.row.multiCount * scope.row.multiScore + scope.row.judgeCount * scope.row.judgeScore}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="选题方式">
+          <template slot-scope="scope">
+            <div v-if="scope.row.paperPolicyId < 0">普通模式</div>
+            <div v-if="scope.row.paperPolicyId > 0">策略模式</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="paperPolicyName"
           label="试卷策略">
+          <template slot-scope="scope">
+            <div v-if="scope.row.paperPolicyId < 0">N/A</div>
+            <div v-if="scope.row.paperPolicyId > 0">{{scope.row.paperPolicyName}}</div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="cancelReason"
@@ -70,34 +88,33 @@
         <el-table-column
           prop="paperGenerateType"
           label="试卷生成方式">
+          <template slot-scope="scope">
+            <div v-if="scope.row.paperGenerateType == 1">随机</div>
+            <div v-if="scope.row.paperGenerateType == 2">统一</div>
+            <div v-if="scope.row.paperGenerateType == 3">随机统一</div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="remark"
           label="备注信息">
         </el-table-column>
-        <el-table-column
-          prop="questionBankId"
-          label="题库信息">
-        </el-table-column>
-        <el-table-column
-          prop="userChoiceType"
-          label="用户选择方式">
-        </el-table-column>
-        <el-table-column
-          prop="totalScore"
-          label="总分">
-        </el-table-column>
+
         <el-table-column
           prop="percentable"
           label="百分制">
-        </el-table-column>
-        <el-table-column
-          prop="metaScoreInfo"
-          label="题型信息">
+          <template slot-scope="scope">
+            {{scope.row.percentable == 1? "是": "否"}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="status"
           label="状态">
+          <template slot-scope="scope">
+            <el-tag size="mini" type="primary" v-if="scope.row.status == 1">就绪</el-tag>
+            <el-tag size="mini" type="warning" v-if="scope.row.status == 2">考试中</el-tag>
+            <el-tag size="mini" type="success" v-if="scope.row.status == 3">已封场</el-tag>
+            <el-tag size="mini" type="info" v-if="scope.row.status == 4">取消/作废</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="openTime"
@@ -110,10 +127,6 @@
         <el-table-column
           prop="createTime"
           label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="createUserId"
-          label="创建人">
         </el-table-column>
 
         <el-table-column
@@ -160,6 +173,7 @@
       return {
         tableData: [],
         queryForm: {
+          status: '',
           name: '',
           pageNum: 1,
           pageSize: 10,
@@ -200,11 +214,15 @@
         console.log("tab:::", tab.index);
         let idx = tab.index;
         if (idx == 0) {
-          this.queryForm.status = null;
+          this.queryForm.status = '';
         } else if (idx == 1) {
-          this.queryForm.status = 2;
+          this.queryForm.status = 1;
         } else if (idx == 2) {
+          this.queryForm.status = 2;
+        }else if(idx == 3){
           this.queryForm.status = 3;
+        }else if (idx == 4){
+          this.queryForm.status = 4;
         }
         this.findByCondition();
       },
@@ -215,8 +233,11 @@
        */
       findByCondition: async function () {
         console.log("queryForm:::", this.queryForm);
+        if(!this.queryForm.status){
+          this.queryForm.status = '';
+        }
         let data = await this.http("/scene/api/myOpen?pageNum=" +
-          this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+          this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize + "&status=" + this.queryForm.status);
         console.log("data:::", data);
         if (data) {
           this.tableData = data.list;

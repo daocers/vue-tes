@@ -132,11 +132,22 @@
           <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="选项" prop="content" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.a1"></el-input>
-          <el-input v-model="dataForEdit.a2"></el-input>
-          <el-input v-model="dataForEdit.a3"></el-input>
-          <el-input v-model="dataForEdit.a4"></el-input>
-          <el-input v-model="dataForEdit.a5"></el-input>
+          <el-input placeholder="请输入A选项" v-model="dataForEdit.a1">
+            <template slot="prepend">A:</template>
+          </el-input>
+          <el-input placeholder="请输入B选项" v-model="dataForEdit.a2">
+            <template slot="prepend">B:</template>
+          </el-input>
+          <el-input placeholder="请输入C选项" v-model="dataForEdit.a3">
+            <template slot="prepend">C:</template>
+          </el-input>
+          <el-input placeholder="请输入D选项" v-model="dataForEdit.a4">
+            <template slot="prepend">D:</template>
+          </el-input>
+          <el-input placeholder="请输入E选项" v-model="dataForEdit.a5">
+            <template slot="prepend">E:</template>
+          </el-input>
+
         </el-form-item>
         <el-form-item label="附加信息" prop="extraInfo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
@@ -150,8 +161,8 @@
         <el-form-item label="是否公开" prop="publicFlag" :label-width="labelWidth">
           <el-switch
             v-model="dataForEdit.publicFlag"
-            active-value=1
-            inactive-value=2
+            :active-value=1
+            :inactive-value=2
             active-text="公开"
             inactive-text="私有">
           </el-switch>
@@ -409,7 +420,7 @@
         if (this.questionBankList.length > 0) {
           return false;
         }
-        let data = await  this.postParam("/questionBank/api/findAll");
+        let data = await this.postParam("/questionBank/api/findAll");
         this.questionBankList = data;
       },
 
@@ -455,11 +466,32 @@
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         let itemList = JSON.parse(this.dataForEdit.content);
-        this.dataForEdit.a1 = itemList[0];
-        this.dataForEdit.a2 = itemList[1];
-        this.dataForEdit.a3 = itemList[2];
-        this.dataForEdit.a4 = itemList[3];
-        this.dataForEdit.a5 = itemList[4];
+        if(itemList[0] && itemList[0].length > 0){
+          this.dataForEdit.a1 = itemList[0].substr(2);
+        }else{
+          this.dataForEdit.a1 = "";
+        }
+        if(itemList[1] && itemList[1].length > 0){
+          this.dataForEdit.a2 = itemList[1].substr(2);
+        }else{
+          this.dataForEdit.a2 = "";
+        }
+        if(itemList[2] && itemList[2].length > 0){
+          this.dataForEdit.a3 = itemList[2].substr(2);
+        }else{
+          this.dataForEdit.a3 = '';
+        }
+        if(itemList[3] && itemList[3].length > 0){
+          this.dataForEdit.a4 = itemList[3].substr(2);
+        }else{
+          this.dataForEdit.a4 = '';
+        }
+        if(itemList[4] && itemList[4].length > 0){
+          this.dataForEdit.a5 = itemList[4].substr(2);
+        }else{
+          this.dataForEdit.a5 = '';
+        }
+
         console.log("dataForEdit:", this.dataForEdit)
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
@@ -477,11 +509,29 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/single/api/save', this.dataForEdit, 3000);
+            let item = [];
+            if(this.dataForEdit.a1.length > 0){
+              item.push(this.dataForEdit.a1)
+            }
+            if(this.dataForEdit.a2.length > 0){
+              item.push(this.dataForEdit.a2)
+            }
+            if(this.dataForEdit.a3.length > 0){
+              item.push(this.dataForEdit.a3)
+            }
+            if(this.dataForEdit.a4.length > 0){
+              item.push(this.dataForEdit.a4)
+            }
+            if(this.dataForEdit.a5.length > 0){
+              item.push(this.dataForEdit.a5)
+            }
+            this.dataForEdit.content = JSON.stringify(item);
+
+            let res = await this.http('/single/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改
-                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+                this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
                 //        以下代码变动无法触发页面渲染
                 //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
                 //          console.log(this.tableData)

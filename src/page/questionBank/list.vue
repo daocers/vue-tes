@@ -30,26 +30,31 @@
       </el-table-column>
       <el-table-column
         prop="memo"
+        width="150px"
         label="题库描述">
       </el-table-column>
       <el-table-column
-        prop="branchId"
+        prop="branchName"
         label="所属机构">
       </el-table-column>
       <el-table-column
-        prop="departmentId"
+        prop="departmentName"
         label="所属部门">
       </el-table-column>
       <el-table-column
-        prop="stationId"
+        prop="stationName"
         label="所属岗位">
       </el-table-column>
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="createUserId"
+        prop="createUserName"
         label="创建人">
       </el-table-column>
       <el-table-column

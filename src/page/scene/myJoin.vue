@@ -1,145 +1,125 @@
 <template>
   <div class="myJoin">
-    <el-tabs type="border-card" @tab-click="handleTabClick">
-      <!--<el-tab-pane>-->
-      <!--<span slot="label"><i class="el-icon-date"></i> 我的行程</span>-->
-      <!--我的行程-->
+    <!--<el-tabs type="border-card" @tab-click="handleTabClick">-->
+      <!--<el-tab-pane label="全部" tab-click="getSceneList()">-->
+
       <!--</el-tab-pane>-->
-      <el-tab-pane label="全部" tab-click="getSceneList()">
+      <!--<el-tab-pane label="已开场" tab-click="getSceneList(2)"></el-tab-pane>-->
+      <!--<el-tab-pane label="未开场" tab-click="getSceneList(3)"></el-tab-pane>-->
+      <!--<el-form :inline="true" ref="queryForm" :model="queryForm" size="small">-->
+        <!--<el-form-item label="名称" prop="name">-->
+          <!--<el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-button type="primary" plain @click="findByCondition()">查询</el-button>-->
+          <!--<el-button type="default" plain @click="reset()">重置</el-button>-->
+        <!--</el-form-item>-->
+      <!--</el-form>-->
+    <el-tag type="primary" style="margin-bottom: 15px;">提示： 按照考试时间倒序排列</el-tag>
+    <el-table
+      :data="tableData"
+      border
+      style="width: 100%">
+      <el-table-column
+        v-if="false"
+        prop="id"
+        label="id"
+        width="10">
+      </el-table-column>
 
-      </el-tab-pane>
-      <el-tab-pane label="已开场" tab-click="getSceneList(2)"></el-tab-pane>
-      <el-tab-pane label="未开场" tab-click="getSceneList(3)"></el-tab-pane>
-      <el-form :inline="true" ref="queryForm" :model="queryForm" size="small">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-          <el-button type="default" plain @click="reset()">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <el-table-column
+        prop="code"
+        label="场次编码">
+        <template slot-scope="scope">{{scope.row.scene.code}}</template>
 
-      <el-table
-        :data="tableData"
-        border
-        style="width: 100%">
-        <el-table-column
-          v-if="false"
-          prop="id"
-          label="id"
-          width="10">
-        </el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="场次名称">
+        <template slot-scope="scope">{{scope.row.scene.name}}</template>
+      </el-table-column>
 
-        <el-table-column
-          prop="code"
-          label="场次编码">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="场次名称">
-        </el-table-column>
-        <el-table-column
-          prop="ownerType"
-          label="归属类型">
-        </el-table-column>
-        <el-table-column
-          prop="ownerId"
-          label="开场单位">
-        </el-table-column>
-        <el-table-column
-          prop="authCode"
-          label="授权码">
-        </el-table-column>
-        <el-table-column
-          prop="changePaper"
-          label="允许换卷">
-        </el-table-column>
-        <el-table-column
-          prop="delayTime"
-          label="迟到不准入场时间">
-        </el-table-column>
-        <el-table-column
-          prop="duration"
-          label="作答时间">
-        </el-table-column>
-        <el-table-column
-          prop="paperPolicyId"
-          label="试卷策略">
-        </el-table-column>
-        <el-table-column
-          prop="cancelReason"
-          label="取消原因">
-        </el-table-column>
-        <el-table-column
-          prop="paperGenerateType"
-          label="试卷生成方式">
-        </el-table-column>
-        <el-table-column
-          prop="remark"
-          label="备注信息">
-        </el-table-column>
-        <el-table-column
-          prop="questionBankId"
-          label="题库信息">
-        </el-table-column>
-        <el-table-column
-          prop="userChoiceType"
-          label="用户选择方式">
-        </el-table-column>
-        <el-table-column
-          prop="totalScore"
-          label="总分">
-        </el-table-column>
-        <el-table-column
-          prop="percentable"
-          label="百分制">
-        </el-table-column>
-        <el-table-column
-          prop="metaScoreInfo"
-          label="题型信息">
-        </el-table-column>
-        <el-table-column
-          prop="status"
-          label="状态">
-        </el-table-column>
-        <el-table-column
-          prop="openTime"
-          label="开场时间">
-        </el-table-column>
-        <el-table-column
-          prop="closeTime"
-          label="封场时间">
-        </el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="createUserId"
-          label="创建人">
-        </el-table-column>
+      <el-table-column
+        prop="score"
+        label="百分制得分">
+      </el-table-column>
+      <el-table-column
+        prop="originalScore"
+        label="原始分数">
+      </el-table-column>
+      <el-table-column
+        prop="sceneStatus"
+        label="场次状态">
+        <template slot-scope="scope">
+          <el-tag size="mini" type="primary" v-if="scope.row.scene.status == 1">就绪</el-tag>
+          <el-tag size="mini" type="warning" v-if="scope.row.scene.status == 2">考试中</el-tag>
+          <el-tag size="mini" type="success" v-if="scope.row.scene.status == 3">已封场</el-tag>
+          <el-tag size="mini" type="info" v-if="scope.row.scene.status == 4">取消/作废</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="beginTime"
+        label="进场时间">
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        label="交卷时间">
+      </el-table-column>
 
-        <el-table-column
-          fixed="right"
-          label="操作"
-          width="90">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination style="float: right; margin-top: 10px;"
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="queryForm.pageNum"
-                     :page-sizes="[10, 20, 50]"
-                     :page-size="queryForm.pageSize"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="totalCount">
-      </el-pagination>
-    </el-tabs>
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="场次名称">
+              <span>{{ props.row.scene.name }}</span>
+            </el-form-item>
+            <el-form-item label="场次编码">
+              <span>{{ props.row.scene.code }}</span>
+            </el-form-item>
+            <el-form-item label="单选题数量">
+              <span>{{ props.row.scene.singleCount}}</span>
+            </el-form-item>
+            <el-form-item label="分值">
+              <span>{{ props.row.scene.singleScore }}</span>
+            </el-form-item>
+            <el-form-item label="多选题数量">
+              <span>{{ props.row.scene.multiCount }}</span>
+            </el-form-item>
+            <el-form-item label="分值">
+              <span>{{ props.row.scene.multiScore }}</span>
+            </el-form-item>
+            <el-form-item label="判断题数量">
+              <span>{{ props.row.scene.judgeCount }}</span>
+            </el-form-item>
+            <el-form-item label="分值">
+              <span>{{ props.row.scene.judgeScore }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
+      <!--<el-table-column-->
+        <!--v-show="false"-->
+        <!--fixed="right"-->
+        <!--label="操作"-->
+        <!--width="90">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
+          <!--<el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+    </el-table>
+
+    <el-pagination style="float: right; margin-top: 10px;"
+                   @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   :current-page="queryForm.pageNum"
+                   :page-sizes="[10, 20, 50]"
+                   :page-size="queryForm.pageSize"
+                   layout="total, sizes, prev, pager, next, jumper"
+                   :total="totalCount">
+    </el-pagination>
+
+    <!--</el-tabs>-->
   </div>
 </template>
 
@@ -212,6 +192,24 @@
 </script>
 
 
-<style>
-
+<style scoped>
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 120px;
+    color: #99a9bf;
+    font-weight: 900;
+  }
+  .demo-table-expand span{
+    color: #409eff;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+  el-form el-form-item > label{
+    width: 100px;
+  }
 </style>

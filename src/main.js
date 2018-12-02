@@ -64,6 +64,33 @@ Vue.prototype.postEntity = async function (url, data, timeout) {
   return await processResponse(response);
 }
 
+Vue.prototype.post4Original = async function(url, params, timeout){
+  let data = new URLSearchParams();
+  for (let key in params) {
+    data.append(key, params[key]);
+  }
+  let token = await getToken();
+  if (!timeout) {
+    timeout = global_timeout;
+  }
+  let response = await axios({
+    headers: {"Content-Type": 'application/x-www-form-urlencoded', "token": token},
+    url: host + url,
+    method: 'post',
+    data: data,
+    timeout: timeout
+  })
+  if(response.status == 200){
+    return response.data;
+  }else{
+    console.info("请求处理失败");
+    this.$notify.error({
+      title: '错误',
+      message: '请求处理失败'
+    });
+    return null;
+  }
+}
 /*
 *
 * 处理响应信息

@@ -18,7 +18,8 @@
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      height="800px"
+      style="width: 100%;">
       <el-table-column
         v-if="false"
         prop="id"
@@ -36,7 +37,10 @@
       </el-table-column>
       <el-table-column
         prop="content"
-        label="选项信息">
+        label="选项信息" width="200px">
+        <template slot-scope="scope">
+          <div v-for="item in JSON.parse(scope.row.content)">{{item}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         v-if="false"
@@ -44,29 +48,29 @@
         label="附加信息">
       </el-table-column>
       <el-table-column
-        prop="bankId"
-        label="题库id">
+        prop="bankName"
+        label="题库">
       </el-table-column>
-      <el-table-column prop="bankName" label="题库"></el-table-column>
       <el-table-column
-        prop="branchId"
+        prop="branchName"
         label="所属分行">
       </el-table-column>
       <el-table-column
-        prop="departmentId"
+        prop="departmentName"
         label="所属部门">
       </el-table-column>
       <el-table-column
-        prop="stationId"
+        prop="stationName"
         label="所属岗位">
       </el-table-column>
-      <el-table-column
-        prop="ownerId"
-        label="">
-      </el-table-column>
+
       <el-table-column
         prop="publicFlag"
         label="是否公用">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.publicFlag == 1">公用</el-tag>
+          <el-tag type="warning" v-if="scope.row.publicFlag == 2">私有</el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -128,16 +132,40 @@
           <el-input v-model="dataForEdit.answer" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="选项" prop="content" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.content" placeholder="请输入"></el-input>
+          <el-input placeholder="请输入A选项" v-model="dataForEdit.a1">
+            <template slot="prepend">A:</template>
+          </el-input>
+          <el-input placeholder="请输入B选项" v-model="dataForEdit.a2">
+            <template slot="prepend">B:</template>
+          </el-input>
+          <el-input placeholder="请输入C选项" v-model="dataForEdit.a3">
+            <template slot="prepend">C:</template>
+          </el-input>
+          <el-input placeholder="请输入D选项" v-model="dataForEdit.a4">
+            <template slot="prepend">D:</template>
+          </el-input>
+          <el-input placeholder="请输入E选项" v-model="dataForEdit.a5">
+            <template slot="prepend">E:</template>
+          </el-input>
+
         </el-form-item>
         <el-form-item label="附加信息" prop="extraInfo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.extraInfo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="题库" prop="bankId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.bankId" placeholder="请输入"></el-input>
+          <el-select v-model="dataForEdit.bankId">
+            <el-option v-for="bank in questionBankList" :key="bank.id" :label="bank.name" :value="bank.id"></el-option>
+          </el-select>
+          <!--<el-input v-model="dataForEdit.bankId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="是否公开" prop="publicFlag" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.publicFlag" placeholder="请输入"></el-input>
+          <el-switch
+            v-model.number="dataForEdit.publicFlag"
+            :active-value=1
+            :inactive-value=2
+            active-text="公开"
+            inactive-text="私有">
+          </el-switch>
         </el-form-item>
         <el-form-item label="attr1" prop="attr1" :label-width="labelWidth">
           <el-input v-model="dataForEdit.attr1" placeholder="请输入"></el-input>
@@ -159,7 +187,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -193,7 +221,9 @@
         :auto-upload="false">
 
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
+                   @click="batchAdd">上传到服务器
+        </el-button>
         <div style="display: inline-block; margin-left: 20px;">
           没有模板？<a type="success" href="#" @click="download">下载模板</a>
         </div>
@@ -296,6 +326,7 @@
 
           publicFlag:
             [
+              {type: 'number', required: true}
               // {required: true, message: '请输入publicFlag', trigger: 'blur'},
               // {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
@@ -319,13 +350,13 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
         fileList.shift(file);
-        this.uploadFlag = fileList.length > 0 ? true: false;
+        this.uploadFlag = fileList.length > 0 ? true : false;
         console.log("fileList", this.fileList)
       },
       handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
-        this.uploadFlag = fileList.length > 0 ? true: false;
+        this.uploadFlag = fileList.length > 0 ? true : false;
 
       },
       handlePreview(file) {
@@ -394,7 +425,7 @@
       * 查找所有题库信息
       * */
       findQuestionBanks: async function () {
-        let data = await  this.postParam("/questionBank/api/findAll");
+        let data = await this.postParam("/questionBank/api/findAll");
         this.questionBankList = data;
       },
 
@@ -427,16 +458,46 @@
        * 跳转到添加数据页面
        */
       toAdd() {
+        this.findQuestionBanks();
         console.log("唤起添加对话框")
         this.editDialogShow = true;
-        this.dataForEdit = {};
+        this.dataForEdit = {a1: '', a2: '', a3: '', a4: '', a5: ''};
       },
       /**
        * 唤起编辑对话框
        */
       toEdit(idx, row) {
+        this.findQuestionBanks();
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
+        let itemList = JSON.parse(this.dataForEdit.content);
+        if (itemList[0] && itemList[0].length > 0) {
+          this.dataForEdit.a1 = itemList[0].substr(2);
+        } else {
+          this.dataForEdit.a1 = "";
+        }
+        if (itemList[1] && itemList[1].length > 0) {
+          this.dataForEdit.a2 = itemList[1].substr(2);
+        } else {
+          this.dataForEdit.a2 = "";
+        }
+        if (itemList[2] && itemList[2].length > 0) {
+          this.dataForEdit.a3 = itemList[2].substr(2);
+        } else {
+          this.dataForEdit.a3 = '';
+        }
+        if (itemList[3] && itemList[3].length > 0) {
+          this.dataForEdit.a4 = itemList[3].substr(2);
+        } else {
+          this.dataForEdit.a4 = '';
+        }
+        if (itemList[4] && itemList[4].length > 0) {
+          this.dataForEdit.a5 = itemList[4].substr(2);
+        } else {
+          this.dataForEdit.a5 = '';
+        }
+
+        console.log("dataForEdit:", this.dataForEdit)
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
       },
@@ -444,7 +505,7 @@
       /**
        * 提交更新数据
        */
-      commitData: async function () {
+      save: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -453,7 +514,24 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/multi/api/save', this.dataForEdit, 3000);
+            let item = [];
+            if (this.dataForEdit.a1.length > 0) {
+              item.push(this.dataForEdit.a1)
+            }
+            if (this.dataForEdit.a2.length > 0) {
+              item.push(this.dataForEdit.a2)
+            }
+            if (this.dataForEdit.a3.length > 0) {
+              item.push(this.dataForEdit.a3)
+            }
+            if (this.dataForEdit.a4.length > 0) {
+              item.push(this.dataForEdit.a4)
+            }
+            if (this.dataForEdit.a5.length > 0) {
+              item.push(this.dataForEdit.a5)
+            }
+            this.dataForEdit.content = JSON.stringify(item);
+            let res = await this.http('/multi/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改

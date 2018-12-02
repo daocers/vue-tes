@@ -5,7 +5,8 @@
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <el-input placeholder="请输入场次授权码" v-model="authCode" class="input-with-select">
-              <el-button slot="append" icon="el-icon-arrow-right" @click="toExam()">进入考试</el-button>
+              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试
+              </el-button>
             </el-input>
           </div>
         </el-card>
@@ -35,8 +36,25 @@
 //         }
 //       },
       async toExam() {
+        //校验场次状态
+        let res = await this.post4Original("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode});
+        if (!res || !res.result || !res.data) {
+          this.$alert(res.message, "提示", {
+            confirmButtonText: '确定',
+            callback: action => {
+              if (res.code != 0) {
+                this.$router.push("/exam")
+              }
+            }
+          });
+          return false;
+        }
+
         console.log("准备考试生成试卷")
-        let paperId = await this.postParam("/exam/api/getPaper", {sceneId: this.sceneId, authCode: this.authCode}, 10000);
+        let paperId = await this.postParam("/exam/api/getPaper", {
+          sceneId: this.sceneId,
+          authCode: this.authCode
+        }, 10000);
         if (paperId) {
           sessionStorage.setItem("paperId", paperId);
           this.$router.push("/exam/main?id=" + this.sceneId + "&paperId=" + paperId);
@@ -48,12 +66,13 @@
     created: function () {
       let sceneId = this.$route.query.id;
       console.log("sceneId:::", sceneId);
-      if(sceneId){
+      if (sceneId) {
         this.sceneId = sceneId;
-      }else{
+      } else {
         console.error("无法获取到场次id");
         this.$router.replace("/exam/");
       }
+
     }
   }
 
@@ -64,5 +83,13 @@
   .box-card {
     margin: 80px;
     padding: 80px;
+  }
+
+  .enter {
+    border: 1px #409eff;
+    background-color: #409EFF !important;
+    color: white !important;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
   }
 </style>

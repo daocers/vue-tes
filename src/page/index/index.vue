@@ -57,6 +57,7 @@
               <el-menu-item index="/single">单选题</el-menu-item>
               <el-menu-item index="/multi">多选题</el-menu-item>
               <el-menu-item index="/judge">判断题</el-menu-item>
+              <el-menu-item index="/property">属性管理</el-menu-item>
             </el-submenu>
             <el-submenu index="3">
               <template slot="title">

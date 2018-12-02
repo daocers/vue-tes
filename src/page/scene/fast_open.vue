@@ -50,9 +50,9 @@
       <el-col :span="12">
         <el-form-item label="试卷类型" prop="paperGenerateType">
           <el-select v-model="scene.paperGenerateType" placeholder="">
-            <el-option label="随机" value=1></el-option>
-            <el-option label="统一" value=2></el-option>
-            <el-option label="乱序统一" value=3></el-option>
+            <el-option label="随机" :value=1></el-option>
+            <el-option label="统一" :value=2></el-option>
+            <el-option label="乱序统一" :value=3></el-option>
           </el-select>
           <span
             style="display: block; color: cornflowerblue;">随机选择，每张试卷都不一样;<br/> 统一试卷，每张试卷一样; <br/>乱序统一，试题相同，顺序不同</span>
@@ -78,8 +78,8 @@
 
     <el-form-item label="出卷模式" prop="paperModel">
       <el-select v-model="scene.paperModel" placeholder="试卷策略模式">
-        <el-option label="简单模式" value="1"></el-option>
-        <el-option label="策略模式" value="2"></el-option>
+        <el-option label="简单模式" :value="1"></el-option>
+        <el-option label="策略模式" :value="2"></el-option>
       </el-select>
     </el-form-item>
 

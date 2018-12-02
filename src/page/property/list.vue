@@ -24,6 +24,15 @@
         width="10">
       </el-table-column>
       <el-table-column
+        prop="questionType"
+        label="题型">
+        <template slot-scope="scope">
+          <div v-if="scope.row.questionType == 1">单选</div>
+          <div v-if="scope.row.questionType == 2">多选</div>
+          <div v-if="scope.row.questionType == 3">判断</div>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="name"
         label="属性名称">
       </el-table-column>
@@ -43,27 +52,19 @@
       <el-table-column
         prop="status"
         label="状态">
+        <template slot-scope="scope">
+          <el-tag size="small" v-if="scope.row.status == '1'">正常</el-tag>
+          <el-tag size="small" type="info" v-if="scope.row.status == 2">禁用</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="isDel"
-        label="删除标志">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
+        prop="createUserName"
         label="创建人">
       </el-table-column>
       <el-table-column
         prop="createTime"
         label="创建时间">
       </el-table-column>
-      <!--<el-table-column-->
-      <!--prop="updateUserId"-->
-      <!--label="updateUserId">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="updateTime"-->
-      <!--label="updateTime">-->
-      <!--</el-table-column>-->
 
       <el-table-column
         fixed="right"
@@ -88,27 +89,31 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
+
         <el-form-item label="属性名称" prop="name" :label-width="labelWidth">
-          <el-input :disabled="true" v-model="dataForEdit.name" placeholder="请输入"></el-input>
+          <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="属性编号" prop="code" :label-width="labelWidth">
-          <el-input :disabled="true" v-model="dataForEdit.code" placeholder="请输入"></el-input>
+        <el-form-item label="题型" prop="questionType" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.questionType">
+            <el-option v-for="type in types" :key="type.id" :value="type.id" :label="type.name"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="必选" prop="changePaper" :label-width="labelWidth">
+          <el-switch v-model="dataForEdit.required" :active-value="1" :inactive-value="2"></el-switch>
+        </el-form-item>
+
+        <el-form-item v-if="dataForEdit.id > 0" label="属性编号" prop="code" :label-width="labelWidth">
+          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="序号" prop="no" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
+          <el-input type="number" v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
 
-        <!--<el-form-item label="状态" prop="status">-->
-        <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="删除标志" prop="isDel">-->
-        <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-
-        <el-form-item label="属性信息" required >
+        <el-form-item label="属性值" required>
           <el-table :data="dataForEdit.itemList"
                     border
                     style="width: 100%">
@@ -119,17 +124,12 @@
             </el-table-column>
             <el-table-column prop="name" label="名称">
               <template slot-scope="scope">
-                <div v-if="scope.row.id != null">
-                  <span>{{scope.row.name}}</span>
-                </div>
-                <div v-else>
-                  <el-input v-model="scope.row.name" size="small"></el-input>
-                </div>
+                <el-input v-model="scope.row.name" size="small"></el-input>
               </template>
             </el-table-column>
-            <el-table-column prop="idx" label="排序">
+            <el-table-column prop="memo" label="描述">
               <template slot-scope="scope">
-                <el-input type="number" v-model="scope.row.idx" size="small"></el-input>
+                <el-input v-model="scope.row.memo" size="small"></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -147,62 +147,10 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="添加" :visible.sync="addDialogShow">
-      <el-form ref="addForm" :rules="rules" label-position="right" :model="dataForAdd">
-        <el-form-item label="属性名称" prop="name" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
-        </el-form-item>
-        <!--<el-form-item label="属性编号" prop="code">-->
-        <!--<el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item label="描述" prop="memo" :label-width="labelWidth">
-          <el-input v-model="dataForAdd.memo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="序号" prop="no" :label-width="labelWidth">
-          <el-input type="number" v-model="dataForAdd.no" placeholder="请输入"></el-input>
-        </el-form-item>
-
-        <el-form-item label="属性信息" prop="itemList">
-          <el-table :data="dataForAdd.itemList"
-                    border
-                    style="width: 100%">
-            <el-table-column prop="no" label="序号" width="100px">
-              <template slot-scope="scope">
-                <span>{{scope.$index + 1}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="name" label="名称">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.name" size="small"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column prop="idx" label="排序">
-              <template slot-scope="scope">
-                <el-input type="number" v-model="scope.row.idx" size="small"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              label="操作"
-              width="100">
-              <template slot-scope="scope">
-                <el-button type="text" size="small" @click="removeLine(scope.$index, scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-button type="primary" plain @click="addItem()" icon="el-icon-plus" size="mini">添加</el-button>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAdd()">取 消</el-button>
-        <el-button type="primary" @click="addData()">确 定</el-button>
-      </div>
-    </el-dialog>
 
   </div>
 
@@ -210,7 +158,6 @@
 
 
 <script>
-  import Vue from 'vue'
 
   export default {
     data() {
@@ -251,6 +198,7 @@
         }
       };
       return {
+        types: [{id: 1, name: '单选题'}, {id: 2, name: '多选题'}, {id: 3, name: '判断题'}],
         labelWidth: '80px',
         /**
          * 表格数据
@@ -280,23 +228,13 @@
             {id: null, name: '', idx: null}
           ],
         },
-        /**
-         * 添加对话框数据
-         */
-        dataForAdd: {
-          itemList: [
-            {id: null, name: '', idx: null}
-          ],
-        },
+
 
         /**
          * 属性条目编号
          */
         itemIndex: 1,
-        /**
-         * 添加对话框是否显示
-         */
-        addDialogShow: false,
+
         /**
          * 修改对话框是否显示
          */
@@ -358,7 +296,10 @@
        */
       toAdd() {
         console.log("唤起添加对话框");
-        this.addDialogShow = true;
+        this.editDialogShow = true;
+        this.dataForEdit = {
+          itemList: []
+        }
 
       },
       /**
@@ -373,7 +314,7 @@
       /**
        * 提交更新数据
        */
-      updateData: async function () {
+      save: async function () {
         console.log("更新数据");
         console.log("dataForEdit:", this.dataForEdit);
 
@@ -382,13 +323,10 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/property/api/update', this.dataForEdit, 1000);
+            let id = this.dataForEdit.id;
+            let res = await this.http('/property/api/save', this.dataForEdit, 1000);
             if (res) {
               this.findByCondition();
-//              Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-              //        以下代码变动无法触发页面渲染
-              //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-              //          console.log(this.tableData)
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
@@ -398,53 +336,6 @@
             this.editDialogShow = false;
           }
         });
-      },
-      /**
-       * 提交添加数据
-       */
-      addData: async function () {
-        console.log("添加数据");
-        console.log("dataForAdd:", this.dataForAdd);
-
-        this.$refs['addForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.http("/property/api/save", this.dataForAdd, 1000);
-            if (res == true) {
-              this.$confirm('继续添加?查看列表?', '提示', {
-                confirmButtonText: '继续添加',
-                cancelButtonText: '查看列表',
-                type: 'success',
-                center: true
-              }).then(() => {
-                this.dataForEdit = {
-                  itemList: [
-                    {id: null, name: '', idx: null}
-                  ],
-                };
-                this.$refs['addForm'].resetFields();
-              }).catch(() => {
-                this.$refs['addForm'].resetFields();
-                this.findByCondition();
-//        关闭对话框
-                this.addDialogShow = false;
-              });
-            }
-          }
-        });
-      },
-
-
-      /**
-       * 取消添加
-       */
-      cancelAdd: async function () {
-        this.findByCondition();
-        this.$refs['addForm'].resetFields();
-        this.dataForAdd.itemList = [{id: null, name: '', idx: null}];
-        this.addDialogShow = false;
       },
 
       /**
