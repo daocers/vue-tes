@@ -20,6 +20,7 @@
           @node-drag-over="handleDragOver"
           @node-drag-end="handleDragEnd"
           @node-drop="handleDrop"
+          :allow-drop="checkAllow"
         >
         </el-tree>
 
@@ -248,6 +249,10 @@
        */
       handleNodeClick(node) {
         console.log("节点被点击： ", node);
+        if(node.id == 0){
+          console.log("根节点被点击了")
+          return false;
+        }
         this.nodeData = node;
         this.formShow = true;
       },
@@ -288,6 +293,16 @@
         }
         console.log("treeData:", this.branchTree)
       },
+
+      //是否允许拖拽
+      checkAllow(draggingNode, dropNode, type){
+        if(dropNode.data.id == 0){
+          if(type == "prev" || type == "next"){
+            return false;
+          }
+        }
+        return true;
+      }
 
     },
     created: async function () {
