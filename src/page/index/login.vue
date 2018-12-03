@@ -125,14 +125,11 @@
         this.$refs.loginForm.validate(async (valid) => {
           if (valid) {
             let res = await this.postParam('/user/api/login', this.login);
-            console.log("结果：", res);
             if (res) {
-              console.log("res:::", res);
-              let token = res.token;
-              let urls = res.urls;
-
-              sessionStorage.setItem("urls", urls);
-              //保存条目
+              //保存用户token
+              console.log("获取到token：", res);
+              //登录成功删除所有的sessionStorage
+              sessionStorage.clear();
               sessionStorage.setItem("token", res);
               this.$router.replace("/");
               //获取菜单信息
@@ -142,15 +139,6 @@
               }).catch(e => {
                 console.log("获取权限失败", e)
               })
-
-              //获取角色信息
-              // this.postParam("/role/api/findRoleList").then(res => {
-              //   console.log("获取角色列表", res);
-              // }).catch(e => {
-              //   console.log("获取角色列表失败", e)
-              // })
-
-
             } else {
               this.$message.error("用户名/密码错误");
             }
