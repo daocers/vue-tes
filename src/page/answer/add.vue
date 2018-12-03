@@ -130,7 +130,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        let res = await this.http("/answer/api/save", this.answer);
+                        let res = await this.postEntity("/answer/api/save", this.answer);
                         if (res == true) {
                             this.$confirm('继续添加?查看列表?', '提示', {
                                 confirmButtonText: '继续添加',

@@ -81,7 +81,7 @@
           type: 'warning'
         }).then(async event => {
           console.log("userId:::", userId)
-          let data = await this.http("/exam/api/forceCommit?sceneId=" + this.sceneId + "&userId=" + userId);
+          let data = await this.postEntity("/exam/api/forceCommit?sceneId=" + this.sceneId + "&userId=" + userId);
           if (data) {
             console.log("强制提交试卷成功");
           }
@@ -97,7 +97,7 @@
        */
       findByCondition: async function () {
         console.log("queryForm:::", this.queryForm);
-        let data = await this.http("/exam/api/live?sceneId=" + this.sceneId + "&pageNum=" +
+        let data = await this.postEntity("/exam/api/live?sceneId=" + this.sceneId + "&pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {

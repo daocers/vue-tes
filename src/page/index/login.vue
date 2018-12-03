@@ -120,7 +120,7 @@
       }
     },
     methods: {
-      signIn() {
+      async signIn() {
         let _router = this.$router;
         this.$refs.loginForm.validate(async (valid) => {
           if (valid) {
@@ -131,14 +131,16 @@
               //登录成功删除所有的sessionStorage
               sessionStorage.clear();
               sessionStorage.setItem("token", res);
-              this.$router.replace("/");
               //获取菜单信息
-              let menus = this.postParam("/permission/api/getMenuTree").then(res => {
+              this.postParam("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
+
                 sessionStorage.setItem("menuList", JSON.stringify(res));
+                this.$router.replace("/");
               }).catch(e => {
                 console.log("获取权限失败", e)
               })
+              sessionStorage.setItem("token", res);
             } else {
               this.$message.error("用户名/密码错误");
             }

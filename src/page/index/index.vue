@@ -14,8 +14,10 @@
               <!--<a href="#/help">首页</a>-->
               <!--<router-link to="/help">帮助中心</router-link>-->
               <!--<router-link to="/">首页</router-link>-->
+              <a href="#" @click="logout">退出</a>
               <a href="#" @click="toHelp">帮助中心</a>
               <a href="#" @click="toIndex">首页</a>
+
               <!--<a href="/help" target="_blank">帮助中心</a>-->
             </p>
           </div>
@@ -39,30 +41,15 @@
                 <i class="el-icon-setting"></i>
                 <span>{{menu.name}}</span>
               </template>
-              <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url">{{subItem.name}}</el-menu-item>
+              <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url">{{subItem.name}}
+              </el-menu-item>
             </el-submenu>
+
 
             <el-submenu index="1">
               <template slot="title">
-                <i class="el-icon-setting"></i>
-                <span>基础信息</span>
-              </template>
-              <el-menu-item index="/questionBank">题库管理</el-menu-item>
-            </el-submenu>
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-document"></i>
-                <span>试题管理</span>
-              </template>
-              <el-menu-item index="/single">单选题</el-menu-item>
-              <el-menu-item index="/multi">多选题</el-menu-item>
-              <el-menu-item index="/judge">判断题</el-menu-item>
-              <el-menu-item index="/property">属性管理</el-menu-item>
-            </el-submenu>
-            <el-submenu index="3">
-              <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>用户管理</span>
+                <span>基础信息</span>
               </template>
               <el-menu-item index="/role">角色</el-menu-item>
               <el-menu-item index="/permission">权限</el-menu-item>
@@ -71,17 +58,30 @@
               <el-menu-item index="/station">岗位</el-menu-item>
               <el-menu-item index="/user">用户</el-menu-item>
             </el-submenu>
-            <el-submenu index="4">
+
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-document"></i>
+                <span>试题管理</span>
+              </template>
+              <el-menu-item index="/questionBank">题库管理</el-menu-item>
+              <el-menu-item index="/property">属性管理</el-menu-item>
+              <el-menu-item index="/single">单选题</el-menu-item>
+              <el-menu-item index="/multi">多选题</el-menu-item>
+              <el-menu-item index="/judge">判断题</el-menu-item>
+            </el-submenu>
+
+            <el-submenu index="3">
               <template slot="title">
                 <i class="el-icon-edit-outline"></i>
                 <span>考试管理</span>
               </template>
               <el-menu-item index="/scene/open">快速开场</el-menu-item>
-              <el-menu-item index="/paper">成绩查询</el-menu-item>
               <!--<el-menu-item index="/scene">场次管理</el-menu-item>-->
               <el-menu-item index="/exam">考试</el-menu-item>
               <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>
               <el-menu-item index="/scene/myOpen">我开场的</el-menu-item>
+              <el-menu-item index="/paper">成绩查询</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>
@@ -116,7 +116,7 @@
           // width: '240px',
           height: '500px',
         },
-        menuList:[],
+        menuList: [],
       }
     },
     methods: {
@@ -156,6 +156,15 @@
         e.preventDefault();
         this.anchor = '1';
         this.$router.push({path: "/"})
+      },
+      //退出
+      async logout(e) {
+        e.preventDefault();
+        let res = await this.postParam("/user/api/logout");
+        if (res) {
+          sessionStorage.clear();
+          this.$router.push({path: "/login"})
+        }
       }
 
     },

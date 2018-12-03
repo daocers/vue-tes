@@ -323,7 +323,7 @@
        */
       async findByCondition() {
         console.log("开始分页查询")
-        let data = await this.http("/questionPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/questionPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -387,7 +387,7 @@
               url = "/questionPolicy/api/save";
               addFlag = true;
             }
-            var res = await this.http(url, this.dataForEdit, 1000);
+            var res = await this.postEntity(url, this.dataForEdit, 1000);
             if (res) {
               if(addFlag){
 //                新增
@@ -429,7 +429,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/questionPolicy/api/delete?id=" + row.id);
+        let data = await this.postEntity("/questionPolicy/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -481,10 +481,10 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let questionTypeInfo = await this.http("/questionType/api/getQuestionTypeInfo");
+      let questionTypeInfo = await this.postEntity("/questionType/api/getQuestionTypeInfo");
       console.log("questionTypeInfo: ", questionTypeInfo);
       this.questionTypeInfo = questionTypeInfo;
-      let questionTypeList = await this.http("/questionType/api/findAll");
+      let questionTypeList = await this.postEntity("/questionType/api/findAll");
       this.questionTypeList = questionTypeList;
     },
     computed: {

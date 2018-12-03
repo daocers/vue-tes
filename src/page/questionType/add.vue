@@ -106,7 +106,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        let res = await this.http("/questionType/api/save", this.questionType);
+                        let res = await this.postEntity("/questionType/api/save", this.questionType);
                         if (res == true) {
                             this.$confirm('继续添加?查看列表?', '提示', {
                                 confirmButtonText: '继续添加',

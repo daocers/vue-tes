@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="sceneForm" :model="scene" :rules="rules" label-width="80px">
+  <el-form size="medium" ref="sceneForm" :model="scene" :rules="rules" label-width="80px">
     <el-form-item label="场次名称" prop="name" placeholder="3到16位">
       <el-input v-model="scene.name"></el-input>
     </el-form-item>
@@ -184,7 +184,7 @@
           }
         },
         scene: {
-          paperModel: "1",
+          paperModel: 1,
         },
         /* 试卷策略 */
         paperPolicyList: [],
@@ -231,7 +231,7 @@
     },
     //获取全部试卷策略
     getAllPaperPolicy: async function () {
-      let data = await  this.http("/paperPolicy/api/findAll")
+      let data = await  this.postEntity("/paperPolicy/api/findAll")
       this.paperPolicyList = data;
     },
     created: async function () {
@@ -239,7 +239,7 @@
       let sceneId = this.$route.query.id;
       console.log("sceneId:", sceneId);
       if (sceneId) {
-        let data = await this.http("/scene/api/findById?id=" + sceneId);
+        let data = await this.postEntity("/scene/api/findById?id=" + sceneId);
         if (data) {
           console.log("data:", data);
           data.paperModel = data.paperPolicyId < 1 ? 1 : 2
@@ -256,7 +256,7 @@
 
 
       //  获取题库列表
-      let bankList = await this.http("/questionBank/api/findAll");
+      let bankList = await this.postEntity("/questionBank/api/findAll");
       console.log("bankList:", bankList);
       if (bankList) {
         this.questionBankList = bankList;

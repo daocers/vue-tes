@@ -241,7 +241,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/questionBank/api/save', this.dataForEdit, 1000);
+            var res = await this.postEntity('/questionBank/api/save', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -269,7 +269,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/questionBank/api/save", this.dataForAdd, 1000);
+            let res = await this.postEntity("/questionBank/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -301,7 +301,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/questionBank/api/delete?id=" + row.id);
+        let data = await this.postEntity("/questionBank/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

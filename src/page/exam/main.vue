@@ -188,7 +188,7 @@
       async commitPaper() {
         console.log("提交试卷！");
         let paperId = sessionStorage.getItem("paperId");
-        let res = await this.http("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
+        let res = await this.postEntity("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
           this.closeTimer();
           this.$notify.success({
@@ -357,7 +357,7 @@
       }
 
       //校验场次状态
-      let canAccess = await  this.http("/exam/api/canAccess?sceneId=" + this.scenei);
+      let canAccess = await  this.postEntity("/exam/api/canAccess?sceneId=" + this.scenei);
       if(!canAccess){
         this.$alert("不在考试时间内", "提示", {
           confirmButtonText: '确定',
@@ -366,7 +366,7 @@
           }
         })
       }
-      let questionList = await this.http("/exam/api/getQuestionList?sceneId=" + this.sceneId);
+      let questionList = await this.postEntity("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (questionList) {
         console.log("questionList:", questionList)
         // 获取列表，设置初始化的数据
@@ -383,7 +383,7 @@
         return false;
       }
 
-      let scene = await this.http("/scene/api/findById?id=" + sceneId);
+      let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
       if (scene) {
         this.scene = scene;
         let time = new Date();

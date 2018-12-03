@@ -1,16 +1,16 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="用户名" prop="username">
         <el-input v-model="queryForm.username" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
-      <el-form-item style="float: right">
-        <el-button type="primary" @click="toAdd()">添加</el-button>
-      </el-form-item>
+      <!--<el-form-item style="float: right">-->
+        <!--<el-button type="primary" @click="toAdd()">添加</el-button>-->
+      <!--</el-form-item>-->
     </el-form>
 
     <el-table
@@ -277,7 +277,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -328,7 +328,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/paper/api/save', this.dataForEdit, 3000);
+            var res = await this.postEntity('/paper/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改
@@ -394,7 +394,7 @@
         }).then(async () => {
 
           console.log("删除：", idx, row)
-          let data = await this.http("/paper/api/delete?id=" + row.id);
+          let data = await this.postEntity("/paper/api/delete?id=" + row.id);
           if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;

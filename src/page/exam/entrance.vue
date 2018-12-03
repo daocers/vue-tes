@@ -27,7 +27,7 @@
     },
     methods: {
 //       async toNotice() {
-//         let data = await this.http("/exam/api/checkAuthCode?authCode=" + this.authCode + "&sceneId=" + this.sceneId);
+//         let data = await this.postEntity("/exam/api/checkAuthCode?authCode=" + this.authCode + "&sceneId=" + this.sceneId);
 //         if(data){
 //           this.$router.push("/exam/notice?id=" + this.sceneId);
 //         }else{

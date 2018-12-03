@@ -60,7 +60,7 @@
                         prop="createTime"
                         label="createTime">
                 </el-table-column>
-            
+
             <el-table-column
                     fixed="right"
                     label="操作"
@@ -118,8 +118,8 @@
             </div>
         </el-dialog>
 
-                                                        
-                                                        
+
+
     </div>
 
 </template>
@@ -229,7 +229,7 @@
              * 查询
              */
             findByCondition: async function () {
-                let data = await this.http("/propertyItem/v1/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+                let data = await this.postEntity("/propertyItem/v1/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
                 console.log("data: ", data);
                 if (data) {
                     this.tableData = data.list;
@@ -280,7 +280,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        var res = await this.http('/propertyItem/v1/save', this.dataForEdit, 3000);
+                        var res = await this.postEntity('/propertyItem/v1/save', this.dataForEdit, 3000);
                         if (res) {
                             if (this.dataForEdit.id) {
                                 //                修改
@@ -338,7 +338,7 @@
              * 删除数据
              */
             async toRemove(idx, row) {
-                                                                                                                                                                                                                
+
         this.$confirm('数据删除后无法找回, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -346,7 +346,7 @@
         }).then(async () => {
 
             console.log("删除：", idx, row)
-        let data = await this.http("/propertyItem/v1/delete?id=" + row.id);
+        let data = await this.postEntity("/propertyItem/v1/delete?id=" + row.id);
         if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;

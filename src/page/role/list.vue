@@ -121,7 +121,6 @@
 
 
 <script>
-  import Vue from 'vue'
 
   export default {
     data() {
@@ -184,19 +183,18 @@
           name:
             [
               {required: true, message: '请输入name', trigger: 'blur'},
-              {min: 1, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 1, max: 10, message: '10个字符以内', trigger: 'blur'}
             ],
           code:
             [
               {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 1, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 1, max: 20, message: '20个字符以内', trigger: 'blur'}
             ],
           memo:
             [
               {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
             ],
         }
-
       }
     },
 
@@ -206,7 +204,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/role/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/role/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -238,7 +236,7 @@
         console.log("授权")
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         this.authRoleId = row.id;
-        let permissionIdList = await this.http("/permission/api/findPermissionIdList?roleId=" + row.id);
+        let permissionIdList = await this.postEntity("/permission/api/findPermissionIdList?roleId=" + row.id);
         if (permissionIdList) {
           console.log(":::::", permissionIdList)
           this.dataForEdit.permissionIdList = permissionIdList;
@@ -274,7 +272,7 @@
         if (!checkedIds || checkedIds.length == 0) {
           this.$message.warning("请选择权限菜单");
         } else {
-          let res = await this.http("/role/api/authorize?roleId=" + this.authRoleId, checkedIds);
+          let res = await this.postEntity("/role/api/authorize?roleId=" + this.authRoleId, checkedIds);
           if (res) {
             this.dataForEdit.permissionIdList = checkedIds;
             this.$message.success("授权成功");
@@ -306,13 +304,13 @@
             return false;
           } else {
             let res, addFlag;
-            if (this.dataForEdit.id) {
-              res = await this.http("/role/api/update", this.dataForEdit);
-              addFlag = false;
-            } else {
-              res = await this.http("/role/api/save", this.dataForEdit);
+            let id = this.dataForEdit.id;
+            if (!id) {
               addFlag = true;
+            } else {
+              addFlag = false;
             }
+            res = await this.postEntity("/role/api/save", this.dataForEdit);
             if (res) {
               if (addFlag) {
 //                新增
@@ -332,10 +330,7 @@
                 });
               } else {
 //                更新
-                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-                //        以下代码变动无法触发页面渲染
-                //        this.tableData[this.dataForEditIndex] = Object.assign({},this.dataForEdit);
-                //          console.log(this.tableData)
+                this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
                 this.findByCondition();
                 this.$refs['editForm'].clearValidate();
 
@@ -356,7 +351,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/role/api/delete?id=" + row.id);
+        let data = await this.postEntity("/role/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -398,7 +393,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let treeData = await this.http("/permission/api/getPermissionTree", null);
+      let treeData = await this.postEntity("/permission/api/getPermissionTree", null);
       if (treeData) {
         this.treeData = treeData;
       }

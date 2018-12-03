@@ -164,7 +164,7 @@
           }
 
         } else if (this.step == 4) {
-          let data = this.http("/scene/api/save", this.scene);
+          let data = this.postEntity("/scene/api/save", this.scene);
           if (data) {
             console.log("保存成功");
           } else {
@@ -199,7 +199,7 @@
       save: async function () {
         console.log("保存。。。");
         console.log("scene:::::#### ", this.scene);
-        let res = await this.http("/scene/api/save", this.scene);
+        let res = await this.postEntity("/scene/api/save", this.scene);
         if (res) {
           if (res == -1) {
             this.$notify({

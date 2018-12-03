@@ -433,7 +433,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/multi/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/multi/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -531,7 +531,7 @@
               item.push(this.dataForEdit.a5)
             }
             this.dataForEdit.content = JSON.stringify(item);
-            let res = await this.http('/multi/api/save', this.dataForEdit, 3000);
+            let res = await this.postEntity('/multi/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改
@@ -597,7 +597,7 @@
         }).then(async () => {
 
           console.log("删除：", idx, row)
-          let data = await this.http("/multi/api/delete?id=" + row.id);
+          let data = await this.postEntity("/multi/api/delete?id=" + row.id);
           if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;

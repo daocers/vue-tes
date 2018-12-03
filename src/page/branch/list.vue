@@ -239,7 +239,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/branch/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/branch/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -301,7 +301,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/branch/api/save', this.dataForEdit, 1000);
+            var res = await this.postEntity('/branch/api/save', this.dataForEdit, 1000);
             if (res) {
               this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -322,7 +322,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/branch/api/delete?id=" + row.id);
+        let data = await this.postEntity("/branch/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

@@ -533,7 +533,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/commonQuestion/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/commonQuestion/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -577,7 +577,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/commonQuestion/api/update', this.dataForEdit, 1000);
+            var res = await this.postEntity('/commonQuestion/api/update', this.dataForEdit, 1000);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -605,7 +605,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/commonQuestion/api/save", this.dataForAdd, 1000);
+            let res = await this.postEntity("/commonQuestion/api/save", this.dataForAdd, 1000);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -637,7 +637,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/commonQuestion/api/delete?id=" + row.id);
+        let data = await this.postEntity("/commonQuestion/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -752,7 +752,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let questionTypeList = await this.http("/questionType/api/findAll");
+      let questionTypeList = await this.postEntity("/questionType/api/findAll");
       this.questionTypeList = questionTypeList;
       console.log("题型信息： ", questionTypeList)
       if (questionTypeList != null) {
@@ -762,9 +762,9 @@
         }
         console.log("questionTypeMap: {}", this.questionTypeMap)
       }
-      let questionBankList = await this.http("/questionBank/api/findAll");
+      let questionBankList = await this.postEntity("/questionBank/api/findAll");
       this.questionBankList = questionBankList;
-      let propertyList = await this.http("/property/api/findAll");
+      let propertyList = await this.postEntity("/property/api/findAll");
       this.propertyList = propertyList;
     },
     computed: {}

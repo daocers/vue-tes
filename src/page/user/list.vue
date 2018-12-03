@@ -357,7 +357,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/user/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.postEntity("/user/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -397,7 +397,7 @@
 
         console.log("编辑：", row)
         if (this.departmentList.length == 0) {
-          await this.http("/department/api/findAll").then(res => {
+          await this.postEntity("/department/api/findAll").then(res => {
             console.log("获取部门信息", res);
             this.departmentList = res;
           }).catch(e => {
@@ -406,7 +406,7 @@
 
         }
         if (this.stationList.length == 0) {
-          this.http("/station/api/findAll").then(res => {
+          this.postEntity("/station/api/findAll").then(res => {
             console.log("获取岗位信息", res);
             this.stationList = res;
           }).catch(e => {
@@ -414,8 +414,8 @@
           })
         }
 
-        if (this.branchList.length == 0) {
-          this.http("/branch/api/getBranchTree", null).then(res => {
+        if (!this.branchList || this.branchList.length == 0) {
+          this.postEntity("/branch/api/getBranchTree", null).then(res => {
             console.log("获取结构信息", res);
             this.branchList = res;
           }).catch(e => {
@@ -442,7 +442,7 @@
         console.log("分派角色：：", row)
         this.dataForAssign = JSON.parse(JSON.stringify(row));
         console.log("this.dataForAssign:::", this.dataForAssign);
-        let roleIds = await this.http("/role/api/findByUserId?userId=" + this.dataForAssign.id);
+        let roleIds = await this.postEntity("/role/api/findByUserId?userId=" + this.dataForAssign.id);
         this.dataForEditIndex = idx;
         this.assignDialogShow = true;
         this.dataForAssign.roleIdList = roleIds;
@@ -460,7 +460,7 @@
             return false;
           } else {
             let id = this.dataForEdit.id;
-            let res = await this.http('/user/api/save', this.dataForEdit, 1000);
+            let res = await this.postEntity('/user/api/save', this.dataForEdit, 1000);
             if (res) {
               this.dataForEdit.id = res;
               if (id) {
@@ -486,7 +486,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.http("/user/api/delete?id=" + row.id);
+        let data = await this.postEntity("/user/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -516,7 +516,7 @@
        */
       async commitAssign() {
         console.log("roleIdList:", this.dataForAssign.roleIdList)
-        let res = await this.http("/user/api/assignRole?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
+        let res = await this.postEntity("/user/api/assignRole?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
         if (res) {
           Vue.set(this.tableData, this.dataForEditIndex, this.dataForAssign);
           this.$notify({
@@ -602,7 +602,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
-      let roleList = await this.http("/role/api/findAll");
+      let roleList = await this.postEntity("/role/api/findAll");
       this.roleList = roleList;
     },
   }

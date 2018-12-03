@@ -116,27 +116,29 @@
           code:
             [
               {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 20, message: '长度在3-20个字符', trigger: 'blur'}
+              {max: 20, message: '20个字符以内', trigger: 'blur'}
             ],
           address:
             [
-//              {required: true, message: '请输入address', trigger: 'blur'},
-            {min: 3, max: 10, message: '长度在3-100个字符', trigger: 'blur'}
-          ],
-//          level:
-//            [
-//              {required: true, message: '请输入level', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-//          ],
+              {max: 100, message: '100个字符以内', trigger: 'blur'}
+            ],
           superiorId:
             [
-            {required: true, message: '请输入superiorId', trigger: 'blur'},
-//              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-          ],
+              {required: true, message: '请设置superiorId', trigger: 'blur'},
+            ],
         }
       }
     },
     methods: {
+      async getBranchTree() {
+        let data = await this.postEntity("/branch/api/getBranchTree", null);
+        if (data == null || data == undefined) {
+          data = [];
+        }
+        console.log("data: ", data);
+        this.branchTree = data;
+      },
+
       setAddData: function () {
         var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
@@ -211,14 +213,18 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/save", this.dataForAdd);
-            if (res != null && res != undefined) {
+            let res = await this.postEntity("/branch/api/save", this.dataForAdd);
+            if (res) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
-              if (!currentNode.children) {
+              if (!currentNode) {
+                this.branchTree.push(this.dataForAdd)
+              } else if (!currentNode.children) {
                 currentNode.children = [];
+                currentNode.children.push(this.dataForAdd);
+              } else {
+                currentNode.children.push(this.dataForAdd);
               }
-              currentNode.children.push(this.dataForAdd);
               this.addBtnShow = true;
               this.addFormShow = false;
             }
@@ -245,7 +251,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.http("/branch/api/save", this.dataForEdit);
+            let res = await this.postEntity("/branch/api/save", this.dataForEdit);
             if (res == true) {
               this.dataForAdd.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
@@ -260,7 +266,7 @@
       },
 
       async saveTree() {
-        let res = await  this.http("/branch/api/saveTree", this.branchTree);
+        let res = await  this.postEntity("/branch/api/saveTree", this.branchTree);
         if (res) {
           this.$notify.success("保存成功");
           this.saveTreeShow = false;
@@ -329,13 +335,9 @@
 
     },
     created: async function () {
-      let data = await this.http("/branch/api/getBranchTree", null);
-      if (data == null || data == undefined) {
-        data = [];
-      }
-      console.log("data: ", data);
-      this.branchTree = data;
-    }
+      this.getBranchTree();
+    },
+
   }
 </script>
 

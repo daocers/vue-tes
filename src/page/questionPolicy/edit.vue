@@ -53,7 +53,7 @@
       save(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.http("/questionPolicy/api/save", this.questionPolicy)
+            this.postEntity("/questionPolicy/api/save", this.questionPolicy)
           } else {
             console.log("参数校验失败，不提交");
 //           弹窗
