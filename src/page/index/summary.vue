@@ -10,8 +10,8 @@
               <div>{{role}}</div>
             </div>
           </div>
-          <div class="user-info-list">上次登录时间：<span>{{lastLoginTime}}</span></div>
-          <div class="user-info-list">上次登录地点：<span>{{lastLoginIp}}</span></div>
+          <div class="user-info-list">上次登录时间：<span>{{!lastLoginTime? "— —": lastLoginTime}}</span></div>
+          <div class="user-info-list">上次登录地点：<span>{{!lastLoginIp? "— —" : lastLoginIp}}</span></div>
         </el-card>
         <el-card shadow="hover" style="height:252px;">
           <div slot="header" class="clearfix">
@@ -360,9 +360,9 @@
     color: #999;
   }
 
-  .schart {
-    width: 100%;
-    height: 300px;
+  .el-card__header{
+    background-color: gainsboro !important;
   }
+
 
 </style>

@@ -90,6 +90,7 @@ const UserIndex = () => import('../page/user/list.vue');
 const FastOpen = () => import('../page/scene/fast_open');
 const Index = () => import('../page/index/index.vue');
 const Paper = () => import('../page/paper/list');
+const PaperOfScene = () => import("../page/paper/score")
 
 
 const Login = () => import('../page/index/login.vue');
@@ -153,6 +154,7 @@ export default [
       },
 
       {path: '/paper', component: Paper},
+      {path: '/score', component: PaperOfScene},
       {path: '/questionType', component: QuestionTypeIndex},
       {path: '/questionBank', component: QuestionBankIndex},
       {path: '/paperPolicy', component: PaperPolicyIndex},

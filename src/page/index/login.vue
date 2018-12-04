@@ -136,7 +136,7 @@
                 console.log("获取用户菜单信息", res);
 
                 sessionStorage.setItem("menuList", JSON.stringify(res));
-                this.$router.replace("/");
+                this.$router.replace("/help");
               }).catch(e => {
                 console.log("获取权限失败", e)
               })
