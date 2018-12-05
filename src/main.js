@@ -25,27 +25,12 @@ Vue.prototype.httpGet = async function (url) {
 
 Vue.prototype.download = async function (url) {
   let token = sessionStorage.getItem("token");
-  await axios({
-    headers: {"Content-Type": 'application/x-msdownload', "token": token},
-    url: host + url,
-    method: 'post',
-    responseType: 'blob'
-    // data: data,
-    // timeout: timeout
-  }).then(res => {
-    console.debug("res:", res);
-    //这里res.data是返回的blob对象
-    var blob = new Blob([res.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}); //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
-    var downloadElement = document.createElement('a');
-    var href = window.URL.createObjectURL(blob); //创建下载的链接
-    downloadElement.href = href;
-    downloadElement.download = 'xxx.xlsx'; //下载后文件名
-    document.body.appendChild(downloadElement);
-    downloadElement.click(); //点击下载
-    document.body.removeChild(downloadElement); //下载完成移除元素
-    window.URL.revokeObjectURL(href); //释放掉blob对象
-
-  })
+  if (url.indexOf("?") > -1) {
+    url = url + "&token=" + token;
+  } else {
+    url = url + "?token=" + token;
+  }
+  window.location.href = host + url;
 }
 
 /**
@@ -79,7 +64,7 @@ Vue.prototype.postParam = async function (url, params, timeout) {
 *
 **/
 Vue.prototype.postEntity = async function (url, data, timeout) {
-  console.log("url:", url);
+  console.log("url:********", url);
   console.log("data:", data);
   if (!timeout) {
     timeout = global_timeout;
@@ -95,7 +80,7 @@ Vue.prototype.postEntity = async function (url, data, timeout) {
     data: JSON.stringify(data),
     timeout: timeout
   })
-  console.log("response:::", response);
+  console.log(url + ":::", response);
   return await processResponse(response, this);
 }
 

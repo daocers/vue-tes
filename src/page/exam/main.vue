@@ -9,8 +9,8 @@
         </el-form-item>
         <div style="float: right">
           <el-form-item>
-            <el-input v-model="timerInfo" disabled style="width: 200px; color: #3091F2">
-              <template slot="prepend"><img src="../../assets/img/clock.png"/>剩余时间</template>
+            <el-input v-model="timerInfo" disabled style="width: 230px; color: red;">
+              <template slot="prepend">剩余时间</template>
             </el-input>
           </el-form-item>
 
@@ -124,6 +124,9 @@
 
         //定时器引用
         timer: null,
+
+        //考试剩余时间
+        secondsLeft: 0,
       }
     },
     methods: {
@@ -196,7 +199,11 @@
             message: '交卷成功',
             duration: 10,
           });
-          this.$router.push({path: '/'})
+          //五秒后跳转到摘要页面
+          setTimeout(() => {
+            this.$router.push({path: '/summary'})
+          }, 5000)
+
         } else {
           this.$notify.error({
             title: "失败",
@@ -243,7 +250,7 @@
           this.checkedItems = [];
           console.log("realAnswer:", this.currentQuestion.realAnswer);
           //有答案，直接提交
-          if(this.currentQuestion.realAnswer.length > 0){
+          if (this.currentQuestion.realAnswer.length > 0) {
             //有答案，直接发送信息
             let msg = {};
             msg.type = 1;
@@ -356,18 +363,45 @@
         return false;
       }
 
-      //校验场次状态
-      let canAccess = await  this.postEntity("/exam/api/canAccess?sceneId=" + this.scenei);
-      if(!canAccess){
-        this.$alert("不在考试时间内", "提示", {
-          confirmButtonText: '确定',
-          callback: res => {
-            this.$router.push("/exam")
-          }
-        })
-      }
+      // //校验场次状态
+      // let canAccess = await  this.postEntity("/exam/api/canAccess?sceneId=" + this.sceneId);
+      // console.log("canAccess", canAccess);
+      // if(!canAccess){
+      //   this.$alert("不在考试时间内", "提示", {
+      //     confirmButtonText: '确定',
+      //     callback: res => {
+      //       this.$router.push("/exam")
+      //     }
+      //   })
+      // }
       let questionList = await this.postEntity("/exam/api/getQuestionList?sceneId=" + this.sceneId);
-      if (questionList) {
+      if (questionList && questionList.length > 0) {
+        this.postParam("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
+          console.log("获取剩余时间", res);
+          let leftSeconds = res;
+          this.endTime = new Date(new Date().getTime() + res * 1000);
+
+          console.log("endTime::", this.endTime)
+          //      定时器
+          let _this = this;
+          this.timer = setInterval(() => {
+            if (_this.endTime.getTime() > new Date().getTime()) {
+              _this.changeTime();
+            } else {
+//          清除定时器
+              this.timerInfo = "00:00:00"
+              this.closeTimer();
+//          提交试卷
+              _this.$alert('考试时间用完，提交试卷', '时间到！', {
+                confirmButtonText: '确定',
+                callback: action => {
+
+                  this.$router.push("/scene/myJoin");
+                }
+              });
+            }
+          }, 1000);
+        })
         console.log("questionList:", questionList)
         // 获取列表，设置初始化的数据
         this.questionList = questionList;
@@ -383,36 +417,19 @@
         return false;
       }
 
-      let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
-      if (scene) {
-        this.scene = scene;
-        let time = new Date();
-        this.endTime = new Date(time.getTime() + scene.duration * 60000);
-      } else {
-        this.$notify.error(({
-          title: '错误',
-          message: '没有找到该场次'
-        }))
-        return false;
-      }
-//      定时器
-      let _this = this;
-      this.timer = setInterval(() => {
-        if (_this.endTime.getTime() > new Date().getTime()) {
-          _this.changeTime();
-        } else {
-//          清除定时器
-          this.closeTimer();
-//          提交试卷
-          _this.$alert('考试时间用完，提交试卷', '时间到！', {
-            confirmButtonText: '确定',
-            callback: action => {
+      // let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
+      // if (scene) {
+      //   this.scene = scene;
+      //   let time = new Date();
+      //   this.endTime = new Date(time.getTime() + scene.duration * 60000);
+      // } else {
+      //   this.$notify.error(({
+      //     title: '错误',
+      //     message: '没有找到该场次'
+      //   }))
+      //   return false;
+      // }
 
-              this.$router.push("/scene/myJoin");
-            }
-          });
-        }
-      }, 1000);
     }
   }
 </script>

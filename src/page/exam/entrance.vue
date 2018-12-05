@@ -38,7 +38,20 @@
       async toExam() {
         //校验场次状态
         let res = await this.post4Original("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode});
-        if (!res || !res.result || !res.data) {
+        console.log("res:", res);
+        if (res && res.result && res.code == 0) {
+          console.log("准备考试生成试卷")
+          let paperId = await this.postParam("/exam/api/getPaper", {
+            sceneId: this.sceneId,
+            authCode: this.authCode
+          }, 10000);
+          if (paperId) {
+            sessionStorage.setItem("paperId", paperId);
+            this.$router.push("/exam/main?id=" + this.sceneId + "&paperId=" + paperId);
+          } else {
+            this.$alert("生成试卷失败，请重试");
+          }
+        } else {
           this.$alert(res.message, "提示", {
             confirmButtonText: '确定',
             callback: action => {
@@ -50,17 +63,7 @@
           return false;
         }
 
-        console.log("准备考试生成试卷")
-        let paperId = await this.postParam("/exam/api/getPaper", {
-          sceneId: this.sceneId,
-          authCode: this.authCode
-        }, 10000);
-        if (paperId) {
-          sessionStorage.setItem("paperId", paperId);
-          this.$router.push("/exam/main?id=" + this.sceneId + "&paperId=" + paperId);
-        } else {
-          this.$alert("生成试卷失败，请重试");
-        }
+
       }
     },
     created: function () {
