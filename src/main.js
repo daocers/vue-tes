@@ -33,6 +33,89 @@ Vue.prototype.download = async function (url) {
   window.location.href = host + url;
 }
 
+
+Vue.prototype.httpPost = async function (url, data, type, timeout) {
+  if (!timeout) {
+    timeout = global_timeout;
+  }
+  if (!type) {
+    type = 'JSON';
+  }
+
+  let contentType = '';
+  if (type.toUpperCase() == "FORM") {
+    contentType = 'application/x-www-form-urlencoded';
+    let params = new URLSearchParams();
+    for (let key in data) {
+      params.append(key, data[key]);
+    }
+    data = params;
+  } else {
+    contentType = 'application/json;charset=UTF-8';
+  }
+  let token = sessionStorage.getItem("token");
+  if (!token) {
+    this.$notify({
+      title: '提示',
+      message: '会话超时',
+      type: "info",
+    })
+    this.router.push("/login")
+    return false;
+  }
+
+  let response = await axios({
+    headers: {"Content-Type": contentType, "token": token},
+    url: host + url,
+    method: 'post',
+    data: data,
+    timeout: timeout
+  })
+
+  console.log("响应数据：", response);
+  if (response.status == 200) {
+    let data = response.data;
+
+    let code = data.code;
+    let result = data.result;
+    let message = data.message;
+
+    if (!result) {
+      if (code) {
+        //  请求失败，
+        if (-1 == code) {
+          console.log("用户未登录");
+          this.$router.push({path: "/login"});
+        } else if (-2 == code) {
+          console.log("登录失败")
+          this.$router.push({path: "/login"});
+        } else if (-3 == code) {
+          console.log("无效token")
+          this.$router.push({path: "/login"});
+        } else if (-4 == code) {
+          console.log("其他异常")
+          return false;
+        }
+        this.$notify.error({
+          title: '错误',
+          message: !message ? "系统异常" : message
+        })
+      } else {
+        return data;
+      }
+    }
+    return data;
+  } else {
+    this.$notify.error({
+      title: '错误',
+      message: '网络异常'
+    });
+    return {};
+  }
+
+
+}
+
 /**
  * post请求
  * 服务器success，返回请求实体，

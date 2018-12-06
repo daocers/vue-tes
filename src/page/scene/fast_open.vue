@@ -231,16 +231,22 @@
     },
     //获取全部试卷策略
     getAllPaperPolicy: async function () {
-      let data = await  this.postEntity("/paperPolicy/api/findAll")
-      this.paperPolicyList = data;
+      let res = await this.httpPost("/paperPolicy/api/findAll")
+      if (res.result) {
+        this.paperPolicyList = data;
+      } else {
+        this.$alert("获取试卷策略失败");
+      }
+
     },
     created: async function () {
       console.log("created...");
       let sceneId = this.$route.query.id;
       console.log("sceneId:", sceneId);
       if (sceneId) {
-        let data = await this.postEntity("/scene/api/findById?id=" + sceneId);
-        if (data) {
+        let res = await this.httpPost("/scene/api/findById?id=" + sceneId);
+        if (res.result) {
+          let data = res.data;
           console.log("data:", data);
           data.paperModel = data.paperPolicyId < 1 ? 1 : 2
           this.scene = data;
@@ -285,8 +291,9 @@
             this.scene.judgeScore = judge.score;
             console.log("开场数据，data:", this.scene)
 
-            let data = await this.postEntity("/scene/api/save", this.scene);
-            if (data && data > 0) {
+            let res = await this.httpPost("/scene/api/save", this.scene);
+
+            if (res.result) {
               let msg = '';
               if (this.scene.id) {
                 msg = "修改成功！";

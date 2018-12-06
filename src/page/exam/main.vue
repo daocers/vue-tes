@@ -201,7 +201,7 @@
           });
           //五秒后跳转到摘要页面
           setTimeout(() => {
-            this.$router.push({path: '/summary'})
+            this.$router.push({path: '/help'})
           }, 5000)
 
         } else {
@@ -362,19 +362,16 @@
         this.$router.replace("/exam")
         return false;
       }
-
-      // //校验场次状态
-      // let canAccess = await  this.postEntity("/exam/api/canAccess?sceneId=" + this.sceneId);
-      // console.log("canAccess", canAccess);
-      // if(!canAccess){
-      //   this.$alert("不在考试时间内", "提示", {
-      //     confirmButtonText: '确定',
-      //     callback: res => {
-      //       this.$router.push("/exam")
-      //     }
-      //   })
-      // }
-      let questionList = await this.postEntity("/exam/api/getQuestionList?sceneId=" + this.sceneId);
+      let res = await this.httpPost("/exam/api/getQuestionList?sceneId=" + this.sceneId);
+      if (!res.result) {
+        this.$notify({
+          title: '提示',
+          message: res.message,
+        })
+        this.$router.push("/exam")
+        return false;
+      }
+      let questionList = res.data;
       if (questionList && questionList.length > 0) {
         this.postParam("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
           console.log("获取剩余时间", res);
