@@ -57,6 +57,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="setManager(scope.$index, scope.row)">设置管理员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -167,6 +168,10 @@
 
 
     methods: {
+      setManager: function () {
+        console.log("跳转到选择用户界面。。。")
+        this.$router.push("/user/select");
+      },
       /**
        * 查询
        */
@@ -268,6 +273,31 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+    },
+    mounted: async function () {
+      let managerId = sessionStorage.getItem("managerId");
+      let managerName = sessionStorage.getItem("managerName");
+      let departmentName = sessionStorage.getItem("departmentName");
+      let departmentId = sessionStorage.getItem("departmentId");
+      if (managerId) {
+        this.$confirm("提示", "确认要设置" + managerName + "为" + departmentName + "的管理员吗？", {
+          confirmButtonText: '确定',
+        }).then(result => {
+          if (result) {
+            let data = {
+              departmentId: departmentId,
+              userId: managerId,
+            }
+            let resp = this.httpPost("/department/api/setManger", data, "form");
+            if (resp && resp.result) {
+              this.$message.success("设置管理员成功");
+            }
+          }
+        }).catch(res => {
+          console.log("异常", res);
+        })
+
+      }
     }
   }
 </script>
