@@ -7,22 +7,22 @@
           <span style="float: right; padding: 3px 0; color: #66b1ff;" type="text">>></span>
         </div>
         <el-row>
-          <el-col span="6">
+          <el-col :span="6">
             <div class="fast-item item-1" >
               <span @click="forgetPassword">忘记密码</span>
             </div>
           </el-col>
-          <el-col span="6">
+          <el-col :span="6">
             <div class="fast-item item-2">
               <span @click="fastOpen">快速开场</span>
             </div>
           </el-col>
-          <el-col span="6">
+          <el-col :span="6">
             <div class="fast-item item-3">
               <span @click="questionTypeManage">题型管理</span>
             </div>
           </el-col>
-          <el-col span="6">
+          <el-col :span="6">
             <div class="fast-item item-4">
               <span @click="queryMark">成绩查询</span>
             </div>

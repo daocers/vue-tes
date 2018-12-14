@@ -57,6 +57,7 @@
               <el-menu-item index="/department">部门</el-menu-item>
               <el-menu-item index="/station">岗位</el-menu-item>
               <el-menu-item index="/user">用户</el-menu-item>
+              <el-menu-item index="/user/changePass">修改密码</el-menu-item>
             </el-submenu>
 
             <el-submenu index="2">

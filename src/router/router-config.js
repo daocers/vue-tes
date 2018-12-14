@@ -87,6 +87,7 @@ const SceneMyJoin = () => import('../page/scene/myJoin.vue')
 const SceneMyOpen = () => import('../page/scene/myOpen.vue')
 const SceneLive = () => import('../page/scene/sceneLive');
 const UserIndex = () => import('../page/user/list.vue');
+const ChangePass = () => import("../page/user/changePass.vue")
 const FastOpen = () => import('../page/scene/fast_open');
 const Index = () => import('../page/index/index.vue');
 const Paper = () => import('../page/paper/list');
@@ -168,6 +169,7 @@ export default [
       {path: '/scene/myJoin', component: SceneMyJoin},
       {path: '/scene/myOpen', component: SceneMyOpen},
       {path: '/user/', component: UserIndex},
+      {path: '/user/changePass', component: ChangePass},
       {path: '/scene/live/:sceneId', component: SceneLive},
       {path: '/help', component: Help},
     ]
