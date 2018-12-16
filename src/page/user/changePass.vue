@@ -86,7 +86,7 @@
           if (!valid) {
             return false;
           } else {
-            let res = await this.httpPost("/user/api/changePass", this.form, "form");
+            let res = await this.doPost("/user/api/changePass", this.form, "form");
             console.log("res:::", res);
             if (res.result) {
               this.$message({

@@ -47,10 +47,23 @@
           <el-tag size="small" style="background-color: #DCDFE6;" v-if="scope.row.level == 3">三级分行</el-tag>
         </template>
       </el-table-column>
+
+
       <el-table-column
         v-if="false"
         prop="superiorId"
         label="上级机构">
+      </el-table-column>
+
+      <el-table-column
+        label="管理员">
+        <template slot-scope="scope">
+          <el-tag  type="warning" @close="removeManager(scope.row.id, item, index)" size="small"
+                  v-for="(item , index) in scope.row.userList"
+                  :key="item.id"
+                  closable>{{item.name}}
+          </el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -78,6 +91,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="toSetManager(scope.$index, scope.row)">设置管理员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,6 +105,12 @@
                    :total="totalCount">
     </el-pagination>
 
+    <user-select @hide="selectShow = false"
+                 @done="handleDone"
+                 :select-show="selectShow"
+                 target-url="/branch/api/setManager"
+                 :target-id="dataForEdit.id"
+                 :target-name="dataForEdit.name"></user-select>
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
@@ -155,9 +175,14 @@
 
 <script>
 
+  import UserSelect from '../../components/userSelect'
+
   export default {
+    components: {UserSelect},
     data() {
       return {
+        selectShow: false,
+
         statusInfo: [
           {code: 1, name: '正常'},
           {code: 2, name: '禁用'},
@@ -396,7 +421,41 @@
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.findByCondition();
+      },
+
+      //删除管理员
+      removeManager: async function (branchId, user, idx) {
+        let userId = user.id;
+        let resp = await this.doPost("/branch/api/removeManager", {
+          branchId: branchId,
+          userId: userId
+        }, "form");
+        if (resp.result && resp.data) {
+          let userList = this.dataForEdit.userList;
+          userList.splice(idx, 1);
+          this.dataForEdit.userList = userList;
+          this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+
+          return true;
+        } else {
+          return false;
+        }
+
+      },
+      toSetManager: function (idx, obj) {
+        console.log("开始设置管理员", obj);
+        this.dataForEdit = obj;
+        this.dataForEditIndex = idx;
+        this.selectShow = true;
+      },
+
+
+      handleDone(obj) {
+        this.dataForEdit.userList = obj;
+        this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+        this.selectShow = false;
       }
+
     },
     /**
      * 页面初始化时候执行

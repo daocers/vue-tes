@@ -362,7 +362,7 @@
         this.$router.replace("/exam")
         return false;
       }
-      let res = await this.httpPost("/exam/api/getQuestionList?sceneId=" + this.sceneId);
+      let res = await this.doPost("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (!res.result) {
         this.$notify({
           title: '提示',

@@ -105,11 +105,38 @@
         <el-option v-for="item in paperPolicyList"
                    :key="item.id"
                    :label="item.name"
-                   :value="item.id"
-        >
-
+                   :value="item.id">
         </el-option>
       </el-select>
+    </el-form-item>
+
+
+    <el-form-item label="参考人员" prop="" style="margin-top: 30px; border: 1px solid gainsboro; border-radius: 3px;">
+      <div>
+        <el-form-item label="机构" prop="">
+          <el-select multiple v-model="scene.branchIds" placeholder="">
+            <el-option v-for="item in branchList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+          <el-checkbox-group v-model="scene.containSub">
+            <el-checkbox label="包含下属分行" name="type" :true-label="1" :false-label="2"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </div>
+
+      <div>
+        <el-form-item label="部门" prop="">
+          <el-select multiple v-model="scene.departmentIds" placeholder="">
+            <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div>
+        <el-form-item label="岗位" prop="">
+          <el-select multiple v-model="scene.stationIds" placeholder="">
+            <el-option v-for="item in stationList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
     </el-form-item>
 
 
@@ -172,6 +199,10 @@
         }
       };
       return {
+        departmentList: [],
+        stationList: [],
+        branchList: [],
+
         /*题库id*/
         questionBankList: [],
 
@@ -231,7 +262,7 @@
     },
     //获取全部试卷策略
     getAllPaperPolicy: async function () {
-      let res = await this.httpPost("/paperPolicy/api/findAll")
+      let res = await this.doPost("/paperPolicy/api/findAll")
       if (res.result) {
         this.paperPolicyList = data;
       } else {
@@ -244,7 +275,7 @@
       let sceneId = this.$route.query.id;
       console.log("sceneId:", sceneId);
       if (sceneId) {
-        let res = await this.httpPost("/scene/api/findById?id=" + sceneId);
+        let res = await this.doPost("/scene/api/findById?id=" + sceneId);
         if (res.result) {
           let data = res.data;
           console.log("data:", data);
@@ -267,12 +298,32 @@
       if (bankList) {
         this.questionBankList = bankList;
       }
+
+
       console.log("bankList: ", this.questionBankList);
+      await this.doPost("/department/api/getUnderManager").then(res => {
+        if (res.result) {
+          this.departmentList = res.data;
+        }
+      });
+
+      await this.doPost("/branch/api/getUnderManager").then(res => {
+        if (res.result) {
+          this.branchList = res.data;
+        }
+      });
+
+      await this.doPost("/station/api/getUnderManager").then(res => {
+        if (res.result) {
+          this.stationList = res.data;
+        }
+      });
     },
 
     methods: {
       //开场
       openScene: async function () {
+        console.log("scene:", this.scene);
         let _this = this;
         this.$refs['sceneForm'].validate(async (valid) => {
           if (!valid) {
@@ -291,7 +342,7 @@
             this.scene.judgeScore = judge.score;
             console.log("开场数据，data:", this.scene)
 
-            let res = await this.httpPost("/scene/api/save", this.scene);
+            let res = await this.doPost("/scene/api/save", this.scene);
 
             if (res.result) {
               let msg = '';

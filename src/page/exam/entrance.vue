@@ -37,7 +37,7 @@
 //       },
       async toExam() {
         //校验场次状态
-        let res = await this.httpPost("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode}, "form");
+        let res = await this.doPost("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode}, "form");
         console.log("res:", res);
         if (res && res.result && res.code == 0) {
           console.log("准备考试生成试卷")

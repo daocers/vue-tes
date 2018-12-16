@@ -34,7 +34,7 @@ Vue.prototype.download = async function (url) {
 }
 
 
-Vue.prototype.httpPost = async function (url, data, type, timeout) {
+Vue.prototype.doPost = async function (url, data, type, timeout) {
   if (!timeout) {
     timeout = global_timeout;
   }

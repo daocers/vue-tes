@@ -32,6 +32,19 @@
         prop="code"
         label="部门编号">
       </el-table-column>
+
+      <el-table-column
+        label="管理员">
+        <template slot-scope="scope">
+          <el-tag type="warning" @close="removeManager(scope.row.id, item, index)" size="small"
+                  v-for="(item , index) in scope.row.userList"
+                  :key="item.id"
+                  closable>{{item.name}}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+
       <el-table-column
         prop="status"
         label="状态">
@@ -57,7 +70,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
-          <el-button type="text" size="small" @click="setManager(scope.$index, scope.row)">设置管理员</el-button>
+          <el-button type="text" size="small" @click="toSetManager(scope.$index, scope.row)">设置管理员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,6 +85,13 @@
     </el-pagination>
 
 
+    <user-select @hide="selectShow = false"
+                 @done="handleDone"
+                 :select-show="selectShow"
+                 target-url="/department/api/setManager"
+                 :target-id="departmentId"
+                 :target-name="departmentName"></user-select>
+
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="部门名称" prop="name" :label-width="labelWidth">
@@ -80,14 +100,7 @@
         <el-form-item v-if="dataForEdit.id > 0" label="部门编号" prop="code" :label-width="labelWidth">
           <el-input disabled v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <!--<el-form-item label="superiorId" prop="superiorId">-->
-        <!--<el-input v-model="dataForEdit.superiorId" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="isDel" prop="isDel">-->
-        <!--<el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
         <el-form-item label="状态" prop="status" :label-width="labelWidth">
-          <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
           <el-select v-model="dataForEdit.status" placeholder="请选择">
             <el-option v-for="status in statusInfo" :key="status.code" :value="status.code" :label="status.name"/>
           </el-select>
@@ -106,10 +119,15 @@
 
 
 <script>
+  import UserSelect from '../../components/userSelect'
 
   export default {
+    components: {UserSelect},
     data() {
       return {
+        departmentName: '',
+        departmentId: -1,
+
         statusInfo: [
           {code: 1, name: '正常'},
           {code: 2, name: '禁用'},
@@ -136,6 +154,10 @@
           pageNum: 1,
         },
 
+        //设置管理员弹窗是否展示
+        selectShow: false,
+        //用户选中组件中的数组
+        dataList: [],
 
         /**
          * 修改对话框是否显示
@@ -162,16 +184,40 @@
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
         }
-
       }
     },
 
 
     methods: {
-      setManager: function () {
-        console.log("跳转到选择用户界面。。。")
-        this.$router.push("/user/select");
+      //删除管理员
+      removeManager: async function (departmentId, user, idx) {
+        let userId = user.id;
+        console.log("remove::", departmentId);
+        let resp = await this.doPost("/department/api/removeManager", {
+          departmentId: departmentId,
+          userId: userId
+        }, "form");
+        if (resp.result && resp.data) {
+          let userList = this.dataForEdit.userList;
+          userList.splice(idx, 1);
+          this.dataForEdit.userList = userList;
+          this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+
+          return true;
+        } else {
+          return false;
+        }
+
       },
+      toSetManager: function (idx, obj) {
+        console.log("开始设置管理员", obj);
+        this.dataForEdit = obj;
+        this.dataForEditIndex = idx;
+        this.selectShow = true;
+        this.departmentId = obj.id;
+        this.departmentName = obj.name;
+      },
+
       /**
        * 查询
        */
@@ -219,7 +265,7 @@
             return false;
           } else {
             let id = this.dataForEdit.id;
-            var res = await this.postEntity('/department/api/save', this.dataForEdit, 1000);
+            let res = await this.postEntity('/department/api/save', this.dataForEdit, 1000);
             if (res) {
               if (id) {
                 this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
@@ -265,7 +311,15 @@
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.findByCondition();
+      },
+
+      handleDone(obj) {
+        this.dataForEdit.userList = obj;
+        this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+        this.selectShow = false;
       }
+
+
     },
     /**
      * 页面初始化时候执行
@@ -275,29 +329,29 @@
       this.findByCondition();
     },
     mounted: async function () {
-      let managerId = sessionStorage.getItem("managerId");
-      let managerName = sessionStorage.getItem("managerName");
-      let departmentName = sessionStorage.getItem("departmentName");
-      let departmentId = sessionStorage.getItem("departmentId");
-      if (managerId) {
-        this.$confirm("提示", "确认要设置" + managerName + "为" + departmentName + "的管理员吗？", {
-          confirmButtonText: '确定',
-        }).then(result => {
-          if (result) {
-            let data = {
-              departmentId: departmentId,
-              userId: managerId,
-            }
-            let resp = this.httpPost("/department/api/setManger", data, "form");
-            if (resp && resp.result) {
-              this.$message.success("设置管理员成功");
-            }
-          }
-        }).catch(res => {
-          console.log("异常", res);
-        })
-
-      }
+      // let managerId = sessionStorage.getItem("managerId");
+      // let managerName = sessionStorage.getItem("managerName");
+      // let departmentName = sessionStorage.getItem("departmentName");
+      // let departmentId = sessionStorage.getItem("departmentId");
+      // if (managerId) {
+      //   this.$confirm("提示", "确认要设置" + managerName + "为" + departmentName + "的管理员吗？", {
+      //     confirmButtonText: '确定',
+      //   }).then(async result => {
+      //     if (result) {
+      //       let data = {
+      //         departmentId: departmentId,
+      //         userId: managerId,
+      //       }
+      //       let resp = await this.doPost("/department/api/setManger", data, "form");
+      //       if (resp && resp.result) {
+      //         this.$message.success("设置管理员成功");
+      //       }
+      //     }
+      //   }).catch(res => {
+      //     console.log("异常", res);
+      //   })
+      //
+      // }
     }
   }
 </script>
