@@ -100,7 +100,9 @@ const Single = () => import('../page/single/list');
 const Multi = () => import('../page/multi/list');
 const Judge = () => import('../page/judge/list');
 const Help = () => import("../page/help/index");
-const Summary =() => import("../page/index/summary");
+const Summary = () => import("../page/index/summary");
+const Practise = () => import("../page/number/index")
+const PractiseMain = () => import("../page/number/practise")
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
@@ -135,6 +137,8 @@ export default [
       {path: '/commonQuestion/add', component: CommonQuestionAdd},
       {path: '/scene/list', component: SceneList},
       {path: '/scene/open', component: FastOpen},
+      {path: '/practise', component: Practise},
+      {path: '/practise/main', component: PractiseMain},
 
       {
         path: '/scene',
