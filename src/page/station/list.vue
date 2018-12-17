@@ -49,7 +49,7 @@
       <el-table-column
         label="管理员">
         <template slot-scope="scope">
-          <el-tag type="warning" @close="removeManager(scope.row.id, item, index)" size="small"
+          <el-tag type="warning" @close="removeManager(scope.row, scope.$index, item, index)" size="small"
                   v-for="(item , index) in scope.row.userList"
                   :key="item.id"
                   closable>{{item.name}}
@@ -312,7 +312,10 @@
       },
 
       //删除管理员
-      removeManager: async function (stationId, user, idx) {
+      removeManager: async function (row, rowIndex, user, idx) {
+        this.dataForEdit = row;
+        this.dataForEditIndex = rowIndex;
+        let stationId = row.id;
         let userId = user.id;
         let resp = await this.doPost("/branch/api/removeManager", {
           stationId: stationId,

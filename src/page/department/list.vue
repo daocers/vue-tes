@@ -36,7 +36,7 @@
       <el-table-column
         label="管理员">
         <template slot-scope="scope">
-          <el-tag type="warning" @close="removeManager(scope.row.id, item, index)" size="small"
+          <el-tag type="warning" @close="removeManager(scope.row, scope.$index, item, index)" size="small"
                   v-for="(item , index) in scope.row.userList"
                   :key="item.id"
                   closable>{{item.name}}
@@ -190,7 +190,10 @@
 
     methods: {
       //删除管理员
-      removeManager: async function (departmentId, user, idx) {
+      removeManager: async function (row, rowIndex, user, idx) {
+        let departmentId = row.id;
+        this.dataForEdit = row;
+        this.dataForEditIndex = rowIndex;
         let userId = user.id;
         console.log("remove::", departmentId);
         let resp = await this.doPost("/department/api/removeManager", {
@@ -329,29 +332,6 @@
       this.findByCondition();
     },
     mounted: async function () {
-      // let managerId = sessionStorage.getItem("managerId");
-      // let managerName = sessionStorage.getItem("managerName");
-      // let departmentName = sessionStorage.getItem("departmentName");
-      // let departmentId = sessionStorage.getItem("departmentId");
-      // if (managerId) {
-      //   this.$confirm("提示", "确认要设置" + managerName + "为" + departmentName + "的管理员吗？", {
-      //     confirmButtonText: '确定',
-      //   }).then(async result => {
-      //     if (result) {
-      //       let data = {
-      //         departmentId: departmentId,
-      //         userId: managerId,
-      //       }
-      //       let resp = await this.doPost("/department/api/setManger", data, "form");
-      //       if (resp && resp.result) {
-      //         this.$message.success("设置管理员成功");
-      //       }
-      //     }
-      //   }).catch(res => {
-      //     console.log("异常", res);
-      //   })
-      //
-      // }
     }
   }
 </script>

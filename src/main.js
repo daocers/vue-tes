@@ -14,6 +14,7 @@ Vue.config.productionTip = false
 const host = "http://localhost:8080";
 const global_timeout = 3000;
 
+let invalidTokenFlag = false;
 /**
  * get请求
  **/
@@ -90,8 +91,18 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
           console.log("登录失败")
           this.$router.push({path: "/login"});
         } else if (-3 == code) {
+          invalidTokenFlag = true;
           console.log("无效token")
           this.$router.push({path: "/login"});
+          if (!invalidTokenFlag) {
+            this.$notify.error({
+              title: '错误',
+              message: '登录超时或者异地登录'
+            })
+          }
+
+          invalidTokenFlag = true;
+          return false;
         } else if (-4 == code) {
           console.log("其他异常")
           return false;
@@ -103,6 +114,8 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
       } else {
         return data;
       }
+    } else {
+      invalidTokenFlag = false;
     }
     return data;
   } else {

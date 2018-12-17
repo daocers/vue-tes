@@ -181,7 +181,7 @@
             this.$emit("done", this.checkedUser);
           }
         } else {
-          this.$confirm("提示", "请选择管理员");
+          this.$confirm("请选择管理员", "提示");
         }
       },
 

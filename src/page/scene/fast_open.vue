@@ -37,8 +37,8 @@
 
     <el-form-item label="顺延时间" prop="delay">
       <el-select v-model="scene.delayMinute" placeholder="迟到多久不准进场">
-        <el-option label="15分钟" value="15"></el-option>
-        <el-option label="30分钟" value="30"></el-option>
+        <el-option label="15分钟" :value="15"></el-option>
+        <el-option label="30分钟" :value="30"></el-option>
       </el-select>
     </el-form-item>
 
@@ -111,10 +111,11 @@
     </el-form-item>
 
 
-    <el-form-item label="参考人员" prop="" style="margin-top: 30px; border: 1px solid gainsboro; border-radius: 3px;">
+    <el-form-item label="参考人员" prop="joinInfo"
+                  style="margin-top: 30px; border: 1px solid gainsboro; border-radius: 3px;">
       <div>
         <el-form-item label="机构" prop="">
-          <el-select multiple v-model="scene.branchIds" placeholder="">
+          <el-select multiple v-model="scene.branchIds" placeholder="选择参考机构">
             <el-option v-for="item in branchList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
           <el-checkbox-group v-model="scene.containSub">
@@ -198,6 +199,24 @@
           }
         }
       };
+
+      var checkJoinInfo = (rule, value, callback) => {
+        console.log("开始校验参考人员信息")
+        let branchIds = this.scene.branchIds;
+        let stationIds = this.scene.stationIds;
+        let departmentIds = this.scene.departmentIds;
+        if (!this.branchList && !this.departmentList && !this.stationList) {
+          console.log("不是管理员")
+          callback(new Error("您还不是管理员，请联系系统负责人申请！"))
+        } else if ((!branchIds || branchIds.length == 0)
+          && (!stationIds || stationIds.length == 0)
+          && (!departmentIds || departmentIds.length == 0)) {
+          console.log("没有选择参考范围")
+          callback(new Error("请设置参考人员范围"))
+        } else {
+          callback();
+        }
+      }
       return {
         departmentList: [],
         stationList: [],
@@ -216,6 +235,8 @@
         },
         scene: {
           paperModel: 1,
+          percentable: 1,
+          delayMinute: 15,
         },
         /* 试卷策略 */
         paperPolicyList: [],
@@ -236,6 +257,9 @@
           ],
           duration: [
             {validator: checkDuration, required: true, trigger: 'change'}
+          ],
+          joinInfo: [
+            {validator: checkJoinInfo, trigger: 'change'}
           ],
           delayMinute: [
             {required: true, message: '请选择顺延时间', trigger: 'change'}
@@ -280,6 +304,9 @@
           let data = res.data;
           console.log("data:", data);
           data.paperModel = data.paperPolicyId < 1 ? 1 : 2
+          // data.branchIds = [];
+          // data.stationIds = [];
+          // data.departmentIds = [];
           this.scene = data;
           let single = {type: '单选题', count: data.singleCount, score: data.singleScore};
           let multi = {type: '多选题', count: data.multiCount, score: data.multiScore};
@@ -300,7 +327,6 @@
       }
 
 
-      console.log("bankList: ", this.questionBankList);
       await this.doPost("/department/api/getUnderManager").then(res => {
         if (res.result) {
           this.departmentList = res.data;
