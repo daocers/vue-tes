@@ -29,12 +29,18 @@
       <el-col :span="10" :offset="2">
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
-            <span>操作提示: 选中机构，新增下级机构/编辑当前机构</span>
+            <span>操作提示: 双击节点添加下级机构；点击节点，编辑当前机构；</span>
             <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+
+
           </div>
         </el-card>
-        <el-button v-show="addBtnShow" type="primary" plain @click="toAdd()">添加机构</el-button>
-        <el-button v-show="addBtnShow" type="primary" plain @click="toEdit">编辑</el-button>
+        <div style="margin-bottom: 5px;">
+          <el-tag v-if="editFormShow" type="warning">当前操作：编辑</el-tag>
+          <el-tag v-if="addFormShow" type="primary">当前操作：添加下级分行</el-tag>
+        </div>
+        <!--<el-button v-show="addBtnShow" type="primary" plain @click="toAdd()">添加机构</el-button>-->
+        <!--<el-button v-show="addBtnShow" type="primary" plain @click="toEdit">编辑</el-button>-->
 
         <el-form v-show="addFormShow" label-position="left" :model="dataForAdd" :rules="rules" ref="addForm"
                  label-width="80px">
@@ -126,7 +132,9 @@
             [
               {required: true, message: '请设置superiorId', trigger: 'blur'},
             ],
-        }
+        },
+
+        times: [0, 0],
       }
     },
     methods: {
@@ -140,6 +148,8 @@
       },
 
       setAddData: function () {
+        this.addFormShow = true;
+        this.editFormShow = false;
         var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
         if (node == null) {
@@ -151,6 +161,8 @@
         }
       },
       setEditData: function () {
+        this.editFormShow = true;
+        this.addFormShow = false;
         var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
         if (node == null) {
@@ -254,7 +266,7 @@
             let res = await this.postEntity("/branch/api/save", this.dataForEdit);
             if (res == true) {
               this.dataForAdd.id = res;
-              var currentNode = this.$refs['tree'].getCurrentNode();
+              let currentNode = this.$refs['tree'].getCurrentNode();
               currentNode.name = this.dataForEdit.name;
               currentNode.address = this.dataForEdit.address;
               currentNode.code = this.dataForEdit.code;
@@ -266,7 +278,7 @@
       },
 
       async saveTree() {
-        let res = await  this.postEntity("/branch/api/saveTree", this.branchTree);
+        let res = await this.postEntity("/branch/api/saveTree", this.branchTree);
         if (res) {
           this.$notify.success("保存成功");
           this.saveTreeShow = false;
@@ -286,14 +298,27 @@
        * @param data
        */
       handleNodeClick(node) {
-        console.log("节点被点击： ", node);
-        if (this.addFormShow) {
-          console.log("manage ... ", node);
+        let time = new Date().getTime();
+        this.times.push(time);
+        this.times.shift();
+        console.log("times::", this.times);
+        if (this.times[1] - this.times[0] < 500) {
+          console.log("双击事件成立")
           this.setAddData();
-        } else if (this.editFormShow) {
-          console.log("edit ... ", node);
+
+        } else {
+          console.log("单击事件")
           this.setEditData();
+
         }
+
+
+        // console.log("节点被点击： ", node);
+        // if (this.addFormShow) {
+        //   console.log("manage ... ", node);
+        // } else if (this.editFormShow) {
+        //   console.log("edit ... ", node);
+        // }
       },
 
       /**

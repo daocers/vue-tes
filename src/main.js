@@ -11,7 +11,7 @@ import axios from 'axios'
 Vue.config.productionTip = false
 // Vue.prototype.$ajax = axios
 // const host = "http://47.93.189.30/hn";
-const host = "http://localhost:8080";
+const host = "http://localhost:8080/hn";
 const global_timeout = 3000;
 
 let invalidTokenFlag = false;
