@@ -10,16 +10,22 @@
 
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">TES考试系统</span>
+            <el-dropdown trigger="click" @command="handleCommand" style="line-height: 36px; height: 36px; padding-top: 10px; float: right; margin-left: 20px;">
+              <el-button style="padding: 0; width: 36px; height: 36px;" circle>
+                <img style="border-radius: 50%; border: none; height: 36px;" src="../../assets/img/head.png">
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
+                <el-dropdown-item command="changePass">修改密码</el-dropdown-item>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <p class="nlink n2">
-              <!--<a href="#/help">首页</a>-->
-              <!--<router-link to="/help">帮助中心</router-link>-->
-              <!--<router-link to="/">首页</router-link>-->
-              <a href="#" @click="logout">退出</a>
-              <a href="#" @click="toHelp">帮助中心</a>
               <a href="#" @click="toIndex">首页</a>
-
-              <!--<a href="/help" target="_blank">帮助中心</a>-->
+              <a href="#" @click="toHelp">帮助中心</a>
+              <!--<a href="#" @click="logout">退出</a>-->
             </p>
+
           </div>
         </div>
       </div>
@@ -130,6 +136,18 @@
       }
     },
     methods: {
+      handleCommand(command) {
+        if(command == 'userCenter'){
+          this.$router.push("/")
+        }else if(command == 'changePass'){
+          this.$router.push("/user/changePass")
+        }else if(command == 'logout'){
+          this.logout();
+        }
+      },
+
+
+
       //展开菜单栏
       handleOpen(key, keyPath) {
         console.log("open...")
@@ -168,8 +186,8 @@
         this.$router.push({path: "/"})
       },
       //退出
-      async logout(e) {
-        e.preventDefault();
+      async logout() {
+        // e.preventDefault();
         let res = await this.postParam("/user/api/logout");
         if (res) {
           sessionStorage.clear();
@@ -502,7 +520,7 @@
   }
 
   .header .nag .nlink a {
-    float: right;
+    /*float: right;*/
     height: 56px;
     font-size: 16px;
     margin-left: 40px
@@ -524,6 +542,12 @@
     border-bottom: 0 none
   }
 
+  /*.n2{*/
+  /*float: right;*/
+  /*}*/
+  /*.n2 a{*/
+  /*margin-left: 5px;*/
+  /*}*/
   .header .nag .tl {
     float: left;
     font-size: 22px;

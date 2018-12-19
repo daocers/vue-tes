@@ -28,7 +28,20 @@
           prop="openTime"
           label="开场时间">
         </el-table-column>
+        <el-table-column
+          prop="status"
+          label="状态">
+          <template slot-scope="scope">
+            <el-tag size="mini" type="primary" v-if="scope.row.status == 1">就绪</el-tag>
+            <el-tag size="mini" type="warning" v-if="scope.row.status == 2">考试中</el-tag>
+            <el-tag size="mini" type="success" v-if="scope.row.status == 3">已封场</el-tag>
+            <el-tag size="mini" type="info" v-if="scope.row.status == 4">取消/作废</el-tag>
+          </template>
+        </el-table-column>
       </el-table>
+
+      <span
+        style="display: block; color: cornflowerblue; font-size: 14px; margin-top: 15px;">只能查看今天往后一周的考试</span>
       <el-pagination style=" margin-top: 10px;"
                      @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
