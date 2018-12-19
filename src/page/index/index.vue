@@ -75,9 +75,10 @@
             <el-submenu index="3">
               <template slot="title">
                 <i class="el-icon-document"></i>
-                <span>练习</span>
+                <span>练习乐园</span>
               </template>
-              <el-menu-item index="/practise">数字录入</el-menu-item>
+              <el-menu-item index="/practise">凭条录入</el-menu-item>
+              <el-menu-item index="/practise/list">练习轨迹</el-menu-item>
             </el-submenu>
 
             <el-submenu index="4">

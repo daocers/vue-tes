@@ -29,7 +29,9 @@
       <el-col :span="10" :offset="2">
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
-            <span>操作提示: 双击节点添加下级机构；点击节点，编辑当前机构；</span>
+            <span style="font-weight: 600;">操作提示: </span>
+            <span style="display: block;">双击节点,添加下级机构；</span>
+            <span style="display: block">点击节点,编辑当前机构；</span>
             <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
 
 
@@ -47,9 +49,9 @@
           <el-form-item label="机构名称" prop="name">
             <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="机构编码" prop="code">
-            <el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>
-          </el-form-item>
+          <!--<el-form-item label="机构编码" prop="code">-->
+          <!--<el-input v-model="dataForAdd.code" placeholder="请输入"></el-input>-->
+          <!--</el-form-item>-->
           <el-form-item label="地址" prop="address">
             <el-input v-model="dataForAdd.address" placeholder="请输入"></el-input>
           </el-form-item>
@@ -59,6 +61,11 @@
           <el-form-item label="上级部门" prop="superiorName">
             <el-input :disabled="true" v-model="dataForAdd.superiorName" placeholder="请输入"></el-input>
           </el-form-item>
+
+          <el-form-item label="上级编号" prop="superiorCode">
+            <el-input :disabled="true" v-model="dataForAdd.superiorCode" placeholder="请输入"></el-input>
+          </el-form-item>
+
 
           <el-form-item>
             <el-button type="primary" @click="add">添加</el-button>
@@ -72,13 +79,13 @@
             <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="机构编码" prop="code">
-            <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+            <el-input v-model="dataForEdit.code" placeholder="请输入" disabled></el-input>
           </el-form-item>
           <el-form-item label="地址" prop="address">
             <el-input v-model="dataForEdit.address" placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="级别" prop="level">
-            <el-input :disabled="true" v-model="dataForEdit.level" placeholder="请输入"></el-input>
+            <el-input :disabled="true" v-model="dataForEdit.level" disabled placeholder="请输入"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -147,32 +154,36 @@
         this.branchTree = data;
       },
 
-      setAddData: function () {
+      setAddData: function (node) {
         this.addFormShow = true;
         this.editFormShow = false;
-        var node = this.$refs['tree'].getCurrentNode();
+        // var node = this.$refs['tree'].getCurrentNode();
         console.log("当前选中的node: ", node);
         if (node == null) {
           this.$message.warning("请选择上级机构");
         } else {
+          this.dataForAdd.id = null;
           this.dataForAdd.superiorId = node.id;
           this.dataForAdd.level = node.level + 1;
           this.dataForAdd.superiorName = node.name;
+          this.dataForAdd.superiorCode = node.code;
         }
       },
-      setEditData: function () {
+      setEditData: function (node) {
         this.editFormShow = true;
         this.addFormShow = false;
-        var node = this.$refs['tree'].getCurrentNode();
-        console.log("当前选中的node: ", node);
+        // var node = this.$refs['tree'].getCurrentNode();
+        console.log("当前选中的node: ", node.name);
         if (node == null) {
           this.$message.warning("请选择要编辑的机构");
         } else {
-          this.dataForEdit.id = node.id;
-          this.dataForEdit.name = node.name;
-          this.dataForEdit.address = node.address;
-          this.dataForEdit.code = node.code;
-          this.dataForEdit.level = node.level;
+          this.dataForEdit = node;
+          // this.dataForEdit.id = node.id;
+          // this.dataForEdit.name = node.name;
+          // this.dataForEdit.address = node.address;
+          // this.dataForEdit.code = node.code;
+          // this.dataForEdit.level = node.level;
+          // console.log("ddfdf", this.dataForEdit)
         }
       },
       /**
@@ -228,15 +239,18 @@
             let res = await this.postEntity("/branch/api/save", this.dataForAdd);
             if (res) {
               this.dataForAdd.id = res;
+              let nodeData = JSON.parse(JSON.stringify(this.dataForAdd));
               var currentNode = this.$refs['tree'].getCurrentNode();
               if (!currentNode) {
-                this.branchTree.push(this.dataForAdd)
+                this.branchTree.push(nodeData)
               } else if (!currentNode.children) {
                 currentNode.children = [];
-                currentNode.children.push(this.dataForAdd);
+                currentNode.children.push(nodeData);
               } else {
-                currentNode.children.push(this.dataForAdd);
+                currentNode.children.push(nodeData);
               }
+              this.$refs['addForm'].resetFields();
+
               this.addBtnShow = true;
               this.addFormShow = false;
             }
@@ -248,8 +262,8 @@
        * 取消添加
        */
       cancel() {
-        this.$refs['addForm'].resetFields();
-        this.$refs['editForm'].resetFields();
+        // this.$refs['addForm'].resetFields();
+        // this.$refs['editForm'].resetFields();
         this.addFormShow = false;
         this.addBtnShow = true;
         this.editFormShow = false;
@@ -304,11 +318,11 @@
         console.log("times::", this.times);
         if (this.times[1] - this.times[0] < 500) {
           console.log("双击事件成立")
-          this.setAddData();
+          this.setAddData(node);
 
         } else {
           console.log("单击事件")
-          this.setEditData();
+          this.setEditData(node);
 
         }
 

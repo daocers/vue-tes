@@ -24,21 +24,26 @@
     <el-dialog title="做答结束" :visible.sync="done"
                :close-on-click-modal="false"
                :close-on-press-escape="false"
+               width="50%"
                :show-close="false">
-      <el-form>
-        <el-form-item label="做答时间" label-width="80">
+      <el-form label-position="left">
+        <el-form-item label="做答时间" label-width="80px">
           <el-input v-model="getTimeInfo" disabled=""></el-input>
         </el-form-item>
 
-        <el-form-item label="正确数量" lable-width="80">
+        <el-form-item label="正确数量" label-width="80px">
           <el-input v-model="tCount" disabled></el-input>
         </el-form-item>
-        <el-form-item label="错误数量" label-width="80">
+
+
+        <el-form-item label="错误数量" label-width="80px">
           <el-input v-model="fCount" disabled></el-input>
         </el-form-item>
 
-        <el-form-item label="正确率" label-width="80">
-          <el-input v-model="rate" disabled></el-input>
+        <el-form-item label="正确率" label-width="80px">
+          <el-input v-model="rate" disabled>
+            <template slot="append"> %</template>
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,8 +163,8 @@
           } else {
             this.fCount++;
           }
-          let rate = this.tCount / (this.tCount + this.fCount);
-          this.rate = rate.toFixed(2);
+          let rate = this.tCount / (this.tCount + this.fCount) * 100;
+          this.rate = rate.toFixed(1);
           this.showResult = true;
         }
       },
@@ -182,10 +187,18 @@
       },
 
       /**
-       * 提交试卷
+       * 提交练习信息
        */
       async commitPractise() {
-
+        this.doPost("/receiptRecord/api/save", {
+          size: this.numberList.length,
+          seconds: this.timeUsed,
+          rightCount: this.tCount,
+          falseCount: this.fCount,
+          rate: this.rate
+        }).then(res => {
+          console.log("提交练习", res);
+        })
       },
 
       toDetail() {

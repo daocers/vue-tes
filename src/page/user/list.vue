@@ -64,14 +64,6 @@
           <el-tag size="small" type="danger" v-if="scope.row.status == 5">作弊</el-tag>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-      <!--prop="createTime" width="160"-->
-      <!--label="创建时间">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-      <!--prop="createUserName"-->
-      <!--label="创建人">-->
-      <!--</el-table-column>-->
 
       <el-table-column
         fixed="right"
@@ -107,11 +99,7 @@
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="机构" prop="branchId" :label-width="labelWidth">
-          <!--<el-select v-model="dataForEdit.branchId">-->
-          <!--<el-option v-for="item in "-->
-          <!--</el-select>-->
-          <span @click="showBranchBox" v-model="dataForEdit.branchId">{{dataForEdit.branchName ? dataForEdit.branchName: '未选择'}}</span>
-          <!--<el-input v-model="dataForEdit.branchId" placeholder="请输入"></el-input>-->
+          <span @click="showBranchBox" v-model="dataForEdit.branchId">{{dataForEdit.branchName ? dataForEdit.branchName: '点击设置机构'}}</span>
         </el-form-item>
         <el-form-item label="部门" prop="departmentId" :label-width="labelWidth">
           <el-select v-model="dataForEdit.departmentId">
@@ -120,7 +108,6 @@
 
             </el-option>
           </el-select>
-          <!--<el-input v-model="dataForEdit.departmentId" placeholder="请输入"></el-input>-->
         </el-form-item>
         <el-form-item label="岗位" prop="stationId" :label-width="labelWidth">
           <el-select v-model="dataForEdit.stationId">
@@ -317,9 +304,14 @@
          * 校验规则
          */
         rules: {
+          username:
+            [
+              {required: true, message: '请输入用户名', trigger: 'blur'},
+              {min: 2, max: 16, message: '长度在2-16个字符', trigger: 'blur'}
+            ],
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入姓名', trigger: 'blur'},
               {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
 
@@ -426,9 +418,15 @@
         if (type == 'add') {
           console.log("唤起添加对话框")
           this.editDialogShow = true;
-          this.dataForEdit = {};
+          this.dataForEdit = {status: 1,};
         } else if (type == 'edit') {
           this.dataForEdit = JSON.parse(JSON.stringify(row));
+          if (this.dataForEdit.departmentId == -1) {
+            this.dataForEdit.departmentId = '';
+          }
+          if (this.dataForEdit.stationId == -1) {
+            this.dataForEdit.stationId = '';
+          }
           this.dataForEditIndex = idx;
           this.editDialogShow = true;
         }
@@ -470,13 +468,13 @@
                 this.findByCondition();
                 // this.tableData.push(this.dataForEdit);
               }
+              //        关闭对话框
+              this.editDialogShow = false;
             } else if (res == false) {
               console.log("请求成功，处理失败");
             } else if (res == null) {
               console.error("请求失败")
             }
-            //        关闭对话框
-            this.editDialogShow = false;
           }
         });
       },

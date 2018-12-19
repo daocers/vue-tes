@@ -55,7 +55,7 @@
         rules: {
           password:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入旧密码', trigger: 'blur'},
               {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
           passNew: [{required: true, message: '请输入新密码', trigger: 'blur'},
@@ -81,8 +81,8 @@
       },
 
 
-       confirm() {
-        this.$refs['form'].validate(async  (valid) => {
+      confirm() {
+        this.$refs['form'].validate(async (valid) => {
           if (!valid) {
             return false;
           } else {

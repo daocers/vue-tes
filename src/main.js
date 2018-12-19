@@ -18,7 +18,25 @@ let invalidTokenFlag = false;
 /**
  * get请求
  **/
-Vue.prototype.httpGet = async function (url) {
+Vue.prototype.doGet = async function (url) {
+  let token = sessionStorage.getItem("token");
+  if (!token) {
+    if (!token) {
+      this.$notify({
+        title: '提示',
+        message: '会话超时',
+        type: "info",
+      })
+      this.router.push("/login")
+      return false;
+    }
+  }
+  url = host + url;
+  if (url.indexOf("?") > -1) {
+    url = url + "&token=" + token;
+  } else {
+    url = url + "?token=" + token;
+  }
   let response = await axios.get(url);
   return await processResponse(response, this);
 };

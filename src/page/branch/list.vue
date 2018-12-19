@@ -58,7 +58,7 @@
       <el-table-column
         label="管理员">
         <template slot-scope="scope">
-          <el-tag  type="warning" @close="removeManager(scope.row, scope.$index, item, index)" size="small"
+          <el-tag type="warning" @close="removeManager(scope.row, scope.$index, item, index)" size="small"
                   v-for="(item , index) in scope.row.userList"
                   :key="item.id"
                   closable>{{item.name}}
@@ -118,13 +118,13 @@
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="机构编号" prop="code" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+          <el-input v-model="dataForEdit.code" placeholder="请输入" disabled></el-input>
         </el-form-item>
         <el-form-item label="地址" prop="address" :label-width="labelWidth">
           <el-input v-model="dataForEdit.address" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="级别" prop="level" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.level" placeholder="请输入"></el-input>
+          <el-input v-model="dataForEdit.level" placeholder="请输入" disabled></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status" :label-width="labelWidth">
           <!--<el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>-->
@@ -347,6 +347,10 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
+        if (row.level == 0) {
+          this.$notify.warning("不能删除总行", "提示");
+          return false;
+        }
         let data = await this.postEntity("/branch/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
