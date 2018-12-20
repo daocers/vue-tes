@@ -10,14 +10,17 @@
 
             <span class="gp" style="display:"></span>
             <span class="tl" style="display:">TES考试系统</span>
-            <el-dropdown trigger="click" @command="handleCommand" style="line-height: 36px; height: 36px; padding-top: 10px; float: right; margin-left: 20px;">
+            <!--<span style="font-size: 23px; font-weight: 600; color: #00457d; float: right;">{{username}}</span>-->
+            <el-dropdown trigger="click" @command="handleCommand"
+                         style="line-height: 36px; height: 36px; padding-top: 10px; float: right; margin-left: 20px; justify-items: center;">
               <el-button style="padding: 0; width: 36px; height: 36px;" circle>
                 <img style="border-radius: 50%; border: none; height: 36px;" src="../../assets/img/head.png">
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
-                <el-dropdown-item command="changePass">修改密码</el-dropdown-item>
-                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                <el-dropdown-item disabled style="color: #66b1ff; font-weight: 600;">我是 &nbsp;{{username}}</el-dropdown-item>
+                <el-dropdown-item command="userCenter"><i class="el-icon-setting"></i> &nbsp;&nbsp;   个人中心</el-dropdown-item>
+                <el-dropdown-item command="changePass"><i class="el-icon-edit"></i>  &nbsp;&nbsp;  修改密码</el-dropdown-item>
+                <el-dropdown-item command="logout" divided=""><i class="el-icon-circle-close-outline"></i> &nbsp;&nbsp; 退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <p class="nlink n2">
@@ -133,19 +136,21 @@
           height: '500px',
         },
         menuList: [],
+
+        //登录
+        username: '',
       }
     },
     methods: {
       handleCommand(command) {
-        if(command == 'userCenter'){
+        if (command == 'userCenter') {
           this.$router.push("/")
-        }else if(command == 'changePass'){
+        } else if (command == 'changePass') {
           this.$router.push("/user/changePass")
-        }else if(command == 'logout'){
+        } else if (command == 'logout') {
           this.logout();
         }
       },
-
 
 
       //展开菜单栏
@@ -197,6 +202,8 @@
 
     },
     created: function () {
+      let username = sessionStorage.getItem("username");
+      this.username = username;
       let menuList = sessionStorage.getItem("menuList");
       this.menuList = JSON.parse(menuList);
       console.log("menuList:", this.menuList);

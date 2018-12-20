@@ -42,7 +42,7 @@ Vue.prototype.doGet = async function (url) {
 };
 
 
-Vue.prototype.download = async function (url) {
+Vue.prototype.downloadFile = async function (url) {
   let token = sessionStorage.getItem("token");
   if (url.indexOf("?") > -1) {
     url = url + "&token=" + token;
@@ -52,6 +52,17 @@ Vue.prototype.download = async function (url) {
   window.location.href = host + url;
 }
 
+Vue.prototype.uploadFile = async function(url, formData){
+  let token = sessionStorage.getItem("token");
+  let response = await axios({
+    headers: {"Content-Type": "multipart/form-data", "token": token},
+    url: host + url,
+    method: 'post',
+    data: formData,
+    timeout: 5000
+  })
+  return await processResponse(response, this);
+}
 
 Vue.prototype.doPost = async function (url, data, type, timeout) {
   if (!timeout) {

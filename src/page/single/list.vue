@@ -211,7 +211,7 @@
         ref="upload"
         :limit="1"
         :data="dataForBatch"
-        action="http://localhost:8080/single/api/batchAdd"
+        :http-request="handleUpload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
@@ -242,7 +242,6 @@
 
 
 <script>
-  import Vue from 'vue'
 
   export default {
     data() {
@@ -387,7 +386,8 @@
       },
       download() {
         this.batchAddErrorMessage = '';
-        window.location.href = "http://localhost:8080/single/api/downloadModel";
+        // window.location.href = "http://localhost:8080/single/api/downloadModel";
+        this.downloadFile("/single/api/downloadModel");
       },
 
       toBatchAdd() {
@@ -400,19 +400,30 @@
       /**
        * 批量导入
        */
-      async batchAdd() {
-        this.$refs['batchForm'].validate(async (valid) => {
-          if (!valid) {
-            console.log("参数校验不通过，请处理");
-            return false;
-          } else {
-            let res = await this.$refs.upload.submit();
-            console.log("上传结果： ", res);
-          }
-        });
+      // async batchAdd(param) {
+      //   this.$refs['batchForm'].validate(async (valid) => {
+      //     if (!valid) {
+      //       console.log("参数校验不通过，请处理");
+      //       return false;
+      //     } else {
+      //       // let res = this.uploadFile("/single/api/batchAdd", {file: this.fileList[0]})
+      //       // // let res = await this.$refs.upload.submit();
+      //       // console.log("上传结果： ", res);
+      //       let fileObject = param.file;
+      //       let formData = new FormData();
+      //       formData.append("file", fileObject);
+      //       this.uploadFile("/single/api/batchAdd", formData);
+      //     }
+      //   });
+      //
+      // },
 
+      handleUpload(param){
+        let fileObject = param.file;
+        let formData = new FormData();
+        formData.append("file", fileObject);
+        this.uploadFile("/single/api/batchAdd", formData);
       },
-
       /*
       * 查找所有题库信息
       * */
@@ -466,29 +477,29 @@
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         let itemList = JSON.parse(this.dataForEdit.content);
-        if(itemList[0] && itemList[0].length > 0){
+        if (itemList[0] && itemList[0].length > 0) {
           this.dataForEdit.a1 = itemList[0].substr(2);
-        }else{
+        } else {
           this.dataForEdit.a1 = "";
         }
-        if(itemList[1] && itemList[1].length > 0){
+        if (itemList[1] && itemList[1].length > 0) {
           this.dataForEdit.a2 = itemList[1].substr(2);
-        }else{
+        } else {
           this.dataForEdit.a2 = "";
         }
-        if(itemList[2] && itemList[2].length > 0){
+        if (itemList[2] && itemList[2].length > 0) {
           this.dataForEdit.a3 = itemList[2].substr(2);
-        }else{
+        } else {
           this.dataForEdit.a3 = '';
         }
-        if(itemList[3] && itemList[3].length > 0){
+        if (itemList[3] && itemList[3].length > 0) {
           this.dataForEdit.a4 = itemList[3].substr(2);
-        }else{
+        } else {
           this.dataForEdit.a4 = '';
         }
-        if(itemList[4] && itemList[4].length > 0){
+        if (itemList[4] && itemList[4].length > 0) {
           this.dataForEdit.a5 = itemList[4].substr(2);
-        }else{
+        } else {
           this.dataForEdit.a5 = '';
         }
 
@@ -510,19 +521,19 @@
             return false;
           } else {
             let item = [];
-            if(this.dataForEdit.a1.length > 0){
+            if (this.dataForEdit.a1.length > 0) {
               item.push(this.dataForEdit.a1)
             }
-            if(this.dataForEdit.a2.length > 0){
+            if (this.dataForEdit.a2.length > 0) {
               item.push(this.dataForEdit.a2)
             }
-            if(this.dataForEdit.a3.length > 0){
+            if (this.dataForEdit.a3.length > 0) {
               item.push(this.dataForEdit.a3)
             }
-            if(this.dataForEdit.a4.length > 0){
+            if (this.dataForEdit.a4.length > 0) {
               item.push(this.dataForEdit.a4)
             }
-            if(this.dataForEdit.a5.length > 0){
+            if (this.dataForEdit.a5.length > 0) {
               item.push(this.dataForEdit.a5)
             }
             this.dataForEdit.content = JSON.stringify(item);

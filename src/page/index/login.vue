@@ -131,6 +131,7 @@
               //登录成功删除所有的sessionStorage
               sessionStorage.clear();
               sessionStorage.setItem("token", res);
+              sessionStorage.setItem("username", this.login.username);
               //获取菜单信息
               this.postParam("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
