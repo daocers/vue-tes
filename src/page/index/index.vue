@@ -4,12 +4,12 @@
       <div class="header">
         <div class="nag">
           <div class="in">
-            <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
+            <a href="/index"><img class="logo" width="40px" height="40px" src="../../assets/img/logo.png"
                                   alt="布谷培训"></a>
             <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
 
-            <span class="gp" style="display:"></span>
-            <span class="tl" style="display:">TES考试系统</span>
+            <span class="gp" style=""></span>
+            <span class="tl" style="">TES考试系统</span>
             <!--<span style="font-size: 23px; font-weight: 600; color: #00457d; float: right;">{{username}}</span>-->
             <el-dropdown trigger="click" @command="handleCommand"
                          style="line-height: 36px; height: 36px; padding-top: 10px; float: right; margin-left: 20px; justify-items: center;">
@@ -398,7 +398,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1 pxtted #ddd;
+    border-top: 1px solid #ddd;
   }
 
   .en .lrcon .lr_lf {
@@ -628,9 +628,9 @@
     padding-left: 0px;
   }
 
-  ul.el-menu-vertical-demo.el-menu {
-    min-width: 200px;
-  }
+  /*ul.el-menu-vertical-demo.el-menu {*/
+    /*min-width: 200px;*/
+  /*}*/
 
   /**
   * 自定义图标
