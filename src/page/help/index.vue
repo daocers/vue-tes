@@ -109,6 +109,7 @@
     },
     methods:{
       forgetPassword(){
+        console.log("ddf")
         this.$router.push({path:"/user"})
       },
       fastOpen(){
