@@ -205,30 +205,30 @@
           </el-select>
         </el-form-item>
 
-      </el-form>
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        :limit="1"
-        :data="dataForBatch"
-        :http-request="handleUpload"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-change="handleChange"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :file-list="fileList"
-        :auto-upload="false">
 
-        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
-                   @click="batchAdd">上传到服务器
-        </el-button>
-        <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="#" @click="download">下载模板</a>
-        </div>
-        <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
-      </el-upload>
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          :limit="1"
+          action=""
+          :data="dataForBatch"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="handleChange"
+          :file-list="fileList"
+          :auto-upload="false">
+
+          <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+          <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
+                     @click="batchAdd">上传到服务器
+          </el-button>
+          <div style="display: inline-block; margin-left: 20px;">
+            没有模板？<a type="success" href="#" @click="download">下载模板</a>
+          </div>
+          <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
+        </el-upload>
+      </el-form>
+
 
       <el-alert v-show="batchAddErrorMessage != ''"
                 v-bind:title='batchAddErrorMessage'
@@ -323,7 +323,10 @@
             ],
 
 
-        }
+        },
+
+        //即将上传的文件
+        file: null,
 
       }
     },
@@ -347,6 +350,8 @@
       handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
+        this.fileList = fileList;
+        this.file = file;
         this.uploadFlag = fileList.length > 0 ? true : false;
 
       },
@@ -354,36 +359,6 @@
         console.log("导入结果：", file.response);
       },
 
-      /**
-       * 服务器成功响应并处理后回调
-       */
-      handleSuccess(response, file, fileList) {
-        console.log("上传结果：", response)
-        if (response.result == false) {
-          this.batchAddErrorMessage = response.message;
-        } else {
-          this.findByCondition();
-          this.$refs.upload.clearFiles();
-          this.batchAddDialogShow = false;
-          this.$notify({
-            title: '成功',
-            message: '批量导入单选试题成功',
-            type: 'success',
-            duration: 0
-          });
-        }
-      },
-      handleError(err, file, fileList) {
-        console.log("上传失败，原因：", err);
-        this.$refs.upload.clearFiles();
-        this.batchAddDialogShow = false;
-        this.$notify({
-          title: '失败',
-          message: '批量导入单选试题失败',
-          type: 'error',
-          duration: 0
-        });
-      },
       download() {
         this.batchAddErrorMessage = '';
         // window.location.href = "http://localhost:8080/single/api/downloadModel";
@@ -400,29 +375,51 @@
       /**
        * 批量导入
        */
-      // async batchAdd(param) {
-      //   this.$refs['batchForm'].validate(async (valid) => {
-      //     if (!valid) {
-      //       console.log("参数校验不通过，请处理");
-      //       return false;
-      //     } else {
-      //       // let res = this.uploadFile("/single/api/batchAdd", {file: this.fileList[0]})
-      //       // // let res = await this.$refs.upload.submit();
-      //       // console.log("上传结果： ", res);
-      //       let fileObject = param.file;
-      //       let formData = new FormData();
-      //       formData.append("file", fileObject);
-      //       this.uploadFile("/single/api/batchAdd", formData);
-      //     }
-      //   });
-      //
-      // },
-
-      handleUpload(param){
-        let fileObject = param.file;
+      async batchAdd(param) {
+        console.log("批量上传：：：", param)
+        this.$refs['batchForm'].validate(async (valid) => {
+          if (!valid) {
+            console.log("参数校验不通过，请处理");
+            return false;
+          } else {
+            let formData = new FormData();
+            formData.append("file", this.file.raw);
+            formData.append("questionBankId", this.dataForBatch.questionBankId)
+            let resp = await this.uploadFile("/single/api/batchAdd", formData);
+            console.log("上传结果:::", resp);
+            this.$refs.upload.clearFiles();
+            this.batchAddDialogShow = false;
+            if (resp) {
+              this.findByCondition();
+              this.$notify({
+                title: '成功',
+                message: '批量导入单选试题成功',
+                type: 'success',
+                // duration: 0
+              });
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '批量导入单选试题失败',
+                type: 'error',
+                duration: 0
+              });
+            }
+          }
+        });
+        return false;
+      },
+      async handleBefore(file) {
+        console.log("提交之前", file);
         let formData = new FormData();
-        formData.append("file", fileObject);
-        this.uploadFile("/single/api/batchAdd", formData);
+        formData.append("file", this.file);
+        formData.append("questionBankId", this.dataForBatch.questionBankId)
+        let resp = await this.uploadFile("/single/api/batchAdd", formData);
+        console.log("上传结果:::", resp);
+        if (resp.result) {
+          this.$alert("上传数据成功", "提示", this.findByCondition())
+        }
+        return false;
       },
       /*
       * 查找所有题库信息

@@ -309,7 +309,7 @@
        * 以下是websocket处理，用来处理强制交卷信息
        * */
       let userId = sessionStorage.getItem("userId");
-      let ws = new WebSocket("ws://localhost:8080/ws/hn.ws?userId=" + userId);
+      let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
       this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {

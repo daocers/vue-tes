@@ -296,6 +296,7 @@
         },
         //上传文件列表
         fileList: [],
+        file: null,
         //是否可以上传
         uploadFlag: false,
 
@@ -356,6 +357,8 @@
       handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
+        this.file = file;
+        this.fileList = fileList;
         this.uploadFlag = fileList.length > 0 ? true : false;
 
       },
@@ -395,7 +398,7 @@
       },
       download() {
         this.batchAddErrorMessage = '';
-        window.location.href = "http://localhost:8080/multi/api/downloadModel";
+        this.download("/multi/api/downloadModel");
       },
 
       toBatchAdd() {
@@ -414,8 +417,29 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.$refs.upload.submit();
-            console.log("上传结果： ", res);
+            let formData = new FormData();
+            formData.append("file", this.file.raw);
+            formData.append("questionBankId", this.dataForBatch.questionBankId)
+            let resp = await this.uploadFile("/multi/api/batchAdd", formData);
+            console.log("上传结果:::", resp);
+            this.$refs.upload.clearFiles();
+            this.batchAddDialogShow = false;
+            if (resp) {
+              this.findByCondition();
+              this.$notify({
+                title: '成功',
+                message: '批量导入多选试题成功',
+                type: 'success',
+                // duration: 0
+              });
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '批量导入多选试题失败',
+                type: 'error',
+                duration: 0
+              });
+            }
           }
         });
 

@@ -52,7 +52,8 @@
             this.$alert("生成试卷失败，请重试");
           }
         } else {
-          this.$alert(res.message, "提示", {
+
+          this.$notify.warning(res.message, "提示", {
             confirmButtonText: '确定',
             callback: action => {
               if (res.code != 0) {
@@ -82,8 +83,8 @@
 </script>
 
 
-<style>
-  .box-card {
+<style scoped>
+  .entrance .box-card {
     margin: 80px;
     padding: 80px;
   }

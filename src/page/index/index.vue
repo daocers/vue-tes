@@ -17,10 +17,14 @@
                 <img style="border-radius: 50%; border: none; height: 36px;" src="../../assets/img/head.png">
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item disabled style="color: #66b1ff; font-weight: 600;">我是 &nbsp;{{username}}</el-dropdown-item>
-                <el-dropdown-item command="userCenter"><i class="el-icon-setting"></i> &nbsp;&nbsp;   个人中心</el-dropdown-item>
-                <el-dropdown-item command="changePass"><i class="el-icon-edit"></i>  &nbsp;&nbsp;  修改密码</el-dropdown-item>
-                <el-dropdown-item command="logout" divided=""><i class="el-icon-circle-close-outline"></i> &nbsp;&nbsp; 退出登录</el-dropdown-item>
+                <el-dropdown-item disabled style="color: #66b1ff; font-weight: 600;">我是 &nbsp;{{username}}
+                </el-dropdown-item>
+                <el-dropdown-item command="userCenter"><i class="el-icon-setting"></i> &nbsp;&nbsp; 个人中心
+                </el-dropdown-item>
+                <el-dropdown-item command="changePass"><i class="el-icon-edit"></i> &nbsp;&nbsp; 修改密码</el-dropdown-item>
+                <el-dropdown-item command="logout" divided=""><i class="bugu-icon-exit"></i> &nbsp;&nbsp;
+                  退出登录
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <p class="nlink n2">
@@ -60,13 +64,14 @@
                 <i class="el-icon-location"></i>
                 <span>基础信息</span>
               </template>
-              <el-menu-item index="/role">角色</el-menu-item>
-              <el-menu-item index="/permission">权限</el-menu-item>
-              <el-menu-item index="/branch">机构</el-menu-item>
-              <el-menu-item index="/department">部门</el-menu-item>
-              <el-menu-item index="/station">岗位</el-menu-item>
-              <el-menu-item index="/user">用户</el-menu-item>
-              <el-menu-item index="/user/changePass">修改密码</el-menu-item>
+              <el-menu-item index="/role"><i class="bugu-icon-role"></i> 角色</el-menu-item>
+              <el-menu-item index="/permission"><i class="bugu-icon-perms"></i> 权限</el-menu-item>
+              <el-menu-item index="/branch"><i class="bugu-icon-branch"></i> 机构
+              </el-menu-item>
+              <el-menu-item index="/department"><i class="bugu-icon-department"></i> 部门</el-menu-item>
+              <el-menu-item index="/station"><i class="bugu-icon-station"></i> 岗位</el-menu-item>
+              <el-menu-item index="/user"><i class="bugu-icon-user"></i> 用户</el-menu-item>
+              <el-menu-item index="/user/changePass"><i class="bugu-icon-pass"></i> 修改密码</el-menu-item>
             </el-submenu>
 
             <el-submenu index="2">
@@ -74,33 +79,33 @@
                 <i class="el-icon-document"></i>
                 <span>试题管理</span>
               </template>
-              <el-menu-item index="/questionBank">题库管理</el-menu-item>
-              <el-menu-item index="/property">属性管理</el-menu-item>
-              <el-menu-item index="/single">单选题</el-menu-item>
-              <el-menu-item index="/multi">多选题</el-menu-item>
-              <el-menu-item index="/judge">判断题</el-menu-item>
+              <el-menu-item index="/questionBank"><i class="bugu-icon-bank"></i> 题库管理</el-menu-item>
+              <el-menu-item index="/property"><i class="">d</i> 属性管理</el-menu-item>
+              <el-menu-item index="/single"><i class="bugu-icon-single"></i> 单选题</el-menu-item>
+              <el-menu-item index="/multi"><i class="bugu-icon-multi"></i> 多选题</el-menu-item>
+              <el-menu-item index="/judge"><i class="bugu-icon-judge"></i> 判断题</el-menu-item>
             </el-submenu>
 
             <el-submenu index="3">
               <template slot="title">
-                <i class="el-icon-document"></i>
+                <i class="bugu-menu-icon-practise" style="margin-right: 10px;"></i>
                 <span>练习乐园</span>
               </template>
-              <el-menu-item index="/practise">凭条录入</el-menu-item>
-              <el-menu-item index="/practise/list">练习轨迹</el-menu-item>
+              <el-menu-item index="/practise"><i class="bugu-icon-number"></i> 凭条录入</el-menu-item>
+              <el-menu-item index="/practise/list"><i class="bugu-icon-log"></i> 练习轨迹</el-menu-item>
             </el-submenu>
 
             <el-submenu index="4">
               <template slot="title">
-                <i class="el-icon-edit-outline"></i>
+                <i class="bugu-menu-icon-scene" style="margin-right: 10px;"></i>
                 <span>考试管理</span>
               </template>
-              <el-menu-item index="/scene/open">快速开场</el-menu-item>
+              <el-menu-item index="/scene/open"><i class="bugu-icon-scene"></i> 快速开场</el-menu-item>
               <!--<el-menu-item index="/scene">场次管理</el-menu-item>-->
-              <el-menu-item index="/exam">考试</el-menu-item>
-              <el-menu-item index="/scene/myJoin">我参加的</el-menu-item>
-              <el-menu-item index="/scene/myOpen">我开场的</el-menu-item>
-              <el-menu-item index="/paper">成绩查询</el-menu-item>
+              <el-menu-item index="/exam"><i class="bugu-icon-exam"></i> 考试</el-menu-item>
+              <el-menu-item index="/scene/myJoin"><i class="bugu-icon-join"></i> 我参加的</el-menu-item>
+              <el-menu-item index="/scene/myOpen"><i class="bugu-icon-create"></i> 我开场的</el-menu-item>
+              <el-menu-item index="/paper"><i class="bugu-icon-score"></i> 成绩查询</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>
@@ -623,9 +628,291 @@
     padding-left: 0px;
   }
 
-  /*ul.el-menu-vertical-demo.el-menu{*/
-  /*min-width: 200px;*/
-  /*}*/
+  ul.el-menu-vertical-demo.el-menu {
+    min-width: 200px;
+  }
 
+  /**
+  * 自定义图标
+  */
+  .bugu-icon-branch {
+    background: url("../../assets/img/branch-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-branch:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+  }
+
+  .bugu-icon-department {
+    background: url("../../assets/img/department-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-department:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+  }
+
+  .bugu-icon-clock {
+    background: url("../../assets/img/clock.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-clock:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+  }
+
+  .bugu-icon-exit {
+    margin: 1px;
+    background: url("../../assets/img/exit-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-exit:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-bank {
+    margin: 1px;
+    background: url("../../assets/img/bank-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-bank:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-single {
+    margin: 1px;
+    background: url("../../assets/img/single-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-single:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-multi {
+    margin: 1px;
+    background: url("../../assets/img/multi-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-multi:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-judge {
+    margin: 1px;
+    background: url("../../assets/img/judge-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-judge:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-number {
+    margin: 1px;
+    background: url("../../assets/img/number-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-number:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-log {
+    margin: 1px;
+    background: url("../../assets/img/log-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-log:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-scene {
+    margin: 1px;
+    background: url("../../assets/img/scene-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-scene:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-create {
+    margin: 1px;
+    background: url("../../assets/img/create-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-create:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-join {
+    margin: 1px;
+    background: url("../../assets/img/join-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-join:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-exam {
+    margin: 1px;
+    background: url("../../assets/img/exam-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-exam:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-score {
+    margin: 1px;
+    background: url("../../assets/img/score-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-score:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-station {
+    margin: 1px;
+    background: url("../../assets/img/station-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-station:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-user {
+    margin: 1px;
+    background: url("../../assets/img/user-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-user:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-pass {
+    margin: 1px;
+    background: url("../../assets/img/pass-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-pass:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-role {
+    margin: 1px;
+    background: url("../../assets/img/role-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-role:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-icon-perms {
+    margin: 1px;
+    background: url("../../assets/img/perms-on.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-icon-perms:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-menu-icon-practise {
+    margin: 1px;
+    background: url("../../assets/img/practise-off.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-menu-icon-practise:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
+
+  .bugu-menu-icon-scene {
+    margin: 1px;
+    background: url("../../assets/img/scene.png") center no-repeat;
+    background-size: cover;
+  }
+
+  .bugu-menu-icon-scene:before {
+    content: "替";
+    font-size: 16px;
+    visibility: hidden;
+    margin: 1px;
+  }
 </style>
 

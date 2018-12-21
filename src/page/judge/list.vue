@@ -192,13 +192,13 @@
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
-        :on-success="handleSuccess"
-        :on-error="handleError"
         :file-list="fileList"
         :auto-upload="false">
 
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
+                   @click="batchAdd">上传到服务器
+        </el-button>
         <div style="display: inline-block; margin-left: 20px;">
           没有模板？<a type="success" href="#" @click="download">下载模板</a>
         </div>
@@ -271,6 +271,8 @@
         },
         //上传文件列表
         fileList: [],
+        file: null,
+        uploadUrl: '',
         //是否可以上传
         uploadFlag: false,
 
@@ -324,13 +326,15 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
         fileList.shift(file);
-        this.uploadFlag = fileList.length > 0 ? true: false;
+        this.uploadFlag = fileList.length > 0 ? true : false;
         console.log("fileList", this.fileList)
       },
       handleChange(file, fileList) {
         console.info("change file: ", file);
         console.info("change fileList: ", fileList);
-        this.uploadFlag = fileList.length > 0 ? true: false;
+        this.fileList = fileList;
+        this.file = file;
+        this.uploadFlag = fileList.length > 0 ? true : false;
 
       },
       handlePreview(file) {
@@ -388,8 +392,29 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.$refs.upload.submit();
-            console.log("上传结果： ", res);
+            let formData = new FormData();
+            formData.append("file", this.file.raw);
+            formData.append("questionBankId", this.dataForBatch.questionBankId)
+            let resp = await this.uploadFile("/judge/api/batchAdd", formData);
+            console.log("上传结果:::", resp);
+            this.$refs.upload.clearFiles();
+            this.batchAddDialogShow = false;
+            if (resp) {
+              this.findByCondition();
+              this.$notify({
+                title: '成功',
+                message: '批量导入判断试题成功',
+                type: 'success',
+                // duration: 0
+              });
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '批量导入判断试题失败',
+                type: 'error',
+                duration: 0
+              });
+            }
           }
         });
 
