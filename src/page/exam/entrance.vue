@@ -26,15 +26,6 @@
       }
     },
     methods: {
-//       async toNotice() {
-//         let data = await this.postEntity("/exam/api/checkAuthCode?authCode=" + this.authCode + "&sceneId=" + this.sceneId);
-//         if(data){
-//           this.$router.push("/exam/notice?id=" + this.sceneId);
-//         }else{
-// //          this.$message.error("场次授权码输入错误");
-//           return false;
-//         }
-//       },
       async toExam() {
         //校验场次状态
         let res = await this.doPost("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode}, "form");

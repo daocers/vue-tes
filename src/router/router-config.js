@@ -96,6 +96,7 @@ const PaperOfScene = () => import("../page/paper/score")
 
 
 const Login = () => import('../page/index/login.vue');
+const About = () => import('../page/index/about.vue');
 const Single = () => import('../page/single/list');
 const Multi = () => import('../page/multi/list');
 const Judge = () => import('../page/judge/list');
@@ -109,14 +110,14 @@ const PractiseList = () => import("../page/receipt/practiseList")
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
-  {path: '/login', component: Login},
-  // {path: '/index', component: Index},
   {
-    //  配置路由，当路径为'/activePublic'，使用组件activePublic
-    //   path: '/activePublic', component: activePublic
-    path: '/leftMenu', component: leftMenu,
-    // path: '/scene/setting', component: sceneSetting
+    path: '/login',
+    component: Login,
   },
+  {path: '/about', component: About},
+  // {
+  //   path: '/leftMenu', component: leftMenu,
+  // },
   {
     path: '/',
     component: Index,

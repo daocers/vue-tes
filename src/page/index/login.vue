@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <!--<div class="pro">-->
-    <!--<div class="msg"><em id="warning"></em>最近有不法分子冒充布谷科技，让用户提供账户和密码。在此声明，我们绝不会通过电话、邮件或短信等形式询问用户名和密码。请用户提高警惕，增强自我保护意识。-->
-    <!--</div>-->
+      <!--<div class="msg"><em id="warning"></em>最近有不法分子冒充布谷科技，让用户提供账户和密码。在此声明，我们绝不会通过电话、邮件或短信等形式询问用户名和密码。请用户提高警惕，增强自我保护意识。-->
+      <!--</div>-->
     <!--</div>-->
     <div class="header">
       <div class="nag">
@@ -14,8 +14,10 @@
           <span class="gp" style="display:"></span>
           <span class="tl" style="display:">欢迎登录</span>
           <p class="nlink n2">
-            <a href="/index">首页</a>
-            <a href="/help/index" target="_blank">帮助中心</a>
+            <!--<a href="/index">首页</a>-->
+            <!--<a href="/help/index" target="_blank">帮助中心</a>-->
+            <router-link to="/about">帮助中心</router-link>
+
           </p>
         </div>
       </div>

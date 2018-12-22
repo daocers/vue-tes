@@ -28,8 +28,10 @@
               </el-dropdown-menu>
             </el-dropdown>
             <p class="nlink n2">
-              <a href="#" @click="toIndex">首页</a>
-              <a href="#" @click="toHelp">帮助中心</a>
+              <router-link to="/">首页</router-link>
+              <router-link to="/help">帮助中心</router-link>
+              <!--<a href="#" @click="toIndex">首页</a>-->
+              <!--<a href="#" @click="toHelp">帮助中心</a>-->
               <!--<a href="#" @click="logout">退出</a>-->
             </p>
 
@@ -219,7 +221,7 @@
       this.menuClass.height = res;
       let token = sessionStorage.getItem("token");
       if (token == null || token.length == 0) {
-        this.$router.push({path: "/login"});
+        this.$router.replace({path: "/login"});
       } else {
         //修改默认进入时候的样式信息
         let url = window.location.href;
