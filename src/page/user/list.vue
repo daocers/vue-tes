@@ -157,23 +157,44 @@
 
 
     <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
+      <!--<el-upload-->
+        <!--class="upload-demo"-->
+        <!--ref="upload"-->
+        <!--:limit="1"-->
+        <!--action="http://localhost:8080/user/api/batchAdd"-->
+        <!--:on-preview="handlePreview"-->
+        <!--:on-remove="handleRemove"-->
+        <!--:on-change="handleChange"-->
+        <!--:on-success="handleSuccess"-->
+        <!--:on-error="handleError"-->
+        <!--:file-list="fileList"-->
+        <!--:auto-upload="false">-->
+        <!--<el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>-->
+        <!--<el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>-->
+        <!--<div style="display: inline-block; margin-left: 20px;">-->
+          <!--没有模板？<a type="success" href="http://localhost:8080/user/api/downloadModel">下载模板</a>-->
+          <!--&lt;!&ndash;<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>&ndash;&gt;-->
+        <!--</div>-->
+        <!--<div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>-->
+      <!--</el-upload>-->
+
       <el-upload
         class="upload-demo"
         ref="upload"
         :limit="1"
-        action="http://localhost:8080/user/api/batchAdd"
+        action=""
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
-        :on-success="handleSuccess"
-        :on-error="handleError"
         :file-list="fileList"
         :auto-upload="false">
+
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
+                   @click="batchAdd">上传到服务器
+        </el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="http://localhost:8080/user/api/downloadModel">下载模板</a>
-          <!--<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>-->
+          没有模板？<a type="success" href="#" @click="download">下载模板</a>
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
@@ -300,6 +321,10 @@
          */
         dataForEditIndex: null,
 
+        uploadFlag: false,
+        file: null,
+        fileList: [],
+
         /**
          * 校验规则
          */
@@ -328,6 +353,82 @@
       }
     },
     methods: {
+      // 批量添加执行的一系列方法
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+        fileList.shift(file);
+        this.uploadFlag = fileList.length > 0 ? true : false;
+        console.log("fileList", this.fileList)
+      },
+      handleChange(file, fileList) {
+        console.info("change file: ", file);
+        console.info("change fileList: ", fileList);
+        this.fileList = fileList;
+        this.file = file;
+        this.uploadFlag = fileList.length > 0 ? true : false;
+        console.log("uploadFlag:", this.uploadFlag)
+      },
+      handlePreview(file) {
+        console.log("导入结果：", file.response);
+      },
+
+      /**
+       * 批量导入
+       */
+      async batchAdd(param) {
+        console.log("批量上传：：：", param)
+        let formData = new FormData();
+        formData.append("file", this.file.raw);
+        // formData.append("questionBankId", this.dataForBatch.questionBankId)
+        let resp = await this.uploadFile("/user/api/batchAdd", formData);
+        console.log("上传结果:::", resp);
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+        if (resp) {
+          this.findByCondition();
+          this.$notify({
+            title: '成功',
+            message: '批量导入用户成功',
+            type: 'success',
+            // duration: 0
+          });
+        } else {
+          this.$notify({
+            title: '失败',
+            message: '批量导入用户失败',
+            type: 'error',
+            duration: 0
+          });
+        }
+        return false;
+      },
+      async handleBefore(file) {
+        console.log("提交之前", file);
+        let formData = new FormData();
+        formData.append("file", this.file);
+        let resp = await this.uploadFile("/user/api/batchAdd", formData);
+        console.log("上传结果:::", resp);
+        if (resp.result) {
+          this.$alert("上传数据成功", "提示", this.findByCondition())
+        }
+        return false;
+      },
+
+
+      download() {
+        this.batchAddErrorMessage = '';
+        this.downloadFile("/user/api/downloadModel");
+      },
+
+      toBatchAdd() {
+        console.log("唤起批量导入对话框。。。")
+//        this.$refs.upload.clearFiles();
+        this.batchAddErrorMessage = '';
+        this.batchAddDialogShow = true;
+      },
+
+
+
       showBranchBox() {
         this.branchTreeShow = true;
       },
@@ -369,19 +470,19 @@
         console.log("查看详情：", row)
       },
 
-      toBatchAdd() {
-        console.log("唤起批量导入对话框。。。")
-//        this.$refs.upload.clearFiles();
-        this.batchAddErrorMessage = '';
-        this.batchAddDialogShow = true;
-      },
-      /**
-       * 批量导入
-       */
-      async batchAdd() {
-        let res = await this.$refs.upload.submit();
-        console.log("上传结果： ", res);
-      },
+//       toBatchAdd() {
+//         console.log("唤起批量导入对话框。。。")
+// //        this.$refs.upload.clearFiles();
+//         this.batchAddErrorMessage = '';
+//         this.batchAddDialogShow = true;
+//       },
+//       /**
+//        * 批量导入
+//        */
+//       async batchAdd() {
+//         let res = await this.$refs.upload.submit();
+//         console.log("上传结果： ", res);
+//       },
       /**
        * 唤起编辑对话框
        */
@@ -540,48 +641,37 @@
         this.batchAddDialogShow = false;
       },
 
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handleChange(file, fileList) {
-        console.info("change file: ", file);
-        console.info("change fileList: ", fileList);
-
-      },
-      handlePreview(file) {
-        console.log("导入结果：", file.response);
-      },
 
       /**
        * 服务器成功响应并处理后回调
        */
-      handleSuccess(response, file, fileList) {
-        console.log("上传结果：", response)
-        if (response.result == false) {
-          this.batchAddErrorMessage = response.message;
-        } else {
-          this.findByCondition();
-          this.$refs.upload.clearFiles();
-          this.batchAddDialogShow = false;
-          this.$notify({
-            title: '成功',
-            message: '批量添加用户成功',
-            type: 'success',
-            duration: 0
-          });
-        }
-      },
-      handleError(err, file, fileList) {
-        console.log("上传失败，原因：", err);
-        this.$refs.upload.clearFiles();
-        this.batchAddDialogShow = false;
-        this.$notify({
-          title: '失败',
-          message: '批量添加用户失败',
-          type: 'error',
-          duration: 0
-        });
-      },
+      // handleSuccess(response, file, fileList) {
+      //   console.log("上传结果：", response)
+      //   if (response.result == false) {
+      //     this.batchAddErrorMessage = response.message;
+      //   } else {
+      //     this.findByCondition();
+      //     this.$refs.upload.clearFiles();
+      //     this.batchAddDialogShow = false;
+      //     this.$notify({
+      //       title: '成功',
+      //       message: '批量添加用户成功',
+      //       type: 'success',
+      //       duration: 0
+      //     });
+      //   }
+      // },
+      // handleError(err, file, fileList) {
+      //   console.log("上传失败，原因：", err);
+      //   this.$refs.upload.clearFiles();
+      //   this.batchAddDialogShow = false;
+      //   this.$notify({
+      //     title: '失败',
+      //     message: '批量添加用户失败',
+      //     type: 'error',
+      //     duration: 0
+      //   });
+      // },
 
       handleSizeChange(val) {
         this.queryForm.pageSize = val;

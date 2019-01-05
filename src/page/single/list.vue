@@ -333,14 +333,7 @@
 
 
     methods: {
-      /**
-       * 批量添加对话框关闭时候执行
-       */
-      handleClose() {
-        this.$refs.upload.clearFiles();
-        this.batchAddDialogShow = false;
-      },
-
+      // 批量添加执行的一系列方法
       handleRemove(file, fileList) {
         console.log(file, fileList);
         fileList.shift(file);
@@ -359,19 +352,6 @@
         console.log("导入结果：", file.response);
       },
 
-      download() {
-        this.batchAddErrorMessage = '';
-        // window.location.href = "http://localhost:8080/single/api/downloadModel";
-        this.downloadFile("/single/api/downloadModel");
-      },
-
-      toBatchAdd() {
-        console.log("唤起批量导入对话框。。。")
-//        this.$refs.upload.clearFiles();
-        this.batchAddErrorMessage = '';
-        this.batchAddDialogShow = true;
-        this.findQuestionBanks();
-      },
       /**
        * 批量导入
        */
@@ -421,6 +401,30 @@
         }
         return false;
       },
+
+
+      download() {
+        this.batchAddErrorMessage = '';
+        // window.location.href = "http://localhost:8080/single/api/downloadModel";
+        this.downloadFile("/single/api/downloadModel");
+      },
+
+      toBatchAdd() {
+        console.log("唤起批量导入对话框。。。")
+//        this.$refs.upload.clearFiles();
+        this.batchAddErrorMessage = '';
+        this.batchAddDialogShow = true;
+        this.findQuestionBanks();
+      },
+      /**
+       * 批量添加对话框关闭时候执行
+       */
+      handleClose() {
+        this.$refs.upload.clearFiles();
+        this.batchAddDialogShow = false;
+      },
+
+
       /*
       * 查找所有题库信息
       * */

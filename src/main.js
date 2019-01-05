@@ -11,8 +11,15 @@ import axios from 'axios'
 Vue.config.productionTip = false
 // Vue.prototype.$ajax = axios
 // const host = "http://47.93.189.30/hn";
+//测试使用
 const host = "http://localhost:8080/hn";
 const wsUrl = "ws://localhost:8080/hn";
+
+//线上使用
+// const host = "http://www.bugu.co/hn";
+// const wsUrl = "ws://www.bugu.co/hn";
+
+
 const global_timeout = 3000;
 
 let invalidTokenFlag = false;
