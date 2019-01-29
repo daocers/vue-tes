@@ -303,13 +303,13 @@
 
     //加载之后执行
     mounted: function () {
-      sessionStorage.setItem("userId", 1);
+      // sessionStorage.setItem("userId", 1);
 
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
       let userId = sessionStorage.getItem("userId");
-      let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
+      let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId + "&sceneId=" + this.sceneId);
       this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {
