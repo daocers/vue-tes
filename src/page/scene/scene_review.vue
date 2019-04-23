@@ -100,7 +100,6 @@
 </template>
 
 <script type="text/javascript">
-  import ElRow from "element-ui/packages/row/src/row";
 
   export default {
     components: {ElRow},

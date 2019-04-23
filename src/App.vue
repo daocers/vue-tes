@@ -9,16 +9,10 @@
   import Vue from 'vue'
   import Element from 'element-ui'
   import 'element-ui/lib/theme-chalk/index.css'
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElCol from "element-ui/packages/col/src/col";
 
   Vue.use(Element)
 
   export default {
-    components: {
-      ElCol,
-      ElRow
-    },
     name: 'app',
     data: function () {
       return {

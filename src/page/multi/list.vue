@@ -75,21 +75,24 @@
 
       <el-table-column
         prop="attr1"
-        label="attr1">
+        label="业务类型">
       </el-table-column>
       <el-table-column
         prop="attr2"
-        label="attr2">
+        label="难度">
       </el-table-column>
       <el-table-column
+        v-if="false"
         prop="attr3"
         label="attr3">
       </el-table-column>
       <el-table-column
+        v-if="false"
         prop="attr4"
         label="attr4">
       </el-table-column>
       <el-table-column
+        v-if="false"
         prop="attr5"
         label="attr5">
       </el-table-column>

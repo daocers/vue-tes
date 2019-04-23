@@ -274,8 +274,6 @@
 
 <script>
   import Vue from 'vue'
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElCol from "element-ui/packages/col/src/col";
 
 
   export default {

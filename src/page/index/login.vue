@@ -137,7 +137,8 @@
               //获取菜单信息
               this.postParam("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
-
+                let menuList = JSON.stringify(res);
+                console.log("菜单列表：", menuList);
                 sessionStorage.setItem("menuList", JSON.stringify(res));
                 this.$router.replace("/help");
               }).catch(e => {

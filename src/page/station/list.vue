@@ -190,7 +190,7 @@
           name:
             [
               {required: true, message: '请输入name', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
           memo:
             [
