@@ -1,5 +1,5 @@
 <template>
-  <div id="exam">
+  <div id="receipt">
     <el-row :gutter="10" style="padding: 5px;">
       <el-form :inline="true">
         <el-form-item>
@@ -125,7 +125,7 @@
         timeUsed: 0,
 
         //定时器引用
-        timer: null,
+        receiptTimer: null,
 
         //是否处理完
         done: false,
@@ -209,9 +209,9 @@
       },
 
       closeTimer() {
-        if (this.timer) {
-          clearInterval(this.timer);
-          this.timer = null;
+        if (this.receiptTimer) {
+          clearInterval(this.receiptTimer);
+          this.receiptTimer = null;
         }
       }
     },
@@ -239,13 +239,13 @@
     //加载之后执行
     mounted: function () {
       //定时器
-      this.timer = setInterval(() => {
+      this.receiptTimer = setInterval(() => {
         this.timeUsed++;
       }, 1000)
       this.$refs.number.focus();
     },
     beforeDestroy: function () {
-      if (this.timer) {
+      if (this.receiptTimer) {
         this.closeTimer();
       }
     },

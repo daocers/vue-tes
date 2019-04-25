@@ -49,6 +49,10 @@
     margin: 0;
   }
 
+  /*解决表格位置错位*/
+  td, th{
+    display: table-cell;
+  }
   #app {
     /*min-width: 1200px;*/
     margin: 0 auto;
