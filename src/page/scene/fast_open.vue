@@ -24,12 +24,14 @@
             format="yyyy-MM-dd HH:mm"
             type="datetime"
             :disabled=true
+
             placeholder="选择日期时间">
           </el-date-picker>
         </el-form-item>
 
       </el-col>
     </el-row>
+
 
     <el-form-item label="作答时间" prop="duration" placeholder="作答时间">
       <el-input type="number" :min="1" v-model="scene.duration" :max="900"></el-input>
@@ -100,6 +102,7 @@
       </el-table>
     </el-row>
 
+
     <el-form-item v-if="scene.paperModel == 2" label="试卷策略" prop="paperPolicyId">
       <el-select v-model="scene.paperPolicyId" placeholder="试卷策略模式">
         <el-option v-for="item in paperPolicyList"
@@ -109,6 +112,28 @@
         </el-option>
       </el-select>
     </el-form-item>
+
+
+    <el-form-item label="翻打凭条" prop="receiptFlag">
+      <el-switch v-model="receiptFlag"></el-switch>
+    </el-form-item>
+
+    <el-row v-if="receiptFlag">
+      <el-col :span="8">
+        <el-form-item label="数量" prop="receiptCount">
+          <el-select v-model="scene.receiptCount" placeholder="">
+            <el-option label="100" :value=100></el-option>
+            <el-option label="50" :value=50></el-option>
+            <el-option label="10" :value=10></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item label="数字长度" prop="numberLength">
+          <el-input v-model="scene.numberLength" type="number" :max="10" :min="5"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
 
 
     <el-form-item label="参考人员" prop="joinInfo"
@@ -218,9 +243,13 @@
         }
       }
       return {
+        time: '',
         departmentList: [],
         stationList: [],
         branchList: [],
+
+        //是否有翻打凭条试题
+        receiptFlag: false,
 
         /*题库id*/
         questionBankList: [],
@@ -231,7 +260,8 @@
           * */
           disabledDate(time) {
             return time.getTime() + 24 * 60 * 60 * 1000 <= Date.now();
-          }
+          },
+
         },
         scene: {
           paperModel: 1,
@@ -313,6 +343,9 @@
           let judge = {type: '判断题', count: data.judgeCount, score: data.judgeScore};
           let arr = [single, multi, judge];
           this.simpleModel = arr;
+          if (data.receiptCount > 0) {
+            this.receiptFlag = true;
+          }
         } else {
           console.log("查询无数据")
         }

@@ -21,7 +21,7 @@
 
     </el-row>
 
-    <el-row>
+    <el-row id="common">
       <el-col :span="18">
         <el-card style="margin-bottom: 10px; font-size: 18px; margin-right: 10px;">
           <div class="title">{{currentQuestion.title}}</div>
@@ -49,8 +49,10 @@
           </div>
         </el-card>
         <el-button type="primary" plain @click="toPrev()" :disabled="this.currentQuestionIdx == 0">上一题</el-button>
-        <el-button type="primary" @click="toNext()" style="margin-left: 100px;" :disabled="this.currentQuestionIdx == this.questionList.length - 1">下一题</el-button>
-        <el-button type="warning" @click="toReceipt()" style="margin-left: 100px;" >开启翻打凭条答题  </el-button>
+        <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
+                   style="margin-left: 100px;">下一题
+        </el-button>
+        <el-button type="warning" @click="toReceipt()">开始翻打凭条考试</el-button>
       </el-col>
       <el-col :span="6">
         <el-table
@@ -93,114 +95,113 @@
       </el-col>
     </el-row>
 
-  </div>
-
-  <div id="receipt">
-    <el-row :gutter="10" style="padding: 5px;">
-      <el-form :inline="true">
-        <el-form-item>
-          <el-input class="index" :value="numberIndex + 1" disabled>
-            <template slot="prepend">凭条序号</template>
-          </el-input>
-        </el-form-item>
-        <div style="float: right">
+    <el-row id="receipt">
+      <el-row :gutter="10" style="padding: 5px;">
+        <el-form :inline="true">
           <el-form-item>
-            <el-input class="timer" v-model="getTimeInfo" disabled style="width: 200px; color: red;">
-              <template slot="prepend">已用时间</template>
+            <el-input class="index" :value="numberIndex + 1" disabled>
+              <template slot="prepend">凭条序号</template>
             </el-input>
           </el-form-item>
-
-          <el-button v-if="showResult" type="primary" @click="commitPractise()">提交练习</el-button>
-        </div>
-
-      </el-form>
-
-    </el-row>
-
-    <el-dialog title="做答结束" :visible.sync="done"
-               :close-on-click-modal="false"
-               :close-on-press-escape="false"
-               width="50%"
-               :show-close="false">
-      <el-form label-position="left">
-        <el-form-item label="做答时间" label-width="80px">
-          <el-input v-model="getTimeInfo" disabled=""></el-input>
-        </el-form-item>
-
-        <el-form-item label="正确数量" label-width="80px">
-          <el-input v-model="tCount" disabled></el-input>
-        </el-form-item>
-
-
-        <el-form-item label="错误数量" label-width="80px">
-          <el-input v-model="fCount" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="正确率" label-width="80px">
-          <el-input v-model="rate" disabled>
-            <template slot="append"> %</template>
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="toOnceMore">再练一场</el-button>
-        <el-button type="primary" @click="toDetail">查看详情</el-button>
-      </div>
-    </el-dialog>
-
-    <el-row>
-      <el-col :span="16">
-        <el-card style="margin-bottom: 10px; font-size: 18px; margin-right: 10px;">
-          <el-row style="margin-top: 50px;">
-            <el-col :span="16" :offset="4">
-              <el-card style="font-weight: 900; font-size: 23px;" shadow="always">
-                当前数字：{{numberList[numberIndex]}}
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <el-row style="margin-top: 100px; margin-bottom: 100px;">
-            <el-col :span="16" :offset="4">
-              <el-input class="number" style="float: right;" ref="number" @keyup.enter.native="handleBlur"
-                        v-model="yourInput">
-                <template slot="prepend">录入框</template>
+          <div style="float: right">
+            <el-form-item>
+              <el-input class="timer" v-model="getTimeInfo" disabled style="width: 200px; color: red;">
+                <template slot="prepend">已用时间</template>
               </el-input>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-      <el-col :span="8" v-if="showResult">
-        <el-table
-          :data="numberList"
-          border
-          height="500px"
-          max-height="600px"
-          :row-class-name="setRowClass"
-          style="width: 100%;">
-          <el-table-column
-            type="index"
-            label="序号"
-            width="60">
-          </el-table-column>
-          <el-table-column
-            prop="number"
-            label="数字"
-            width="80">
-            <template slot-scope="scope">
-              {{scope.row}}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="yourNumber"
-            label="我录入的"
-            width="80">
-            <template slot-scope="scope">
-              {{yourInputList[scope.$index]}}
-            </template>
-          </el-table-column>
-        </el-table>
+            </el-form-item>
 
-      </el-col>
+            <el-button v-if="showResult" type="primary" @click="commitReceipt">提交凭条</el-button>
+          </div>
+
+        </el-form>
+
+      </el-row>
+
+      <el-dialog title="做答结束" :visible.sync="done"
+                 :close-on-click-modal="false"
+                 :close-on-press-escape="false"
+                 width="50%"
+                 :show-close="false">
+        <el-form label-position="left">
+          <el-form-item label="做答时间" label-width="80px">
+            <el-input v-model="getTimeInfo" disabled=""></el-input>
+          </el-form-item>
+
+          <el-form-item label="正确数量" label-width="80px">
+            <el-input v-model="tCount" disabled></el-input>
+          </el-form-item>
+
+
+          <el-form-item label="错误数量" label-width="80px">
+            <el-input v-model="fCount" disabled></el-input>
+          </el-form-item>
+
+          <el-form-item label="正确率" label-width="80px">
+            <el-input v-model="rate" disabled>
+              <template slot="append"> %</template>
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!--          <el-button @click="toOnceMore">再练一场</el-button>-->
+          <el-button type="primary" @click="">查看详情</el-button>
+        </div>
+      </el-dialog>
+
+      <el-row>
+        <el-col :span="16">
+          <el-card style="margin-bottom: 10px; font-size: 18px; margin-right: 10px;">
+            <el-row style="margin-top: 50px;">
+              <el-col :span="16" :offset="4">
+                <el-card style="font-weight: 900; font-size: 23px;" shadow="always">
+                  当前数字：{{numberList[numberIndex]}}
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <el-row style="margin-top: 100px; margin-bottom: 100px;">
+              <el-col :span="16" :offset="4">
+                <el-input class="number" style="float: right;" ref="number" @keyup.enter.native="handleBlur"
+                          v-model="yourInput">
+                  <template slot="prepend">录入框</template>
+                </el-input>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+        <el-col :span="8" v-if="showResult">
+          <el-table
+            :data="numberList"
+            border
+            height="500px"
+            max-height="600px"
+            :row-class-name="setReceiptRowClass"
+            style="width: 100%;">
+            <el-table-column
+              type="index"
+              label="序号"
+              width="60">
+            </el-table-column>
+            <el-table-column
+              prop="number"
+              label="数字"
+              width="80">
+              <template slot-scope="scope">
+                {{scope.row}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="yourNumber"
+              label="我录入的"
+              width="80">
+              <template slot-scope="scope">
+                {{yourInputList[scope.$index]}}
+              </template>
+            </el-table-column>
+          </el-table>
+
+        </el-col>
+      </el-row>
     </el-row>
 
   </div>
@@ -212,6 +213,12 @@
     ws: null,
     data() {
       return {
+        //普通试题框展示，凭条暂时不展示
+        showCommon: true,
+        showReceipt: false,
+        //是否有翻打凭条的数据
+        hasReceipt: false,
+
         /*被选中的选项*/
         checkedItems: [],
         scene: {},
@@ -239,7 +246,8 @@
         //考试剩余时间
         secondsLeft: 0,
 
-/*以下是翻打凭条的数据*/
+
+        // 以下是翻打凭条数据
         number: '',
         numberIndex: 0,
         numberList: [],
@@ -262,6 +270,8 @@
         rate: 0,
         //是否显示结果
         showResult: false,
+
+
       }
     },
     methods: {
@@ -296,6 +306,16 @@
         }
       },
 
+      setReceiptRowClass(row) {
+        let num = row.row;
+        let index = row.rowIndex;
+        if (num == this.yourInputList[index]) {
+          return "right-input";
+        } else {
+          return "wrong-input"
+        }
+      },
+
       jumpTo(idx) {
         console.log("准备跳转到第几题：", idx);
         this.handleQuestionChange(idx);
@@ -311,6 +331,42 @@
         this.handleQuestionChange(this.currentQuestionIdx + 1);
       },
       /**
+       * 开启翻打凭条试题
+       */
+      toReceipt() {
+        //  1 普通试题模块设置不可见，翻打凭条设置可见
+        //   2 处理凭条数字相关信息
+        //   3 处理凭条定时器
+        this.showCommon = false;
+        this.showReceipt = true;
+        this.showResult = true;
+        //定时器
+        this.receiptTimer = setInterval(() => {
+          this.timeUsed++;
+        }, 1000)
+        this.$refs.number.focus();
+      },
+
+      handleBlur() {
+        let num = this.yourInput;
+        if (!num) {
+          return false;
+        }
+        this.yourInputList.push(num);
+        //录完了
+        if (this.numberIndex == this.numberList.length - 1) {
+          //结束定时器
+          this.closeTimer();
+          this.processResult();
+          this.done = true;
+          return;
+        }
+        this.yourInput = '';
+        this.numberIndex++;
+        // this.number = this.numberList[this.numberIndex];
+      },
+
+      /**
        * 上一题
        */
       toPrev() {
@@ -319,14 +375,6 @@
           return false;
         }
         this.handleQuestionChange(this.currentQuestionIdx - 1);
-      },
-
-      //翻打凭条考试
-      toReceipt(){
-      //  todo 1 设置常规试题div不可见，设置翻打凭条部分可见
-      //  2 设置凭条定时器
-      //   3 获取凭条数据信息（加载试题信息时候获取或者点击时候获取，倾向于前者）
-      //   4 设置其他参数
       },
       /**
        * 提交试卷
@@ -440,89 +488,21 @@
         if (this.timer) {
           clearInterval(this.timer);
         }
-      }
-
-
-      /*以下为翻打凭条的数据*/
-      setRowClass(row) {
-        let num = row.row;
-        let index = row.rowIndex;
-        if (num == this.yourInputList[index]) {
-          return "right-input";
-        } else {
-          return "wrong-input"
-        }
-      },
-
-
-      /**
-       * 处理最后结果
-       */
-      processResult() {
-        for (let i = 0; i < this.numberList.length; i++) {
-          let num = this.numberList[i];
-          let yourNum = this.yourInputList[i];
-          if (num == yourNum) {
-            this.tCount++;
-          } else {
-            this.fCount++;
-          }
-          let rate = this.tCount / (this.tCount + this.fCount) * 100;
-          this.rate = rate.toFixed(1);
-          this.showResult = true;
-        }
-      },
-      handleBlur() {
-        let num = this.yourInput;
-        if (!num) {
-          return false;
-        }
-        this.yourInputList.push(num);
-        //录完了
-        if (this.numberIndex == this.numberList.length - 1) {
-          //结束定时器
-          this.closeTimer();
-          this.processResult();
-          this.done = true;
-          return;
-        }
-        this.yourInput = '';
-        this.numberIndex++;
       },
 
       /**
-       * 提交练习信息
+       * 提交凭条信息
        */
-      async commitPractise() {
-        this.doPost("/receiptRecord/api/save", {
-          size: this.numberList.length,
-          seconds: this.timeUsed,
-          rightCount: this.tCount,
-          falseCount: this.fCount,
-          rate: this.rate
-        }).then(res => {
-          console.log("提交练习", res);
-        })
-      },
-
-      toDetail() {
-        this.done = false;
-      },
-      toOnceMore() {
-        this.$router.push("/practise")
-      },
-
-      closeReceiptTimer() {
-        if (this.receiptTimer) {
-          clearInterval(this.receiptTimer);
-          this.receiptTimer = null;
-        }
+      async commitReceipt() {
+        let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
+          + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
+          this.yourInputList);
+        console.log("提交凭条结果：", data);
       }
+
     },
 
-
     computed: {
-      // 单打凭条使用时间信息
       getTimeInfo() {
         let timeUsed = this.timeUsed;
         let s = timeUsed % 60;
@@ -541,14 +521,17 @@
       }
     },
 
+
     //加载之后执行
     mounted: function () {
+      sessionStorage.setItem("userId", 1);
       // sessionStorage.setItem("userId", 1);
 
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
       let userId = sessionStorage.getItem("userId");
+      // let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
       let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId + "&sceneId=" + this.sceneId);
       this.ws = ws;
       console.log("初始化");
@@ -654,18 +637,25 @@
         return false;
       }
 
-      // let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
-      // if (scene) {
-      //   this.scene = scene;
-      //   let time = new Date();
-      //   this.endTime = new Date(time.getTime() + scene.duration * 60000);
-      // } else {
-      //   this.$notify.error(({
-      //     title: '错误',
-      //     message: '没有找到该场次'
-      //   }))
-      //   return false;
-      // }
+      let numberList = await this.doGet("/scene/api/getReceiptNumberList?sceneId=" + sceneId);
+      if (numberList && numberList.length > 0) {
+        this.numberList = numberList;
+        this.number = numberList[0];
+        this.numberIndex = 0;
+      }
+
+      let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
+      if (scene) {
+        this.scene = scene;
+        let time = new Date();
+        this.endTime = new Date(time.getTime() + scene.duration * 60000);
+      } else {
+        this.$notify.error(({
+          title: '错误',
+          message: '没有找到该场次'
+        }))
+        return false;
+      }
 
     }
   }
@@ -701,3 +691,4 @@
 
 
 </style>
+
