@@ -20,7 +20,7 @@ const wsUrl = "ws://localhost:9999/hn";
 // const wsUrl = "ws://www.bugu.co/hn";
 
 
-const global_timeout = 3000;
+const global_timeout = 60000;
 
 let invalidTokenFlag = false;
 

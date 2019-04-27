@@ -108,6 +108,7 @@
               <el-menu-item index="/scene/myJoin"><i class="bugu-icon-join"></i> 我参加的</el-menu-item>
               <el-menu-item index="/scene/myOpen"><i class="bugu-icon-create"></i> 我开场的</el-menu-item>
               <el-menu-item index="/paper"><i class="bugu-icon-score"></i> 成绩查询</el-menu-item>
+              <el-menu-item index="/paperPolicy/edit"><i class="bugu-icon-score"></i> 试卷策略</el-menu-item>
             </el-submenu>
           </el-menu>
         </div>

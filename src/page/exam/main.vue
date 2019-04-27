@@ -21,7 +21,7 @@
 
     </el-row>
 
-    <el-row id="common">
+    <el-row id="common" v-if="showCommon">
       <el-col :span="18">
         <el-card style="margin-bottom: 10px; font-size: 18px; margin-right: 10px;">
           <div class="title">{{currentQuestion.title}}</div>
@@ -39,12 +39,12 @@
               <el-checkbox v-for="item in currentChoiceItems" :label="item" :key="item">{{item}}</el-checkbox>
             </el-checkbox-group>
 
-            <el-checkbox-group @change="handleAnswer" v-show="currentQuestion.questionType == '3'"
-                               :max="1"
-                               v-model="checkedItems">
-              <el-checkbox label="T">正确</el-checkbox>
-              <el-checkbox label="F">错误</el-checkbox>
-            </el-checkbox-group>
+            <el-radio-group @change="handleAnswer" v-show="currentQuestion.questionType == '3'"
+                            :max="1"
+                            v-model="checkedItems">
+              <el-radio label="T">正确</el-radio>
+              <el-radio label="F">错误</el-radio>
+            </el-radio-group>
 
           </div>
         </el-card>
@@ -52,7 +52,7 @@
         <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
                    style="margin-left: 100px;">下一题
         </el-button>
-        <el-button type="warning" @click="toReceipt()">开始翻打凭条考试</el-button>
+        <el-button type="warning" @click="toReceipt" v-if="numberList.length > 0">开始翻打凭条考试</el-button>
       </el-col>
       <el-col :span="6">
         <el-table
@@ -95,7 +95,7 @@
       </el-col>
     </el-row>
 
-    <el-row id="receipt">
+    <el-row id="receipt" v-if="showReceipt">
       <el-row :gutter="10" style="padding: 5px;">
         <el-form :inline="true">
           <el-form-item>
@@ -110,7 +110,7 @@
               </el-input>
             </el-form-item>
 
-            <el-button v-if="showResult" type="primary" @click="commitReceipt">提交凭条</el-button>
+            <el-button :disabled="done" type="primary" @click="commitReceipt">提交凭条</el-button>
           </div>
 
         </el-form>
@@ -162,7 +162,7 @@
             <el-row style="margin-top: 100px; margin-bottom: 100px;">
               <el-col :span="16" :offset="4">
                 <el-input class="number" style="float: right;" ref="number" @keyup.enter.native="handleBlur"
-                          v-model="yourInput">
+                          v-model="yourInput" autofocus="autofocus">
                   <template slot="prepend">录入框</template>
                 </el-input>
               </el-col>
@@ -344,7 +344,6 @@
         this.receiptTimer = setInterval(() => {
           this.timeUsed++;
         }, 1000)
-        this.$refs.number.focus();
       },
 
       handleBlur() {
@@ -355,10 +354,8 @@
         this.yourInputList.push(num);
         //录完了
         if (this.numberIndex == this.numberList.length - 1) {
-          //结束定时器
-          this.closeTimer();
-          this.processResult();
-          this.done = true;
+          this.commitReceipt();
+
           return;
         }
         this.yourInput = '';
@@ -381,19 +378,28 @@
        */
       async commitPaper() {
         console.log("提交试卷！");
+        this.closeTimer();
         let paperId = sessionStorage.getItem("paperId");
         let res = await this.postEntity("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
-          this.closeTimer();
           this.$notify.success({
             title: "成功",
             message: '交卷成功',
             duration: 10,
           });
-          //五秒后跳转到摘要页面
-          setTimeout(() => {
-            this.$router.push({path: '/help'})
-          }, 5000)
+
+          this.$alert("提交试卷成功", "提示", {
+            confirmButtonText: '确定',
+            type: 'success',
+            //跳转到摘要页面
+            callback: () => {
+              this.$router.push({path: "/help"})
+            }
+          })
+          // 五秒后跳转到摘要页面
+          // setTimeout(() => {
+          //   this.$router.push({path: '/help'})
+          // }, 5000)
 
         } else {
           this.$notify.error({
@@ -408,6 +414,7 @@
 
       /*处理答案*/
       handleAnswer(checked) {
+        console.log("checked:", checked)
         if (this.checkedItems instanceof Array) {
           this.checkedItems = this.checkedItems.sort(function (x, y) {
             if (x < y) {
@@ -490,14 +497,29 @@
         }
       },
 
+      closeReceiptTimer() {
+        if (this.receiptTimer) {
+          clearInterval(this.receiptTimer);
+        }
+      },
+
       /**
        * 提交凭条信息
        */
       async commitReceipt() {
+
         let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
           + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
           this.yourInputList);
         console.log("提交凭条结果：", data);
+        // 结束定时器
+        this.closeReceiptTimer();
+        // this.processResult();
+        this.done = true;
+
+        //关闭凭条考试面板，回到普通考试
+        this.showReceipt = false;
+        this.showCommon = true;
       }
 
     },
@@ -638,6 +660,7 @@
       }
 
       let numberList = await this.doGet("/scene/api/getReceiptNumberList?sceneId=" + sceneId);
+      console.log("获取到凭条数据", numberList)
       if (numberList && numberList.length > 0) {
         this.numberList = numberList;
         this.number = numberList[0];

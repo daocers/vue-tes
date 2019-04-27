@@ -191,7 +191,7 @@
        */
       async commitPractise() {
         this.doPost("/receiptRecord/api/save", {
-          size: this.numberList.length,
+          count: this.numberList.length,
           seconds: this.timeUsed,
           rightCount: this.tCount,
           falseCount: this.fCount,
@@ -199,6 +199,11 @@
         }).then(res => {
           console.log("提交练习", res);
         })
+
+        // let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=-1&seconds="
+        //   + this.timeUsed + "&receiptCount=" + this.numberList.length,
+        //   this.yourInputList);
+        // console.log("提交凭条练习数据结果：", data);
       },
 
       toDetail() {

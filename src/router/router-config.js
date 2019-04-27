@@ -107,6 +107,8 @@ const PractiseMain = () => import("../page/number/practise")
 const PractiseList = () => import("../page/receipt/practiseList")
 
 
+const PaperPolicyAdd = () => import("../page/paperPolicy/add")
+
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
@@ -169,6 +171,8 @@ export default [
       {path: '/questionType', component: QuestionTypeIndex},
       {path: '/questionBank', component: QuestionBankIndex},
       {path: '/paperPolicy', component: PaperPolicyIndex},
+      //试卷策略编辑
+      {path: '/paperPolicy/edit', component: PaperPolicyAdd},
 
       //考试
       {path: '/exam', component: ExamIndex},

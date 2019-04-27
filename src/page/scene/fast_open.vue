@@ -68,9 +68,7 @@
     </el-row>
 
 
-    <el-form-item label="识别码" prop="authCode">
-      <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
-    </el-form-item>
+
 
     <el-form-item label="使用题库" prop="questionBankId">
       <el-select v-model="scene.questionBankId" placeholder="请选择本场使用的题库">
@@ -99,6 +97,7 @@
             <el-input type="text" size="small" v-model="scope.row.score"></el-input>
           </template>
         </el-table-column>
+
       </el-table>
     </el-row>
 
@@ -136,34 +135,44 @@
     </el-row>
 
 
-    <el-form-item label="参考人员" prop="joinInfo"
-                  style="margin-top: 30px; border: 1px solid gainsboro; border-radius: 3px;">
-      <div>
-        <el-form-item label="机构" prop="">
-          <el-select multiple v-model="scene.branchIds" placeholder="选择参考机构">
-            <el-option v-for="item in branchList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-          <el-checkbox-group v-model="scene.containSub">
-            <el-checkbox label="包含下属分行" name="type" :true-label="1" :false-label="2"></el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-      </div>
 
-      <div>
-        <el-form-item label="部门" prop="">
-          <el-select multiple v-model="scene.departmentIds" placeholder="">
-            <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
-      <div>
-        <el-form-item label="岗位" prop="">
-          <el-select multiple v-model="scene.stationIds" placeholder="">
-            <el-option v-for="item in stationList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
-    </el-form-item>
+
+
+    <el-row style="margin-top: 30px; border: 1px solid #b3d8ff; border-radius: 3px;">
+      <el-form-item label="识别码" prop="authCode">
+        <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
+      </el-form-item>
+
+      <el-form-item label="参考人员" prop="joinInfo"
+                    >
+        <div>
+          <el-form-item label="机构" prop="">
+            <el-select multiple v-model="scene.branchIds" placeholder="选择参考机构">
+              <el-option v-for="item in branchList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+            <el-checkbox-group v-model="scene.containSub">
+              <el-checkbox label="包含下属分行" name="type" :true-label="1" :false-label="2"></el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </div>
+
+        <div>
+          <el-form-item label="部门" prop="">
+            <el-select multiple v-model="scene.departmentIds" placeholder="">
+              <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="岗位" prop="">
+            <el-select multiple v-model="scene.stationIds" placeholder="">
+              <el-option v-for="item in stationList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </el-form-item>
+    </el-row>
+
 
 
     <el-form-item style="margin-top: 30px">
@@ -194,12 +203,12 @@
       };
       var checkAuthCode = (rule, value, callback) => {
         if (!value || value == '' || value == undefined) {
-          callback(new Error("请输入10位场次识别码"));
+          callback(new Error("请输入6-10位场次识别码"));
         } else {
-          let reg = /^[0-9a-zA-Z]{10}$/;
+          let reg = /^[0-9a-zA-Z]{6,10}$/;
           if (!reg.test(value)) {
             value = '';
-            callback(new Error("非法字符，请输入十位字母或数字"));
+            callback(new Error("非法识别码，请输入6-10位字母或数字"));
           } else {
             callback();
           }
@@ -230,14 +239,16 @@
         let branchIds = this.scene.branchIds;
         let stationIds = this.scene.stationIds;
         let departmentIds = this.scene.departmentIds;
+        let authCode = this.scene.authCode;
         if (!this.branchList && !this.departmentList && !this.stationList) {
           console.log("不是管理员")
           callback(new Error("您还不是管理员，请联系系统负责人申请！"))
         } else if ((!branchIds || branchIds.length == 0)
           && (!stationIds || stationIds.length == 0)
-          && (!departmentIds || departmentIds.length == 0)) {
+          && (!departmentIds || departmentIds.length == 0)
+          && !authCode) {
           console.log("没有选择参考范围")
-          callback(new Error("请设置参考人员范围"))
+          callback(new Error("请设置参考人员范围或者识别码"))
         } else {
           callback();
         }
@@ -304,7 +315,7 @@
             {required: true, message: '请选择试卷生成方式', trigger: 'change'}
           ],
           authCode: [
-            {required: true, message: '请输入场次识别码', trigger: 'blur'},
+            // {required: true, message: '请输入场次识别码', trigger: 'blur'},
             {validator: checkAuthCode, trigger: 'blur'},
           ],
           questionBankId: [

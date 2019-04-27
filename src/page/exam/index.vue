@@ -70,6 +70,20 @@
     },
     methods: {
       toNotice(scene){
+        let status = scene.status;
+        let msg = "";
+        if(status == 1){
+          msg = "考试未开始";
+        }else if(status == 3){
+          msg = "考试已结束";
+        }
+        if(msg){
+          this.$message({
+            type: 'warning',
+            message: "考试未开始"
+          });
+          return false;
+        }
         console.log("scene:", scene);
         sessionStorage.setItem("scene", JSON.stringify(scene));
         this.$router.push("/exam/notice?id=" + scene.id);
