@@ -21,7 +21,8 @@
           <template  slot-scope="scope">
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
-            <el-button type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>
+<!--            <el-button type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>-->
+            <el-button type="text" @click="nextStep(scope.row)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -36,6 +37,12 @@
             <el-tag size="mini" type="warning" v-if="scope.row.status == 2">考试中</el-tag>
             <el-tag size="mini" type="success" v-if="scope.row.status == 3">已封场</el-tag>
             <el-tag size="mini" type="info" v-if="scope.row.status == 4">取消/作废</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="examStatus" label="考试情况">
+          <template slot-scope="scope">
+            <el-tag size="mini" type="primary">占位</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -88,6 +95,32 @@
         sessionStorage.setItem("scene", JSON.stringify(scene));
         this.$router.push("/exam/notice?id=" + scene.id);
       },
+
+      nextStep(scene){
+        let status = scene.status;
+        let msg = "";
+        if(status == 1){
+          msg = "考试未开始";
+        }else if(status == 3){
+          msg = "考试已结束";
+        }
+        if(msg){
+          this.$message({
+            type: 'warning',
+            message: msg
+          });
+          return false;
+        }
+        console.log("scene:", scene);
+        sessionStorage.setItem("scene", JSON.stringify(scene));
+        //有验证码输入验证码，没验证码直接到考试须知
+        if(scene.authCode){
+          this.$router.push("/exam/entrance?id=" + scene.id);
+        }else{
+          this.$router.push("/exam/notice?id=" + scene.id);
+        }
+      },
+
       findByCondition: async function () {
         let data = await this.postEntity("/exam/api/findReadyScene?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize);
         if (data) {

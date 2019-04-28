@@ -52,7 +52,7 @@
         <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
                    style="margin-left: 100px;">下一题
         </el-button>
-        <el-button type="warning" @click="toReceipt" v-if="numberList.length > 0">开始翻打凭条考试</el-button>
+        <el-button type="warning" style="float: right; margin-right: 10px;" @click="toReceipt" v-if="numberList.length > 0">开始翻打凭条考试</el-button>
       </el-col>
       <el-col :span="6">
         <el-table
@@ -117,36 +117,36 @@
 
       </el-row>
 
-      <el-dialog title="做答结束" :visible.sync="done"
-                 :close-on-click-modal="false"
-                 :close-on-press-escape="false"
-                 width="50%"
-                 :show-close="false">
-        <el-form label-position="left">
-          <el-form-item label="做答时间" label-width="80px">
-            <el-input v-model="getTimeInfo" disabled=""></el-input>
-          </el-form-item>
+<!--      <el-dialog title="做答结束" :visible.sync="done"-->
+<!--                 :close-on-click-modal="false"-->
+<!--                 :close-on-press-escape="false"-->
+<!--                 width="50%"-->
+<!--                 :show-close="false">-->
+<!--        <el-form label-position="left">-->
+<!--          <el-form-item label="做答时间" label-width="80px">-->
+<!--            <el-input v-model="getTimeInfo" disabled=""></el-input>-->
+<!--          </el-form-item>-->
 
-          <el-form-item label="正确数量" label-width="80px">
-            <el-input v-model="tCount" disabled></el-input>
-          </el-form-item>
+<!--          <el-form-item label="正确数量" label-width="80px">-->
+<!--            <el-input v-model="tCount" disabled></el-input>-->
+<!--          </el-form-item>-->
 
 
-          <el-form-item label="错误数量" label-width="80px">
-            <el-input v-model="fCount" disabled></el-input>
-          </el-form-item>
+<!--          <el-form-item label="错误数量" label-width="80px">-->
+<!--            <el-input v-model="fCount" disabled></el-input>-->
+<!--          </el-form-item>-->
 
-          <el-form-item label="正确率" label-width="80px">
-            <el-input v-model="rate" disabled>
-              <template slot="append"> %</template>
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <!--          <el-button @click="toOnceMore">再练一场</el-button>-->
-          <el-button type="primary" @click="">查看详情</el-button>
-        </div>
-      </el-dialog>
+<!--          <el-form-item label="正确率" label-width="80px">-->
+<!--            <el-input v-model="rate" disabled>-->
+<!--              <template slot="append"> %</template>-->
+<!--            </el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          &lt;!&ndash;          <el-button @click="toOnceMore">再练一场</el-button>&ndash;&gt;-->
+<!--          <el-button type="primary" @click="">查看详情</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
 
       <el-row>
         <el-col :span="16">
@@ -334,6 +334,13 @@
        * 开启翻打凭条试题
        */
       toReceipt() {
+        if(this.done){
+          this.$message({
+            type: 'warning',
+            message: "已经提交过凭条答案",
+          })
+          return false;
+        }
         //  1 普通试题模块设置不可见，翻打凭条设置可见
         //   2 处理凭条数字相关信息
         //   3 处理凭条定时器

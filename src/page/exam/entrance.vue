@@ -5,7 +5,8 @@
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <el-input placeholder="请输入场次授权码" v-model="authCode" class="input-with-select">
-              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试
+<!--              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试-->
+              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toNotice">进入考试
               </el-button>
             </el-input>
           </div>
@@ -26,6 +27,24 @@
       }
     },
     methods: {
+      async toNotice(){
+        let res = await  this.doPost("/scene/api/checkAuthCode", {
+          sceneId: this.sceneId,
+          authCode: this.authCode
+        }, "form")
+        console.warn("校验验证码结果：", res);
+        if(res && res.result && res.data){
+          this.$router.push("/exam/notice");
+          sessionStorage.setItem("authCode", this.authCode)
+        }
+        // else{
+        //   this.$message({
+        //     type: 'warning',
+        //     message: '验证码失败',
+        //     title: '提示'
+        //   })
+        // }
+      },
       async toExam() {
         //校验场次状态
         let res = await this.doPost("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode}, "form");

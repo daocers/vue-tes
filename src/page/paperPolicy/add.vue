@@ -5,9 +5,9 @@
 
         <el-form label-position="left" size="small" :model="paperPolicy" :rules="rules" ref="addForm"
                  label-width="80px">
-          <el-form-item v-if="!paperPolicy.id" label="编码" prop="code">
-            <el-input v-model="paperPolicy.code" placeholder="请输入"></el-input>
-          </el-form-item>
+<!--          <el-form-item v-if="!paperPolicy.id" label="编码" prop="code">-->
+<!--            <el-input v-model="paperPolicy.code" placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
           <el-form-item label="策略名称" prop="name">
             <el-input v-model="paperPolicy.name" placeholder="请输入"></el-input>
           </el-form-item>
@@ -19,7 +19,7 @@
           <!--          </el-form-item>-->
 
           <el-form-item label="单选题" prop="single">
-            <el-table :data="singleModel" size="small"
+            <el-table :data="paperPolicy.singleInfo" size="small"
                       style="width: 100%">
               <el-table-column prop="busiType" label="业务类型">
                 <template slot-scope="scope">
@@ -47,14 +47,17 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5" :min="0.5"></el-input-number>
+                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                                   :min="0.5"></el-input-number>
                 </template>
               </el-table-column>
 
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button size="small" type="primary" icon="el-icon-edit" circle @click="addLine('single')"></el-button>
-                  <el-button size="small" type="danger" icon="el-icon-delete" circle @click="removeLine('single', scope.$index)"></el-button>
+                  <el-button size="small" type="primary" icon="el-icon-edit" circle
+                             @click="addLine('single')"></el-button>
+                  <el-button size="small" type="danger" icon="el-icon-delete" circle
+                             @click="removeLine('single', scope.$index)"></el-button>
                 </template>
               </el-table-column>
 
@@ -62,7 +65,7 @@
           </el-form-item>
 
           <el-form-item label="多选题" prop="multi">
-            <el-table :data="multiModel" size="small"
+            <el-table :data="paperPolicy.multiInfo" size="small"
                       style="width: 100%">
               <el-table-column prop="busiType" label="业务类型">
                 <template slot-scope="scope">
@@ -90,15 +93,26 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5" :min="0.5"></el-input-number>
+                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                                   :min="0.5"></el-input-number>
                 </template>
               </el-table-column>
+
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button size="small" type="primary" icon="el-icon-edit" circle
+                             @click="addLine('single')"></el-button>
+                  <el-button size="small" type="danger" icon="el-icon-delete" circle
+                             @click="removeLine('single', scope.$index)"></el-button>
+                </template>
+              </el-table-column>
+
 
             </el-table>
           </el-form-item>
 
           <el-form-item label="判断题" prop="judge">
-            <el-table :data="judgeModel" size="small"
+            <el-table :data="paperPolicy.judgeInfo" size="small"
                       style="width: 100%">
               <el-table-column prop="busiType" label="业务类型">
                 <template slot-scope="scope">
@@ -126,44 +140,38 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5" :min="0.5"></el-input-number>
+                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                                   :min="0.5"></el-input-number>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button size="small" type="primary" icon="el-icon-edit" circle
+                             @click="addLine('single')"></el-button>
+                  <el-button size="small" type="danger" icon="el-icon-delete" circle
+                             @click="removeLine('single', scope.$index)"></el-button>
                 </template>
               </el-table-column>
 
             </el-table>
           </el-form-item>
 
-          <!--          <el-form-item label="翻打凭条" prop="single">-->
-          <!--            <el-table :data="simpleModel" size="small"-->
-          <!--                      style="width: 100%">-->
-          <!--&lt;!&ndash;              <el-table-column prop="type" label="题型" width="180px"></el-table-column>&ndash;&gt;-->
-          <!--&lt;!&ndash;              <el-table-column prop="count" label="数量">&ndash;&gt;-->
-          <!--&lt;!&ndash;                <template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;                  <el-input type="number" size="small" v-model="scope.row.count"></el-input>&ndash;&gt;-->
-          <!--&lt;!&ndash;                </template>&ndash;&gt;-->
-          <!--&lt;!&ndash;              </el-table-column>&ndash;&gt;-->
-          <!--&lt;!&ndash;              <el-table-column prop="score" label="分值">&ndash;&gt;-->
-          <!--&lt;!&ndash;                <template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;                  <el-input type="text" size="small" v-model="scope.row.score"></el-input>&ndash;&gt;-->
-          <!--&lt;!&ndash;                </template>&ndash;&gt;-->
-          <!--&lt;!&ndash;              </el-table-column>&ndash;&gt;-->
-          <!--              <el-col :span="8">-->
-          <!--                <el-form-item label="数量" prop="receiptCount">-->
-          <!--                  <el-select v-model="scene.receiptCount" placeholder="">-->
-          <!--                    <el-option label="100" :value=100></el-option>-->
-          <!--                    <el-option label="50" :value=50></el-option>-->
-          <!--                    <el-option label="10" :value=10></el-option>-->
-          <!--                  </el-select>-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-          <!--              <el-col :span="8">-->
-          <!--                <el-form-item label="数字长度" prop="numberLength">-->
-          <!--                  <el-input v-model="scene.numberLength" type="number" :max="10" :min="5"></el-input>-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-
-          <!--            </el-table>-->
-          <!--          </el-form-item>-->
+          <el-form-item label="翻打凭条" prop="receiptFlag">
+            <el-switch v-model="receiptFlag"></el-switch>
+          </el-form-item>
+          <el-col :span="18" v-if="receiptFlag">
+            <el-form-item label="凭条张数" prop="receiptCount">
+              <el-select v-model="paperPolicy.receiptCount" placeholder="">
+                <el-option label="100" :value=100></el-option>
+                <el-option label="50" :value=50></el-option>
+                <el-option label="10" :value=10></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="数字长度" prop="numberLength">
+              <el-input v-model="paperPolicy.numberLength" type="number" :max="10" :min="5"></el-input>
+            </el-form-item>
+          </el-col>
 
           <el-form-item>
             <el-button type="primary" @click="add">保存</el-button>
@@ -186,104 +194,78 @@
 <script>
   export default {
     data() {
+      var checkContent = (rule, value, callback) => {
+        console.log("真正校验")
+        let total = 0;
+        for (let idx in this.paperPolicy.singleInfo) {
+          let item = this.paperPolicy.singleInfo[idx];
+          let count = item.count;
+          let score = item.score;
+          if ((!count && score) || (count && !score)) {
+            callback(new Error("请设置题量和分值"));
+          }
+          if (count) {
+            total = total + count;
+          }
+        }
+
+        for (let idx in this.paperPolicy.multiInfo) {
+          let item = this.paperPolicy.multiInfo[idx];
+          let count = item.count;
+          let score = item.score;
+          if ((!count && score) || (count && !score)) {
+            callback(new Error("请设置题量和分值"));
+          }
+          if (count) {
+            total = total + count;
+          }
+        }
+
+        for (let idx in this.paperPolicy.judgeInfo) {
+          let item = this.paperPolicy.judgeInfo[idx];
+          let count = item.count;
+          let score = item.score;
+          if ((!count && score) || (count && !score)) {
+            callback(new Error("请设置题量和分值"));
+          }
+          if (count) {
+            total = total + count;
+          }
+        }
+        if (total == 0) {
+          callback(new Error("请至少指定一种类型的试题信息"));
+        } else {
+          callback();
+        }
+
+      }
       return {
-        paperPolicy: {},
+        receiptFlag: false,
+        paperPolicy: {
+          singleInfo: [{}],
+          multiInfo: [{}],
+          judgeInfo: [{}],
+        },
         rules: {
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入测量名称', trigger: 'blur'},
               {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
-          questionTypeInfo:
-            [
-              {required: true, message: '请输入questionTypeInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          content:
-            [
-              {required: true, message: '请输入content', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          count:
-            [
-              {required: true, message: '请输入count', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          score:
-            [
-              {required: true, message: '请输入score', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          percentable:
-            [
-              {required: true, message: '请输入percentable', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          ownerId:
-            [
-              {required: true, message: '请输入ownerId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          ownerType:
-            [
-              {required: true, message: '请输入ownerType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          questionSelectType:
-            [
-              {required: true, message: '请输入questionSelectType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          privaryType:
-            [
-              {required: true, message: '请输入privaryType', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          isDel:
-            [
-              {required: true, message: '请输入isDel', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          status:
-            [
-              {required: true, message: '请输入status', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createUserId:
-            [
-              {required: true, message: '请输入createUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateTime:
-            [
-              {required: true, message: '请输入updateTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createTime:
-            [
-              {required: true, message: '请输入createTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateUserId:
-            [
-              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
+          single: [
+            {validator: checkContent, trigger: 'blur'}
+          ],
+          multi: [
+            {validator: checkContent, trigger: 'blur'}
+          ],
+          judge: [
+            {validator: checkContent, trigger: 'blur'}
+          ]
         },
-        singleModel: [
-          {}
-        ],
-        multiModel: [
-          {}
-        ],
-        judgeModel: [
-          {}
-        ],
+        receiptModel: {
+          receiptCount: 100,
+          numberLength: 6,
+        },
 
         diffList: [
           {label: "简单", value: 1},
@@ -302,11 +284,11 @@
     methods: {
       addLine(questionType) {
         if ("single" == questionType) {
-          this.singleModel.push({})
+          this.paperPolicy.singleInfo.push({})
         } else if ("multi" == questionType) {
-          this.multiModel.push({})
+          this.paperPolicy.multiInfo.push({})
         } else if ("judge" == questionType) {
-          this.judgeModel.push({})
+          this.paperPolicy.judgeInfo.push({})
         } else {
           console.warn("这是什么", questionType)
         }
@@ -314,11 +296,11 @@
       removeLine(questionType, index) {
         let data;
         if ("single" == questionType) {
-          data = this.singleModel;
+          data = this.paperPolicy.singleInfo;
         } else if ("multi" == questionType) {
-          data = this.multiModel;
+          data = this.paperPolicy.multiInfo;
         } else if ("judge" == questionType) {
-          data = this.judgeModel;
+          data = this.paperPolicy.judgeInfo;
         } else {
           console.warn("这是什么", questionType)
           return;
@@ -332,11 +314,16 @@
       },
       add() {
         this.$refs['addForm'].validate(async (valid) => {
+          console.log("开始校验")
           if (!valid) {
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.postEntity("/paperPolicy/api/save", this.paperPolicy);
+            console.log("开始提交")
+            // this.paperPolicy.singleInfo = JSON.stringify(this.paperPolicy.singleInfo);
+            // this.paperPolicy.multiInfo = JSON.stringify(this.paperPolicy.multiInfo);
+            // this.paperPolicy.judgeInfo = JSON.stringify(this.paperPolicy.judgeInfo);
+            let res = await this.doPost("/paperPolicy/api/save", this.paperPolicy);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {
                 confirmButtonText: '继续添加',
@@ -358,7 +345,6 @@
 
     },
     created: function () {
-
     }
   }
 </script>

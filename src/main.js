@@ -152,6 +152,10 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
           message: !message ? "系统异常" : message
         })
       } else {
+        this.$notify.error({
+          title: "错误",
+          message: !message ? "系统异常" : message
+        })
         return data;
       }
     } else {

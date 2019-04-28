@@ -187,7 +187,6 @@
 
   export default {
 
-    components: {},
     data() {
       var checkDuration = (rule, value, callback) => {
         console.log("duration: ", value)
@@ -202,16 +201,17 @@
         }
       };
       var checkAuthCode = (rule, value, callback) => {
-        if (!value || value == '' || value == undefined) {
-          callback(new Error("请输入6-10位场次识别码"));
+        // if (!value || value == '' || value == undefined) {
+        //   callback(new Error("请输入6-10位场次识别码"));
+        // } else {
+        //
+        // }
+        let reg = /^[0-9a-zA-Z]{6,10}$/;
+        if (!reg.test(value)) {
+          value = '';
+          callback(new Error("非法识别码，请输入6-10位字母或数字"));
         } else {
-          let reg = /^[0-9a-zA-Z]{6,10}$/;
-          if (!reg.test(value)) {
-            value = '';
-            callback(new Error("非法识别码，请输入6-10位字母或数字"));
-          } else {
-            callback();
-          }
+          callback();
         }
       };
 
