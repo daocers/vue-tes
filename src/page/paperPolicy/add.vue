@@ -47,7 +47,7 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                  <el-input-number v-model="singleScore" :precision="1" :step="0.5" :max="5"
                                    :min="0.5"></el-input-number>
                 </template>
               </el-table-column>
@@ -93,7 +93,7 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                  <el-input-number v-model="multiScore" :precision="1" :step="0.5" :max="5"
                                    :min="0.5"></el-input-number>
                 </template>
               </el-table-column>
@@ -101,9 +101,9 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button size="small" type="primary" icon="el-icon-edit" circle
-                             @click="addLine('single')"></el-button>
+                             @click="addLine('multi')"></el-button>
                   <el-button size="small" type="danger" icon="el-icon-delete" circle
-                             @click="removeLine('single', scope.$index)"></el-button>
+                             @click="removeLine('multi', scope.$index)"></el-button>
                 </template>
               </el-table-column>
 
@@ -140,7 +140,7 @@
               </el-table-column>
               <el-table-column prop="score" label="分值">
                 <template slot-scope="scope">
-                  <el-input-number v-model="scope.row.score" :precision="1" :step="0.5" :max="5"
+                  <el-input-number v-model="judgeScore" :precision="1" :step="0.5" :max="5"
                                    :min="0.5"></el-input-number>
                 </template>
               </el-table-column>
@@ -148,9 +148,9 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button size="small" type="primary" icon="el-icon-edit" circle
-                             @click="addLine('single')"></el-button>
+                             @click="addLine('judge')"></el-button>
                   <el-button size="small" type="danger" icon="el-icon-delete" circle
-                             @click="removeLine('single', scope.$index)"></el-button>
+                             @click="removeLine('judge', scope.$index)"></el-button>
                 </template>
               </el-table-column>
 
@@ -200,36 +200,33 @@
         for (let idx in this.paperPolicy.singleInfo) {
           let item = this.paperPolicy.singleInfo[idx];
           let count = item.count;
-          let score = item.score;
-          if ((!count && score) || (count && !score)) {
+          if (!count) {
             callback(new Error("请设置题量和分值"));
           }
           if (count) {
-            total = total + count;
+            total = total + parseInt(count);
           }
         }
 
         for (let idx in this.paperPolicy.multiInfo) {
           let item = this.paperPolicy.multiInfo[idx];
           let count = item.count;
-          let score = item.score;
-          if ((!count && score) || (count && !score)) {
+          if (!count) {
             callback(new Error("请设置题量和分值"));
           }
           if (count) {
-            total = total + count;
+            total = total + parseInt(count);
           }
         }
 
         for (let idx in this.paperPolicy.judgeInfo) {
           let item = this.paperPolicy.judgeInfo[idx];
           let count = item.count;
-          let score = item.score;
-          if ((!count && score) || (count && !score)) {
+          if (!count) {
             callback(new Error("请设置题量和分值"));
           }
           if (count) {
-            total = total + count;
+            total = total + parseInt(count);
           }
         }
         if (total == 0) {
@@ -240,6 +237,11 @@
 
       }
       return {
+        //分值
+        singleScore: 1,
+        multiScore: 1,
+        judgeScore: 1,
+
         receiptFlag: false,
         paperPolicy: {
           singleInfo: [{}],

@@ -70,7 +70,6 @@ const BranchManage = () => import('../page/branch/manage.vue')
 const StationIndex = () => import('../page/station/list.vue')
 const PropertyIndex = () => import('../page/property/list.vue')
 const Test = () => import('../page/test.vue')
-const PaperPolicyIndex = () => import('../page/paperPolicy/list.vue')
 
 const QuestionTypeIndex = () => import('../page/questionType/list.vue')
 const QuestionBankIndex = () => import('../page/questionBank/list.vue')
@@ -106,7 +105,7 @@ const Practise = () => import("../page/number/index")
 const PractiseMain = () => import("../page/number/practise")
 const PractiseList = () => import("../page/receipt/practiseList")
 
-
+const PaperPolicyIndex = () => import('../page/paperPolicy/list.vue')
 const PaperPolicyAdd = () => import("../page/paperPolicy/add")
 
 // const Login = (r) => require(['../page/index/login.vue'])
@@ -172,6 +171,7 @@ export default [
       {path: '/questionBank', component: QuestionBankIndex},
       {path: '/paperPolicy', component: PaperPolicyIndex},
       //试卷策略编辑
+      {path: '/paperPolicy', component: PaperPolicyIndex},
       {path: '/paperPolicy/edit', component: PaperPolicyAdd},
 
       //考试
