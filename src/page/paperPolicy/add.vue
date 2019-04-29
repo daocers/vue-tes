@@ -200,9 +200,9 @@
         for (let idx in this.paperPolicy.singleInfo) {
           let item = this.paperPolicy.singleInfo[idx];
           let count = item.count;
-          if (!count) {
-            callback(new Error("请设置题量和分值"));
-          }
+          // if (!count) {
+          //   callback(new Error("请设置题量和分值"));
+          // }
           if (count) {
             total = total + parseInt(count);
           }
@@ -211,9 +211,9 @@
         for (let idx in this.paperPolicy.multiInfo) {
           let item = this.paperPolicy.multiInfo[idx];
           let count = item.count;
-          if (!count) {
-            callback(new Error("请设置题量和分值"));
-          }
+          // if (!count) {
+          //   callback(new Error("请设置题量和分值"));
+          // }
           if (count) {
             total = total + parseInt(count);
           }
@@ -222,9 +222,9 @@
         for (let idx in this.paperPolicy.judgeInfo) {
           let item = this.paperPolicy.judgeInfo[idx];
           let count = item.count;
-          if (!count) {
-            callback(new Error("请设置题量和分值"));
-          }
+          // if (!count) {
+          //   callback(new Error("请设置题量和分值"));
+          // }
           if (count) {
             total = total + parseInt(count);
           }
@@ -322,9 +322,6 @@
             return false;
           } else {
             console.log("开始提交")
-            // this.paperPolicy.singleInfo = JSON.stringify(this.paperPolicy.singleInfo);
-            // this.paperPolicy.multiInfo = JSON.stringify(this.paperPolicy.multiInfo);
-            // this.paperPolicy.judgeInfo = JSON.stringify(this.paperPolicy.judgeInfo);
             let res = await this.doPost("/paperPolicy/api/save", this.paperPolicy);
             if (res == true) {
               this.$confirm('继续添加?查看列表?', '提示', {

@@ -37,17 +37,35 @@
         label="描述">
       </el-table-column>
       <el-table-column
-        prop="singleInfo"
-        label="单选信息">
+        prop="singleCount"
+        label="单选数量">
       </el-table-column>
+
       <el-table-column
-        prop="multiInfo"
-        label="多选信息">
+        prop="singleScore"
+        label="单选分值">
       </el-table-column>
+
       <el-table-column
-        prop="judgeInfo"
-        label="判断信息">
+        prop="multiCount"
+        label="多选数量">
       </el-table-column>
+
+      <el-table-column
+        prop="multiScore"
+        label="多选分值">
+      </el-table-column>
+
+      <el-table-column
+        prop="judgeCount"
+        label="判断数量">
+      </el-table-column>
+
+      <el-table-column
+        prop="judgeScore"
+        label="判断分值">
+      </el-table-column>
+
       <el-table-column
         prop="receiptCount"
         label="凭条数量">
@@ -78,6 +96,7 @@
         label="操作"
         width="90">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="toDetail(scope.$index, scope.row)">查看详情</el-button>
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -93,65 +112,187 @@
                    :total="totalCount">
     </el-pagination>
 
-    <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="name" prop="name" :label-width="labelWidth">
+    <el-dialog v-bind:title="detailFlag ? '查看详情': dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow"
+               width="80%">
+      <el-form :disabled="detailFlag" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+        <el-form-item label="策略名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="code" prop="code" :label-width="labelWidth">
+        <el-form-item label="策略编码" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="memo" prop="memo" :label-width="labelWidth">
+        <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="singleInfo" prop="singleInfo" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.singleInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="multiInfo" prop="multiInfo" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.multiInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="judgeInfo" prop="judgeInfo" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.judgeInfo" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="receiptCount" prop="receiptCount" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.receiptCount" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="numberLength" prop="numberLength" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.numberLength" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="branchId" prop="branchId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.branchId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="stationId" prop="stationId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.stationId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="departmentId" prop="departmentId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.departmentId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="status" prop="status" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.status" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="isDel" prop="isDel" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.isDel" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createUserId" prop="createUserId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.createUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="createTime" prop="createTime" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.createTime" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateUserId" prop="updateUserId" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.updateUserId" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="updateTime" prop="updateTime" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.updateTime" placeholder="请输入"></el-input>
-        </el-form-item>
-      </el-form>
 
-      <div slot="footer" class="dialog-footer">
+        <el-form-item label="单选题" prop="single">
+          <el-table :data="dataForEdit.singleList" size="small"
+                    style="width: 100%">
+            <el-table-column prop="busiType" label="业务类型">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.busiType" size="small">
+                  <el-option v-for="item in busiList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="diff" label="难度">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.difficulty" size="small">
+                  <el-option v-for="item in diffList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <el-input :min="1" type="number" size="small" v-model="scope.row.count"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="score" label="分值">
+              <template slot-scope="scope">
+                <el-input-number v-model="dataForEdit.singleScore" :precision="1" :step="0.5" :max="5"
+                                 :min="0.5"></el-input-number>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="small" type="primary" icon="el-icon-edit" circle
+                           @click="addLine('single')"></el-button>
+                <el-button size="small" type="danger" icon="el-icon-delete" circle
+                           @click="removeLine('single', scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+
+          </el-table>
+        </el-form-item>
+
+        <el-form-item label="多选题" prop="multi">
+          <el-table :data="dataForEdit.multiList" size="small"
+                    style="width: 100%">
+            <el-table-column prop="busiType" label="业务类型">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.busiType" size="small">
+                  <el-option v-for="item in busiList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="diff" label="难度">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.difficulty" size="small">
+                  <el-option v-for="item in diffList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <el-input :min="1" type="number" size="small" v-model="scope.row.count"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="score" label="分值">
+              <template slot-scope="scope">
+                <el-input-number v-model="dataForEdit.multiScore" :precision="1" :step="0.5" :max="5"
+                                 :min="0.5"></el-input-number>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="small" type="primary" icon="el-icon-edit" circle
+                           @click="addLine('multi')"></el-button>
+                <el-button size="small" type="danger" icon="el-icon-delete" circle
+                           @click="removeLine('multi', scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+
+
+          </el-table>
+        </el-form-item>
+
+        <el-form-item label="判断题" prop="judge">
+          <el-table :data="dataForEdit.judgeList" size="small"
+                    style="width: 100%">
+            <el-table-column prop="busiType" label="业务类型">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.busiType" size="small">
+                  <el-option v-for="item in busiList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="diff" label="难度">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.difficulty" size="small">
+                  <el-option v-for="item in diffList" :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="count" label="数量">
+              <template slot-scope="scope">
+                <el-input :min="1" type="number" size="small" v-model="scope.row.count"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="score" label="分值">
+              <template slot-scope="scope">
+                <el-input-number v-model="dataForEdit.judgeScore" :precision="1" :step="0.5" :max="5"
+                                 :min="0.5"></el-input-number>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="small" type="primary" icon="el-icon-edit" circle
+                           @click="addLine('judge')"></el-button>
+                <el-button size="small" type="danger" icon="el-icon-delete" circle
+                           @click="removeLine('judge', scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+
+          </el-table>
+        </el-form-item>
+
+        <el-form-item label="翻打凭条" prop="receiptFlag">
+          <el-switch v-model="receiptFlag"></el-switch>
+        </el-form-item>
+        <el-col :span="18" v-if="receiptFlag">
+          <el-form-item label="凭条张数" prop="receiptCount">
+            <el-select v-model="dataForEdit.receiptCount" placeholder="">
+              <el-option label="100" :value=100></el-option>
+              <el-option label="50" :value=50></el-option>
+              <el-option label="10" :value=10></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="数字长度" prop="numberLength">
+            <el-input v-model="dataForEdit.numberLength" type="number" :max="10" :min="5"></el-input>
+          </el-form-item>
+        </el-col>
+
+        <!--        <el-form-item label="拼条数量" prop="receiptCount" :label-width="labelWidth">-->
+        <!--          <el-input v-model="dataForEdit.receiptCount" placeholder="请输入"></el-input>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="数字长度" prop="numberLength" :label-width="labelWidth">-->
+        <!--          <el-input v-model="dataForEdit.numberLength" placeholder="请输入"></el-input>-->
+        <!--        </el-form-item>-->
+
+      </el-form>
+      <div v-if="!detailFlag" slot="footer" class="dialog-footer">
         <el-button @click="cancelCommit">取 消</el-button>
         <el-button type="primary" @click="commitData()">确 定</el-button>
       </div>
+
     </el-dialog>
 
 
@@ -166,6 +307,7 @@
   export default {
     data() {
       return {
+        receiptFlag: false,
         /**
          * 对话框的label宽度
          */
@@ -195,6 +337,9 @@
          */
         editDialogShow: false,
 
+        //默认非查看详情
+        detailFlag: false,
+
         /**
          * 修改对话框数据
          */
@@ -205,6 +350,19 @@
          */
         dataForEditIndex: null,
 
+        diffList: [
+          {label: "简单", value: 1},
+          {label: "中等", value: 2},
+          {label: "困难", value: 3},
+        ],
+
+        busiList: [
+          {label: '对公', value: 1},
+          {label: '对私', value: 2},
+          {label: '公共', value: 3},
+          {label: '国际', value: 4},
+        ],
+
         /**
          * 校验规则
          */
@@ -212,87 +370,21 @@
           name:
             [
               {required: true, message: '请输入name', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          code:
-            [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {max: 10, message: '长度在10个字符以内', trigger: 'blur'}
             ],
           memo:
             [
-              {required: true, message: '请输入memo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          singleInfo:
-            [
-              {required: true, message: '请输入singleInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          multiInfo:
-            [
-              {required: true, message: '请输入multiInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          judgeInfo:
-            [
-              {required: true, message: '请输入judgeInfo', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {max: 100, message: '长度在100个字符以内', trigger: 'blur'}
             ],
           receiptCount:
             [
               {required: true, message: '请输入receiptCount', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 3, type: 'number', max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
           numberLength:
             [
               {required: true, message: '请输入numberLength', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          branchId:
-            [
-              {required: true, message: '请输入branchId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          stationId:
-            [
-              {required: true, message: '请输入stationId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          departmentId:
-            [
-              {required: true, message: '请输入departmentId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          status:
-            [
-              {required: true, message: '请输入status', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          isDel:
-            [
-              {required: true, message: '请输入isDel', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createUserId:
-            [
-              {required: true, message: '请输入createUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          createTime:
-            [
-              {required: true, message: '请输入createTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateUserId:
-            [
-              {required: true, message: '请输入updateUserId', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
-            ],
-          updateTime:
-            [
-              {required: true, message: '请输入updateTime', trigger: 'blur'},
-              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 3, max: 10, type: 'number', message: '长度在3-10个字符', trigger: 'blur'}
             ],
         }
 
@@ -305,10 +397,12 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.http("/paperPolicy/v1/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/paperPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        data = data.data;
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
+          console.log("this.tableData:", this.tableData)
           this.totalCount = data.total;//总记录数目
         } else {
           this.tableData = [];
@@ -332,7 +426,15 @@
       toAdd() {
         console.log("唤起添加对话框")
         this.editDialogShow = true;
-        this.dataForEdit = {};
+        this.dataForEdit = {
+          singleList: [{}],
+          multiList: [{}],
+          judgeList: [{}],
+          singleScore: 1,
+          multiScore: 1,
+          judgeScore: 1,
+        };
+
       },
       /**
        * 唤起编辑对话框
@@ -340,8 +442,70 @@
       toEdit(idx, row) {
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
+        if (this.dataForEdit.singleList.length == 0) {
+          this.dataForEdit.singleList = [{}]
+        }
+        if (this.dataForEdit.multiList.length == 0) {
+          this.dataForEdit.multiList = [{}]
+        }
+        if (this.dataForEdit.judgeList.length == 0) {
+          this.dataForEdit.judgeList = [{}]
+        }
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
+        this.detailFlag = false;
+      },
+
+      /**
+       * 查看详情
+       */
+      toDetail(idx, row) {
+        console.log("编辑：", row)
+        this.dataForEdit = JSON.parse(JSON.stringify(row));
+        if (this.dataForEdit.singleList.length == 0) {
+          this.dataForEdit.singleList = [{}]
+        }
+        if (this.dataForEdit.multiList.length == 0) {
+          this.dataForEdit.multiList = [{}]
+        }
+        if (this.dataForEdit.judgeList.length == 0) {
+          this.dataForEdit.judgeList = [{}]
+        }
+        this.dataForEditIndex = idx;
+        this.editDialogShow = true;
+        this.detailFlag = true;
+      },
+
+
+      addLine(questionType) {
+        if ("single" == questionType) {
+          this.dataForEdit.singleList.push({})
+        } else if ("multi" == questionType) {
+          this.dataForEdit.multiList.push({})
+        } else if ("judge" == questionType) {
+          this.dataForEdit.judgeList.push({})
+        } else {
+          console.warn("这是什么", questionType)
+        }
+      },
+      removeLine(questionType, index) {
+        let data;
+        if ("single" == questionType) {
+          data = this.dataForEdit.singleList;
+        } else if ("multi" == questionType) {
+          data = this.dataForEdit.multiList;
+        } else if ("judge" == questionType) {
+          data = this.dataForEdit.judgeList;
+        } else {
+          console.warn("这是什么", questionType)
+          return;
+        }
+
+        data.splice(index, 1);
+        if (data.length == 0) {
+          data.push({})
+        }
+
       },
 
       /**
@@ -356,9 +520,12 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/paperPolicy/v1/save', this.dataForEdit, 3000);
+            var res = await this.doPost('/paperPolicy/api/save', this.dataForEdit);
             if (res) {
               if (this.dataForEdit.id) {
+                this.dataForEdit.singleInfo = JSON.stringify(this.dataForEdit.singleList)
+                this.dataForEdit.multiInfo = JSON.stringify(this.dataForEdit.multiList)
+                this.dataForEdit.judgeInfo = JSON.stringify(this.dataForEdit.judgeList)
                 //                修改
                 Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
                 //        以下代码变动无法触发页面渲染
@@ -422,7 +589,7 @@
         }).then(async () => {
 
           console.log("删除：", idx, row)
-          let data = await this.http("/paperPolicy/v1/delete?id=" + row.id);
+          let data = await this.doPost("/paperPolicy/api/delete?id=" + row.id);
           if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;

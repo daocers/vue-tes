@@ -68,8 +68,6 @@
     </el-row>
 
 
-
-
     <el-form-item label="使用题库" prop="questionBankId">
       <el-select v-model="scene.questionBankId" placeholder="请选择本场使用的题库">
         <el-option v-for="item in questionBankList" :label="item.name" :key="item.id" :value="item.id"></el-option>
@@ -77,10 +75,11 @@
     </el-form-item>
 
     <el-form-item label="出卷模式" prop="paperModel">
-      <el-select v-model="scene.paperModel" placeholder="试卷策略模式">
+      <el-select v-model="scene.paperModel" placeholder="试卷策略模式" @change="handlePaperModelChange">
         <el-option label="简单模式" :value="1"></el-option>
         <el-option label="策略模式" :value="2"></el-option>
       </el-select>
+      <span v-if="paperPolicy.id">已选策略：<el-tag>{{paperPolicy.name}}</el-tag></span>
     </el-form-item>
 
     <el-row v-if="scene.paperModel == 1">
@@ -95,6 +94,38 @@
         <el-table-column prop="score" label="分值">
           <template slot-scope="scope">
             <el-input type="text" size="small" v-model="scope.row.score"></el-input>
+          </template>
+        </el-table-column>
+
+      </el-table>
+    </el-row>
+
+    <el-row v-if="scene.paperModel == 2">
+      <el-table :data="paperPolicyList" size="small"
+                style="width: 100%" @row-click="handleRowClick">
+        <!--        <el-table-column type="selection"></el-table-column>-->
+        <el-table-column prop="name" label="名称" width="180px"></el-table-column>
+        <el-table-column prop="single" label="单选" width="180px">
+          <template slot-scope="scope">
+            {{scope.row.singleCount}} {{scope.row.singleScore}}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="multi" label="多选" width="180px">
+          <template slot-scope="scope">
+            {{scope.row.multiCount}} {{scope.row.multiScore}}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="judge" label="判断题" width="180px">
+          <template slot-scope="scope">
+            {{scope.row.judgeCount}} {{scope.row.judgeScore}}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="judge" label="翻打凭条" width="180px">
+          <template slot-scope="scope">
+            {{scope.row.receiptCount}} {{scope.row.numberLength}}
           </template>
         </el-table-column>
 
@@ -135,16 +166,13 @@
     </el-row>
 
 
-
-
-
     <el-row style="margin-top: 30px; border: 1px solid #b3d8ff; border-radius: 3px;">
       <el-form-item label="识别码" prop="authCode">
         <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
       </el-form-item>
 
       <el-form-item label="参考人员" prop="joinInfo"
-                    >
+      >
         <div>
           <el-form-item label="机构" prop="">
             <el-select multiple v-model="scene.branchIds" placeholder="选择参考机构">
@@ -172,7 +200,6 @@
         </div>
       </el-form-item>
     </el-row>
-
 
 
     <el-form-item style="margin-top: 30px">
@@ -281,6 +308,8 @@
         },
         /* 试卷策略 */
         paperPolicyList: [],
+        //已选的策略
+        paperPolicy: {},
         //简单策略的信息
         simpleModel: [
           {type: '单选题'},
@@ -325,16 +354,7 @@
         }
       }
     },
-    //获取全部试卷策略
-    getAllPaperPolicy: async function () {
-      let res = await this.doPost("/paperPolicy/api/findAll")
-      if (res.result) {
-        this.paperPolicyList = data;
-      } else {
-        this.$alert("获取试卷策略失败");
-      }
 
-    },
     created: async function () {
       console.log("created...");
       let sceneId = this.$route.query.id;
@@ -388,9 +408,25 @@
           this.stationList = res.data;
         }
       });
+
+      await this.doPost("/paperPolicy/api/findAll").then(res => {
+        if (res.result) {
+          this.paperPolicyList = res.data;
+        }
+      })
     },
 
     methods: {
+      handlePaperModelChange(data){
+        if(data == 1){
+          this.paperPolicy = {}
+        }
+      },
+      //试题策略
+      handleRowClick(row, column, event) {
+        console.log("table-click", row)
+        this.paperPolicy = row;
+      },
       //开场
       openScene: async function () {
         console.log("scene:", this.scene);
