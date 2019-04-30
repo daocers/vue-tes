@@ -51,7 +51,7 @@
 
   /*解决表格位置错位*/
   td, th{
-    display: table-cell;
+    display: table-cell !important;
   }
   #app {
     /*min-width: 1200px;*/

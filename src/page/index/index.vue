@@ -56,61 +56,61 @@
                 <i class="el-icon-setting"></i>
                 <span>{{menu.name}}</span>
               </template>
-              <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url">{{subItem.name}}
+              <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url"  v-if="subItem.status == 1">{{subItem.name}}
               </el-menu-item>
             </el-submenu>
 
 
-            <el-submenu index="1">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>基础信息</span>
-              </template>
-              <el-menu-item index="/role"><i class="bugu-icon-role"></i> 角色</el-menu-item>
-              <el-menu-item index="/permission"><i class="bugu-icon-perms"></i> 权限</el-menu-item>
-              <el-menu-item index="/branch"><i class="bugu-icon-branch"></i> 机构
-              </el-menu-item>
-              <el-menu-item index="/department"><i class="bugu-icon-department"></i> 部门</el-menu-item>
-              <el-menu-item index="/station"><i class="bugu-icon-station"></i> 岗位</el-menu-item>
-              <el-menu-item index="/user"><i class="bugu-icon-user"></i> 用户</el-menu-item>
-              <el-menu-item index="/user/changePass"><i class="bugu-icon-pass"></i> 修改密码</el-menu-item>
-            </el-submenu>
+<!--            <el-submenu index="1">-->
+<!--              <template slot="title">-->
+<!--                <i class="el-icon-location"></i>-->
+<!--                <span>基础信息</span>-->
+<!--              </template>-->
+<!--              <el-menu-item index="/role"><i class="bugu-icon-role"></i> 角色</el-menu-item>-->
+<!--              <el-menu-item index="/permission"><i class="bugu-icon-perms"></i> 权限</el-menu-item>-->
+<!--              <el-menu-item index="/branch"><i class="bugu-icon-branch"></i> 机构-->
+<!--              </el-menu-item>-->
+<!--              <el-menu-item index="/department"><i class="bugu-icon-department"></i> 部门</el-menu-item>-->
+<!--              <el-menu-item index="/station"><i class="bugu-icon-station"></i> 岗位</el-menu-item>-->
+<!--              <el-menu-item index="/user"><i class="bugu-icon-user"></i> 用户</el-menu-item>-->
+<!--              <el-menu-item index="/user/changePass"><i class="bugu-icon-pass"></i> 修改密码</el-menu-item>-->
+<!--            </el-submenu>-->
 
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-document"></i>
-                <span>试题管理</span>
-              </template>
-              <el-menu-item index="/questionBank"><i class="bugu-icon-bank"></i> 题库管理</el-menu-item>
-              <el-menu-item index="/property"><i class="">d</i> 属性管理</el-menu-item>
-              <el-menu-item index="/single"><i class="bugu-icon-single"></i> 单选题</el-menu-item>
-              <el-menu-item index="/multi"><i class="bugu-icon-multi"></i> 多选题</el-menu-item>
-              <el-menu-item index="/judge"><i class="bugu-icon-judge"></i> 判断题</el-menu-item>
-            </el-submenu>
+<!--            <el-submenu index="2">-->
+<!--              <template slot="title">-->
+<!--                <i class="el-icon-document"></i>-->
+<!--                <span>试题管理</span>-->
+<!--              </template>-->
+<!--              <el-menu-item index="/questionBank"><i class="bugu-icon-bank"></i> 题库管理</el-menu-item>-->
+<!--              <el-menu-item index="/property"><i class="">d</i> 属性管理</el-menu-item>-->
+<!--              <el-menu-item index="/single"><i class="bugu-icon-single"></i> 单选题</el-menu-item>-->
+<!--              <el-menu-item index="/multi"><i class="bugu-icon-multi"></i> 多选题</el-menu-item>-->
+<!--              <el-menu-item index="/judge"><i class="bugu-icon-judge"></i> 判断题</el-menu-item>-->
+<!--            </el-submenu>-->
 
-            <el-submenu index="3">
-              <template slot="title">
-                <i class="bugu-menu-icon-practise" style="margin-right: 10px;"></i>
-                <span>练习乐园</span>
-              </template>
-              <el-menu-item index="/practise"><i class="bugu-icon-number"></i> 凭条录入</el-menu-item>
-              <el-menu-item index="/practise/list"><i class="bugu-icon-log"></i> 练习轨迹</el-menu-item>
-            </el-submenu>
+<!--            <el-submenu index="3">-->
+<!--              <template slot="title">-->
+<!--                <i class="bugu-menu-icon-practise" style="margin-right: 10px;"></i>-->
+<!--                <span>练习乐园</span>-->
+<!--              </template>-->
+<!--              <el-menu-item index="/practise"><i class="bugu-icon-number"></i> 凭条录入</el-menu-item>-->
+<!--              <el-menu-item index="/practise/list"><i class="bugu-icon-log"></i> 练习轨迹</el-menu-item>-->
+<!--            </el-submenu>-->
 
-            <el-submenu index="4">
-              <template slot="title">
-                <i class="bugu-menu-icon-scene" style="margin-right: 10px;"></i>
-                <span>考试管理</span>
-              </template>
-              <el-menu-item index="/scene/open"><i class="bugu-icon-scene"></i> 快速开场</el-menu-item>
-              <!--<el-menu-item index="/scene">场次管理</el-menu-item>-->
-              <el-menu-item index="/exam"><i class="bugu-icon-exam"></i> 考试</el-menu-item>
-              <el-menu-item index="/scene/myJoin"><i class="bugu-icon-join"></i> 我参加的</el-menu-item>
-              <el-menu-item index="/scene/myOpen"><i class="bugu-icon-create"></i> 我开场的</el-menu-item>
-              <el-menu-item index="/paper"><i class="bugu-icon-score"></i> 成绩查询</el-menu-item>
-              <el-menu-item index="/paperPolicy/"><i class="bugu-icon-score"></i> 试卷策略</el-menu-item>
-              <el-menu-item index="/paperPolicy/edit"><i class="bugu-icon-score"></i> 试卷策略编辑</el-menu-item>
-            </el-submenu>
+<!--            <el-submenu index="4">-->
+<!--              <template slot="title">-->
+<!--                <i class="bugu-menu-icon-scene" style="margin-right: 10px;"></i>-->
+<!--                <span>考试管理</span>-->
+<!--              </template>-->
+<!--              <el-menu-item index="/scene/open"><i class="bugu-icon-scene"></i> 快速开场</el-menu-item>-->
+<!--              &lt;!&ndash;<el-menu-item index="/scene">场次管理</el-menu-item>&ndash;&gt;-->
+<!--              <el-menu-item index="/exam"><i class="bugu-icon-exam"></i> 考试</el-menu-item>-->
+<!--              <el-menu-item index="/scene/myJoin"><i class="bugu-icon-join"></i> 我参加的</el-menu-item>-->
+<!--              <el-menu-item index="/scene/myOpen"><i class="bugu-icon-create"></i> 我开场的</el-menu-item>-->
+<!--              <el-menu-item index="/paper"><i class="bugu-icon-score"></i> 成绩查询</el-menu-item>-->
+<!--              <el-menu-item index="/paperPolicy/"><i class="bugu-icon-score"></i> 试卷策略</el-menu-item>-->
+<!--              <el-menu-item index="/paperPolicy/edit"><i class="bugu-icon-score"></i> 试卷策略编辑</el-menu-item>-->
+<!--            </el-submenu>-->
           </el-menu>
         </div>
         <div class="main">
@@ -232,6 +232,8 @@
           this.anchor = url.substr(idx + 1);
         }
       }
+
+
     }
   }
 </script>
@@ -633,7 +635,7 @@
   }
 
   /*ul.el-menu-vertical-demo.el-menu {*/
-    /*min-width: 200px;*/
+  /*min-width: 200px;*/
   /*}*/
 
   /**

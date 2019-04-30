@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <!--<div class="pro">-->
-      <!--<div class="msg"><em id="warning"></em>最近有不法分子冒充布谷科技，让用户提供账户和密码。在此声明，我们绝不会通过电话、邮件或短信等形式询问用户名和密码。请用户提高警惕，增强自我保护意识。-->
-      <!--</div>-->
+    <!--<div class="msg"><em id="warning"></em>最近有不法分子冒充布谷科技，让用户提供账户和密码。在此声明，我们绝不会通过电话、邮件或短信等形式询问用户名和密码。请用户提高警惕，增强自我保护意识。-->
+    <!--</div>-->
     <!--</div>-->
     <div class="header">
       <div class="nag">
@@ -134,17 +134,37 @@
               sessionStorage.clear();
               sessionStorage.setItem("token", res);
               sessionStorage.setItem("username", this.login.username);
+
+              console.log("开始获取权限列表")
+              this.doGet("/permission/api/findMenuUrlList").then(res => {
+                console.log("获取权限url列表：", res);
+                sessionStorage.setItem("urlList", res);
+              })
+
+              /**
+               * 下面是通过配置生效的页面权限控制
+               * */
               //获取菜单信息
               this.postParam("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
+                if(res.length == 0){
+                  this.$notify({
+                    title: '提示',
+                    message: '尚未分配角色，请联系管理员',
+                    type: 'warning'
+                  })
+                }
                 let menuList = JSON.stringify(res);
                 console.log("菜单列表：", menuList);
+
                 sessionStorage.setItem("menuList", JSON.stringify(res));
                 this.$router.replace("/help");
               }).catch(e => {
                 console.log("获取权限失败", e)
               })
               sessionStorage.setItem("token", res);
+              /** ===============*/
+
             } else {
               this.$message.error("用户名/密码错误");
             }

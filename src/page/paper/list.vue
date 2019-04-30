@@ -1,14 +1,14 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="考生号" prop="username">
-        <el-input v-model="queryForm.username" placeholder="请输入"></el-input>
+      <el-form-item label="考生号" prop="userName">
+        <el-input v-model="queryForm.userName" placeholder="请输入"></el-input>
       </el-form-item>
-      <!--<el-form-item label="姓名" prop="name">-->
-        <!--<el-input v-model="queryForm.userName" placeholder="请输入"></el-input>-->
-      <!--</el-form-item>-->
+<!--      <el-form-item label="姓名" prop="name">-->
+<!--        <el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
+<!--      </el-form-item>-->
       <el-form-item label="场次编码" prop="sceneCode">
-        <el-input v-model="queryForm.sceneCode" placeholder="请输入"></el-input>
+        <el-input :disabled="queryForm.sceneId > 0" v-model="queryForm.sceneCode" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
@@ -42,8 +42,13 @@
       </el-table-column>
 
       <el-table-column
+        prop="sceneName"
+        label="场次名称">
+      </el-table-column>
+
+      <el-table-column
         prop="originalScore"
-        label="原始得分">
+        label="得分">
       </el-table-column>
       <el-table-column
         prop="score"
@@ -72,10 +77,7 @@
         label="交卷时间">
       </el-table-column>
 
-      <el-table-column
-        prop="sceneName"
-        label="场次名称">
-      </el-table-column>
+
 
       <el-table-column
         prop="status"
@@ -179,7 +181,7 @@
          **/
         queryForm: {
           sceneCode: '',
-          username: '',
+          // username: '',
           sceneId: null,
           //用户名
           userName: null,

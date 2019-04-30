@@ -76,10 +76,16 @@
       <el-table-column
         prop="attr1"
         label="业务类型">
+        <template slot-scope="scope">
+           {{busiTypeMap[scope.row.attr1]}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="attr2"
         label="难度">
+        <template slot-scope="scope">
+            {{diffMap[scope.row.attr2]}}
+        </template>
       </el-table-column>
       <el-table-column
         v-if="false"
@@ -245,10 +251,12 @@
 
 
 <script>
-
+  import {busiTypeMap, diffMap} from '../../data.js'
   export default {
     data() {
       return {
+        busiTypeMap: busiTypeMap,
+        diffMap: diffMap,
         /**
          * 对话框的label宽度
          */
