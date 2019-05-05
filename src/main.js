@@ -177,7 +177,7 @@ async function handleResponse(response, vue) {
           title: "错误",
           message: !message ? "系统异常" : message
         })
-        return data;
+        return false;
       }
     }
     return data.data;
