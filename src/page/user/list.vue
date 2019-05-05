@@ -157,47 +157,39 @@
 
 
     <el-dialog title="批量添加" :visible.sync="batchAddDialogShow" :before-close="handleClose">
-      <!--<el-upload-->
-        <!--class="upload-demo"-->
-        <!--ref="upload"-->
-        <!--:limit="1"-->
-        <!--action="http://localhost:8080/user/api/batchAdd"-->
-        <!--:on-preview="handlePreview"-->
-        <!--:on-remove="handleRemove"-->
-        <!--:on-change="handleChange"-->
-        <!--:on-success="handleSuccess"-->
-        <!--:on-error="handleError"-->
-        <!--:file-list="fileList"-->
-        <!--:auto-upload="false">-->
-        <!--<el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>-->
-        <!--<el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>-->
-        <!--<div style="display: inline-block; margin-left: 20px;">-->
-          <!--没有模板？<a type="success" href="http://localhost:8080/user/api/downloadModel">下载模板</a>-->
-          <!--&lt;!&ndash;<el-button  size="small" type="success" plain @click="downloadModel">下载模板</el-button>&ndash;&gt;-->
-        <!--</div>-->
-        <!--<div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>-->
-      <!--</el-upload>-->
 
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        :limit="1"
-        action=""
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-change="handleChange"
-        :file-list="fileList"
-        :auto-upload="false">
+      <el-form label-position="left" ref="batchForm" :rules="batchAddRules" :model="dataForBatch" label-width="60px">
+        <el-form-item label="默认角色" prop="roleId" :label-width="labelWidth">
+          <el-select v-model="dataForBatch.roleId" placeholder="请选择默认角色">
+            <el-option v-for="role in roleList"
+                       :key="role.id"
+                       :label="role.name"
+                       :value="role.id">
 
-        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
-                   @click="batchAdd">上传到服务器
-        </el-button>
-        <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="#" @click="download">下载模板</a>
-        </div>
-        <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
-      </el-upload>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          :limit="1"
+          action=""
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="handleChange"
+          :file-list="fileList"
+          :auto-upload="false">
+
+          <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+          <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
+                     @click="batchAdd">上传到服务器
+          </el-button>
+          <div style="display: inline-block; margin-left: 20px;">
+            没有模板？<a type="success" href="#" @click="download">下载模板</a>
+          </div>
+          <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
+        </el-upload>
+      </el-form>
 
       <el-alert v-show="batchAddErrorMessage != ''"
                 v-bind:title='batchAddErrorMessage'
@@ -255,6 +247,9 @@
         stationList: [],
         departmentList: [],
 
+        stationMap: {},
+        departmentMap: {},
+
         labelWidth: '90px',
         /**
          * 批量导入的错误信息
@@ -286,6 +281,10 @@
          */
         dataForAdd: {},
 
+        // 批量上传下载模板时候的参数信息
+        dataForBatch: {
+          roleId: null,
+        },
         roleList: [],
 
         /**
@@ -342,6 +341,12 @@
 
         },
 
+        batchAddRules: {
+          roleId: [
+            {type: 'number', required: true, message: '请选择默认角色', trigger: 'change'}
+          ],
+        },
+
         fileList: [],
 
       }
@@ -375,33 +380,72 @@
       /**
        * 批量导入
        */
+      // async batchAdd(param) {
+      //   console.log("批量上传：：：", param)
+      //   let formData = new FormData();
+      //   formData.append("file", this.file.raw);
+      //   formData.append("roleId", this.dataForBatch.roleId)
+      //   let resp = await this.uploadFile("/user/api/batchAdd", formData);
+      //   console.log("上传结果:::", resp);
+      //   this.$refs.upload.clearFiles();
+      //   this.batchAddDialogShow = false;
+      //   if (resp) {
+      //     this.findByCondition();
+      //     this.$notify({
+      //       title: '成功',
+      //       message: '批量导入用户成功',
+      //       type: 'success',
+      //       // duration: 0
+      //     });
+      //   } else {
+      //     this.$notify({
+      //       title: '失败',
+      //       message: '批量导入用户失败',
+      //       type: 'error',
+      //       duration: 0
+      //     });
+      //   }
+      //   return false;
+      // },
+
+      /**
+       * 批量导入
+       */
       async batchAdd(param) {
         console.log("批量上传：：：", param)
-        let formData = new FormData();
-        formData.append("file", this.file.raw);
-        // formData.append("questionBankId", this.dataForBatch.questionBankId)
-        let resp = await this.uploadFile("/user/api/batchAdd", formData);
-        console.log("上传结果:::", resp);
-        this.$refs.upload.clearFiles();
-        this.batchAddDialogShow = false;
-        if (resp) {
-          this.findByCondition();
-          this.$notify({
-            title: '成功',
-            message: '批量导入用户成功',
-            type: 'success',
-            // duration: 0
-          });
-        } else {
-          this.$notify({
-            title: '失败',
-            message: '批量导入用户失败',
-            type: 'error',
-            duration: 0
-          });
-        }
+        this.$refs['batchForm'].validate(async (valid) => {
+          if (!valid) {
+            console.log("参数校验不通过，请处理");
+            return false;
+          } else {
+            let formData = new FormData();
+            formData.append("file", this.file.raw);
+            formData.append("roleId", this.dataForBatch.roleId)
+            let resp = await this.uploadFile("/user/api/batchAdd", formData);
+            console.log("上传结果:::", resp);
+            this.$refs.upload.clearFiles();
+            this.batchAddDialogShow = false;
+            if (resp) {
+              this.findByCondition();
+              this.$notify({
+                title: '成功',
+                message: '批量导入单选试题成功',
+                type: 'success',
+                // duration: 0
+              });
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '批量导入单选试题失败',
+                type: 'error',
+                duration: 0
+              });
+            }
+          }
+        });
         return false;
       },
+
       async handleBefore(file) {
         console.log("提交之前", file);
         let formData = new FormData();
@@ -426,7 +470,6 @@
         this.batchAddErrorMessage = '';
         this.batchAddDialogShow = true;
       },
-
 
 
       showBranchBox() {
@@ -493,6 +536,11 @@
           await this.doGet("/department/api/findAll").then(res => {
             console.log("获取部门信息", res);
             this.departmentList = res;
+            for (let idx in res) {
+              let item = res[idx];
+              console.log("item", item)
+              this.departmentMap[item.id] = item.name;
+            }
           }).catch(e => {
             console.log("获取部门信息失败", e);
           })
@@ -502,6 +550,10 @@
           this.doGet("/station/api/findAll").then(res => {
             console.log("获取岗位信息", res);
             this.stationList = res;
+            for (let idx in res) {
+              let item = res[idx];
+              this.stationMap[item.id] = item.name;
+            }
           }).catch(e => {
             console.log("获取岗位信息失败", e);
           })
@@ -563,7 +615,10 @@
             if (res) {
               this.dataForEdit.id = res;
               if (id) {
-                Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
+                console.log("this.departmentMap", this.departmentMap)
+                this.dataForEdit.departmentName = this.departmentMap[this.dataForEdit.departmentId];
+                this.dataForEdit.stationName = this.stationMap[this.dataForEdit.stationId];
+                this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
 
               } else {
                 this.findByCondition();

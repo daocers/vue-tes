@@ -331,7 +331,7 @@
               } else {
 //                更新
                 this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
-                this.findByCondition();
+                // this.findByCondition();
                 this.$refs['editForm'].clearValidate();
 
 //        关闭对话框
