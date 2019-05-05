@@ -5,7 +5,7 @@
         <el-card class="box-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <el-input placeholder="请输入场次授权码" v-model="authCode" class="input-with-select">
-<!--              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试-->
+              <!--              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试-->
               <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toNotice">进入考试
               </el-button>
             </el-input>
@@ -27,13 +27,13 @@
       }
     },
     methods: {
-      async toNotice(){
-        let res = await  this.doPost("/scene/api/checkAuthCode", {
+      async toNotice() {
+        let res = await this.doPost("/scene/api/checkAuthCode", {
           sceneId: this.sceneId,
           authCode: this.authCode
         }, "form")
         console.warn("校验验证码结果：", res);
-        if(res && res.result && res.data){
+        if (res && res.result && res.data) {
           this.$router.push("/exam/notice");
           sessionStorage.setItem("authCode", this.authCode)
         }
@@ -51,10 +51,10 @@
         console.log("res:", res);
         if (res && res.result && res.code == 0) {
           console.log("准备考试生成试卷")
-          let paperId = await this.postParam("/exam/api/getPaper", {
+          let paperId = await this.doPost("/exam/api/getPaper", {
             sceneId: this.sceneId,
             authCode: this.authCode
-          }, 10000);
+          }, "FORM");
           if (paperId) {
             sessionStorage.setItem("paperId", paperId);
             this.$router.push("/exam/main?id=" + this.sceneId + "&paperId=" + paperId);

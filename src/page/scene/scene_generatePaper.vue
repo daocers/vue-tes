@@ -195,7 +195,7 @@
         let paperPolicyId = this.$parent.$data.scene.paperPolicyId;
         let questionBankId = this.$parent.$data.scene.questionBankId;
         if (paperPolicyId) {
-          let res = await this.postEntity("/paperPolicy/api/checkPaperPolicy?paperPolicyId=" +
+          let res = await this.doPost("/paperPolicy/api/checkPaperPolicy?paperPolicyId=" +
             paperPolicyId + "&questionBankId=" + questionBankId);
           console.log("校验：：：", res);
           if(res == true){
@@ -220,7 +220,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/paperPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/paperPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (!data) {
           data = [];
@@ -260,7 +260,7 @@
     },
     created: async function () {
       console.log("paper created")
-      let data = await this.postEntity("/questionBank/api/findAll");
+      let data = await this.doGet("/questionBank/api/findAll");
       if (data) {
         this.questionBankList = data;
       }

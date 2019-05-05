@@ -273,7 +273,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/property/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/property/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data != null) {
           this.tableData = data.list;
@@ -324,7 +324,7 @@
             return false;
           } else {
             let id = this.dataForEdit.id;
-            let res = await this.postEntity('/property/api/save', this.dataForEdit, 1000);
+            let res = await this.doPost('/property/api/save', this.dataForEdit);
             if (res) {
               this.findByCondition();
             } else if (res == false) {
@@ -343,7 +343,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.postEntity("/property/api/delete?id=" + row.id);
+        let data = await this.doPost("/property/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

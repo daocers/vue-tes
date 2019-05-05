@@ -19,10 +19,8 @@ const wsUrl = "ws://localhost:9999/hn";
 // const host = "http://www.bugu.co/hn";
 // const wsUrl = "ws://www.bugu.co/hn";
 
-
+// 全局超时时间
 const global_timeout = 60000;
-
-let invalidTokenFlag = false;
 
 Vue.prototype.host = host;
 Vue.prototype.wsUrl = wsUrl;
@@ -49,10 +47,14 @@ Vue.prototype.doGet = async function (url) {
     url = url + "?token=" + token;
   }
   let response = await axios.get(url);
-  return await processResponse(response, this);
+  return await handleResponse(response, this);
 };
 
-
+/**
+ * 下载文件
+ * @param url
+ * @returns {Promise<void>}
+ */
 Vue.prototype.downloadFile = async function (url) {
   let token = sessionStorage.getItem("token");
   if (url.indexOf("?") > -1) {
@@ -63,19 +65,46 @@ Vue.prototype.downloadFile = async function (url) {
   window.location.href = host + url;
 }
 
-Vue.prototype.uploadFile = async function(url, formData){
+
+/**
+ * 上传文件
+ * @param url
+ * @param formData
+ * @returns {Promise<*|boolean>}
+ */
+Vue.prototype.uploadFile = async function (url, formData, timeout) {
   let token = sessionStorage.getItem("token");
   let response = await axios({
     headers: {"Content-Type": "multipart/form-data", "token": token},
     url: host + url,
     method: 'post',
     data: formData,
-    timeout: 5000
+    timeout: timeout ? timeout : 60000
   })
-  return await processResponse(response, this);
+  return await handleResponse(response, this);
 }
 
+
+/**
+ * 执行post请求
+ * @param url
+ * @param data
+ * @param type
+ * @param timeout
+ * @returns {Promise<{}|boolean|*>}
+ */
 Vue.prototype.doPost = async function (url, data, type, timeout) {
+  let token = sessionStorage.getItem("token");
+  if (!token) {
+    this.$notify({
+      title: '提示',
+      message: '会话超时',
+      type: "info",
+    })
+    this.$router.push("/login")
+    return false;
+  }
+
   if (!timeout) {
     timeout = global_timeout;
   }
@@ -94,16 +123,6 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
   } else {
     contentType = 'application/json;charset=UTF-8';
   }
-  let token = sessionStorage.getItem("token");
-  if (!token) {
-    this.$notify({
-      title: '提示',
-      message: '会话超时',
-      type: "info",
-    })
-    this.router.push("/login")
-    return false;
-  }
 
   let response = await axios({
     headers: {"Content-Type": contentType, "token": token},
@@ -114,9 +133,20 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
   })
 
   console.log("响应数据：", response);
+  return await handleResponse(response, this);
+}
+
+
+
+/**
+ * 处理请求响应
+ * @param response
+ * @param vue
+ * @returns {Promise<{}|boolean|*>}
+ */
+async function handleResponse(response, vue) {
   if (response.status == 200) {
     let data = response.data;
-
     let code = data.code;
     let result = data.result;
     let message = data.message;
@@ -125,188 +155,51 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
       if (code) {
         //  请求失败，
         if (-1 == code) {
-          console.log("用户未登录");
-          this.$router.push({path: "/login"});
-        } else if (-2 == code) {
-          console.log("登录失败")
-          this.$router.push({path: "/login"});
-        } else if (-3 == code) {
-          invalidTokenFlag = true;
-          console.log("无效token")
-          this.$router.push({path: "/login"});
-          if (!invalidTokenFlag) {
-            this.$notify.error({
-              title: '错误',
-              message: '登录超时或者异地登录'
-            })
-          }
-
-          invalidTokenFlag = true;
+          console.log("用户信息异常", message);
+          vue.$notify.error({
+            title: '错误',
+            message: 'Token已失效，重新登录'
+          })
+          vue.$router.push({path: "/login"});
           return false;
-        } else if (-4 == code) {
-          console.log("其他异常")
-          return false;
+        } else if (-100 == code) {
+          console.log("参数异常, message", message)
+        } else if (-10000 == code) {
+          console.log("系统异常", message)
         }
-        this.$notify.error({
+        vue.$notify.error({
           title: '错误',
           message: !message ? "系统异常" : message
         })
+        return false;
       } else {
-        this.$notify.error({
+        vue.$notify.error({
           title: "错误",
           message: !message ? "系统异常" : message
         })
         return data;
       }
-    } else {
-      invalidTokenFlag = false;
     }
-    return data;
+    return data.data;
   } else {
-    this.$notify.error({
+    vue.$notify.error({
       title: '错误',
       message: '网络异常'
     });
     return {};
   }
-
-
-}
-
-/**
- * post请求
- * 服务器success，返回请求实体，
- * 如果失败，直接按照系统统一抛异常
- *
- **/
-Vue.prototype.postParam = async function (url, params, timeout) {
-  let data = new URLSearchParams();
-  for (let key in params) {
-    data.append(key, params[key]);
-  }
-  let token = sessionStorage.getItem("token");
-  if (!timeout) {
-    timeout = global_timeout;
-  }
-  let response = await axios({
-    headers: {"Content-Type": 'application/x-www-form-urlencoded', "token": token},
-    url: host + url,
-    method: 'post',
-    data: data,
-    timeout: timeout
-  })
-  return await processResponse(response, this);
-}
-
-/*
-* 发送实体信息，post请求  application/json
-* 成功，返回实体，失败直接按照系统提示抛异常
-*
-**/
-Vue.prototype.postEntity = async function (url, data, timeout) {
-  console.log("url:********", url);
-  console.log("data:", data);
-  if (!timeout) {
-    timeout = global_timeout;
-  }
-  let token = sessionStorage.getItem("token");
-  let response = await axios({
-    /**
-     * 此处必须使用application/json，不能使用text/json
-     * */
-    headers: {"Content-Type": 'application/json;charset=UTF-8', "token": token},
-    method: 'post',
-    url: host + url,
-    data: JSON.stringify(data),
-    timeout: timeout
-  })
-  console.log(url + ":::", response);
-  return await processResponse(response, this);
 }
 
 
-/**
- * 发送post请求，得到原始数据，逻辑层控制数据处理
- * @param url
- * @param params
- * @param timeout
- * @returns {Promise<*>}
- */
-Vue.prototype.post4Original = async function (url, params, timeout) {
-  let data = new URLSearchParams();
-  for (let key in params) {
-    data.append(key, params[key]);
-  }
-  let token = sessionStorage.getItem("token");
-  if (!timeout) {
-    timeout = global_timeout;
-  }
-  let response = await axios({
-    headers: {"Content-Type": 'application/x-www-form-urlencoded', "token": token},
-    url: host + url,
-    method: 'post',
-    data: data,
-    timeout: timeout
-  })
-  if (response.status == 200) {
-    return response.data;
-  } else {
-    console.info("请求处理失败");
-    this.$notify.error({
-      title: '错误',
-      message: '请求处理失败'
-    });
-    return null;
-  }
+Vue.prototype.loading = function(){
+  const loading = this.$loading({
+    lock: true,
+    text: 'Loading',
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.7)'
+  });
+  return loading;
 }
-
-/*
-*
-* 处理响应信息
-**/
-async function processResponse(response, vue) {
-  console.log("响应数据：", response);
-  let res;
-  if (response.status == 200) {
-
-    var response = response.data;
-    let code = response.code;
-    let result = response.result;
-    let message = response.message;
-    let data = response.data;
-
-    //请求成功
-    if (result) {
-      return data;
-    } else {
-      //  请求失败，
-      if (-1 == code) {
-        console.log("用户未登录");
-        vue.$router.push({path: "/login"});
-      } else if (-2 == code) {
-        console.log("登录失败")
-        vue.$router.push({path: "/login"});
-      } else if (-3 == code) {
-        console.log("无效token")
-        vue.$router.push({path: "/login"});
-      } else if (-4 == code) {
-        console.log("其他异常")
-      }
-      vue.$notify.error({
-        title: '错误',
-        message: !message ? "系统异常" : message
-      })
-
-      return false;
-    }
-  } else {
-    this.$notify.error({
-      title: '错误',
-      message: '请求处理失败'
-    });
-  }
-}
-
 //加载路由中间件
 Vue.use(VueRouter)
 

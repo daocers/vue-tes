@@ -182,7 +182,7 @@
       },
 
       async saveTree() {
-        let res = await this.postEntity("/permission/api/saveTree", this.permissionTree);
+        let res = await this.doPost("/permission/api/saveTree", this.permissionTree);
         if (res) {
           this.saveTreeShow = false;
         }
@@ -199,7 +199,7 @@
           } else {
             let id = this.nodeData.id;
             console.log("this.nodeData:", this.nodeData)
-            let res = await this.postEntity("/permission/api/save", this.nodeData);
+            let res = await this.doPost("/permission/api/save", this.nodeData);
             if (res) {
               this.nodeData.id = res;
               var currentNode = this.$refs['tree'].getCurrentNode();
@@ -306,7 +306,7 @@
 
     },
     created: async function () {
-      let data = await this.postEntity("/permission/api/getPermissionTree", null);
+      let data = await this.doPost("/permission/api/getPermissionTree", null);
       console.log("data: ", data);
 
       let root = [{

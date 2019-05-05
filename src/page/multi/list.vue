@@ -4,6 +4,13 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
+
+      <el-form-item label="题库" prop="bankId">
+        <el-select v-model="queryForm.bankId">
+          <el-option v-for="bank in questionBankList" :key="bank.id" :label="bank.name" :value="bank.id"></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" plain @click="findByCondition()">查询</el-button>
         <el-button type="default" plain @click="reset()">重置</el-button>
@@ -279,6 +286,7 @@
          * 查询参数
          **/
         queryForm: {
+          bankId: '',
           name: null,
           pageSize: 10,
           pageNum: 1,
@@ -416,7 +424,6 @@
 //        this.$refs.upload.clearFiles();
         this.batchAddErrorMessage = '';
         this.batchAddDialogShow = true;
-        this.findQuestionBanks();
       },
       /**
        * 批量导入
@@ -459,7 +466,7 @@
       * 查找所有题库信息
       * */
       findQuestionBanks: async function () {
-        let data = await this.postParam("/questionBank/api/findAll");
+        let data = await this.doGet("/questionBank/api/findAll");
         this.questionBankList = data;
       },
 
@@ -467,7 +474,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/multi/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/multi/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -492,7 +499,6 @@
        * 跳转到添加数据页面
        */
       toAdd() {
-        this.findQuestionBanks();
         console.log("唤起添加对话框")
         this.editDialogShow = true;
         this.dataForEdit = {a1: '', a2: '', a3: '', a4: '', a5: ''};
@@ -501,7 +507,6 @@
        * 唤起编辑对话框
        */
       toEdit(idx, row) {
-        this.findQuestionBanks();
         console.log("编辑：", row)
         this.dataForEdit = JSON.parse(JSON.stringify(row));
         let itemList = JSON.parse(this.dataForEdit.content);
@@ -565,7 +570,7 @@
               item.push(this.dataForEdit.a5)
             }
             this.dataForEdit.content = JSON.stringify(item);
-            let res = await this.postEntity('/multi/api/save', this.dataForEdit, 3000);
+            let res = await this.doPost('/multi/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改
@@ -631,7 +636,7 @@
         }).then(async () => {
 
           console.log("删除：", idx, row)
-          let data = await this.postEntity("/multi/api/delete?id=" + row.id);
+          let data = await this.doPost("/multi/api/delete?id=" + row.id);
           if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;
@@ -669,6 +674,8 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+      this.findQuestionBanks();
+
     }
   }
 </script>

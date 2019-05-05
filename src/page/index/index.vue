@@ -202,7 +202,7 @@
       //退出
       async logout() {
         // e.preventDefault();
-        let res = await this.postParam("/user/api/logout");
+        let res = await this.doPost("/user/api/logout");
         if (res) {
           sessionStorage.clear();
           this.$router.push({path: "/login"})

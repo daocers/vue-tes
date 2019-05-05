@@ -121,11 +121,11 @@
         let treeData;
         console.log("查询tree data...")
         if (this.userSelectType == 1) {
-          treeData = await this.postEntity("/branch/api/getBranchTree");
+          treeData = await this.doGet("/branch/api/getBranchTree");
         } else if (this.userSelectType == 2) {
-          treeData = await  this.postEntity("/department/api/findAll");
+          treeData = await  this.doGet("/department/api/findAll");
         } else if (this.userSelectType == 3) {
-          treeData = await this.postEntity("/station/api/findAll");
+          treeData = await this.doGet("/station/api/findAll");
         }
         if (!treeData) {
           treeData = [];

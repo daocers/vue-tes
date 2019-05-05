@@ -190,6 +190,8 @@
        * 提交练习信息
        */
       async commitPractise() {
+        const loading = this.loading();
+
         this.doPost("/receiptRecord/api/save", {
           count: this.numberList.length,
           seconds: this.timeUsed,
@@ -197,13 +199,14 @@
           falseCount: this.fCount,
           rate: this.rate
         }).then(res => {
-          console.log("提交练习", res);
+          loading.close();
+          if (res) {
+            this.$message.success("练习数据提交成功")
+            this.$router.push("/practise/list");
+          } else {
+            this.$message.warn("练习数据提交失败");
+          }
         })
-
-        // let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=-1&seconds="
-        //   + this.timeUsed + "&receiptCount=" + this.numberList.length,
-        //   this.yourInputList);
-        // console.log("提交凭条练习数据结果：", data);
       },
 
       toDetail() {

@@ -240,11 +240,10 @@
        * 查询
        */
       findByCondition: async function () {
-        let resp = await this.doPost("/receiptRecord/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
-        if (resp.result) {
-          let data = resp.data;
-          this.tableData = data.list;
-          this.totalCount = data.total;//总记录数目
+        let res = await this.doPost("/receiptRecord/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        if (res) {
+          this.tableData = res.list;
+          this.totalCount = res.total;//总记录数目
         } else {
           this.tableData = [];
           this.totalCount = 0;
@@ -291,7 +290,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.http('/receiptRecord/v1/save', this.dataForEdit, 3000);
+            var res = await this.http('/receiptRecord/api/save', this.dataForEdit, 3000);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改

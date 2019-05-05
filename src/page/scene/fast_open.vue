@@ -384,7 +384,7 @@
 
 
       //  获取题库列表
-      let bankList = await this.postEntity("/questionBank/api/findAll");
+      let bankList = await this.doPost("/questionBank/api/findAll");
       console.log("bankList:", bankList);
       if (bankList) {
         this.questionBankList = bankList;
@@ -392,33 +392,33 @@
 
 
       await this.doPost("/department/api/getUnderManager").then(res => {
-        if (res.result) {
-          this.departmentList = res.data;
+        if (res) {
+          this.departmentList = res;
         }
       });
 
       await this.doPost("/branch/api/getUnderManager").then(res => {
-        if (res.result) {
-          this.branchList = res.data;
+        if (res) {
+          this.branchList = res;
         }
       });
 
       await this.doPost("/station/api/getUnderManager").then(res => {
-        if (res.result) {
-          this.stationList = res.data;
+        if (res) {
+          this.stationList = res;
         }
       });
 
       await this.doPost("/paperPolicy/api/findAll").then(res => {
-        if (res.result) {
-          this.paperPolicyList = res.data;
+        if (res) {
+          this.paperPolicyList = res;
         }
       })
     },
 
     methods: {
-      handlePaperModelChange(data){
-        if(data == 1){
+      handlePaperModelChange(data) {
+        if (data == 1) {
           this.paperPolicy = {}
         }
       },
@@ -450,7 +450,7 @@
 
             let res = await this.doPost("/scene/api/save", this.scene);
 
-            if (res.result) {
+            if (res) {
               let msg = '';
               if (this.scene.id) {
                 msg = "修改成功！";

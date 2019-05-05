@@ -236,7 +236,7 @@
         if(!this.queryForm.status){
           this.queryForm.status = '';
         }
-        let data = await this.postEntity("/scene/api/myOpen?pageNum=" +
+        let data = await this.doPost("/scene/api/myOpen?pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize + "&status=" + this.queryForm.status);
         console.log("data:::", data);
         if (data) {

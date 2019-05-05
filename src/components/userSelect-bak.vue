@@ -160,7 +160,7 @@
         if (this.clearFlag) {
           this.clearFlag = false;
         }
-        let data = await this.postEntity("/user/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/user/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -194,7 +194,7 @@
     created: async function () {
       console.log("created....")
       // this.findByCondition();
-      let roleList = await this.postEntity("/role/api/findAll");
+      let roleList = await this.doPost("/role/api/findAll");
       this.roleList = roleList;
     },
     props: {

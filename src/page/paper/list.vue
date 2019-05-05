@@ -288,7 +288,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -339,7 +339,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.postEntity('/paper/api/save', this.dataForEdit, 3000);
+            var res = await this.doPost('/paper/api/save', this.dataForEdit);
             if (res) {
               if (this.dataForEdit.id) {
                 //                修改
@@ -405,7 +405,7 @@
         }).then(async () => {
 
           console.log("删除：", idx, row)
-          let data = await this.postEntity("/paper/api/delete?id=" + row.id);
+          let data = await this.doPost("/paper/api/delete?id=" + row.id);
           if (data == true) {
             this.tableData.splice(idx, 1);
             this.tableData = this.tableData;

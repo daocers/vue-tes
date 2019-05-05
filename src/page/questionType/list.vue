@@ -282,7 +282,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/questionType/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/questionType/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -327,7 +327,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            var res = await this.postEntity('/questionType/api/update', this.dataForEdit, 1000);
+            var res = await this.doPost('/questionType/api/update', this.dataForEdit);
             if (res) {
               Vue.set(this.tableData, this.dataForEditIndex, this.dataForEdit);
               //        以下代码变动无法触发页面渲染
@@ -356,7 +356,7 @@
             console.log("参数校验不通过，请处理");
             return false;
           } else {
-            let res = await this.postEntity("/questionType/api/save", this.dataForAdd, 1000);
+            let res = await this.doPost("/questionType/api/save", this.dataForAdd);
             if (res == true) {
               this.$refs['addForm'].resetFields();
               this.$refs['addTable'].clearSelection();
@@ -395,7 +395,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.postEntity("/questionType/api/delete?id=" + row.id);
+        let data = await this.doPost("/questionType/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
@@ -475,7 +475,7 @@
       console.log("created....")
       this.findByCondition();
 
-      let propertyListData = await this.postEntity("/property/api/findByCondition?pageNum=1&pageSize=100", null);
+      let propertyListData = await this.doPost("/property/api/findByCondition?pageNum=1&pageSize=100", null);
       this.propertyList = propertyListData.list;
 
     }

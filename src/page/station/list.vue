@@ -212,7 +212,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/station/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/station/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         this.tableData = data.list;
         this.totalCount = data.total;//总记录数目
@@ -258,7 +258,7 @@
             return false;
           } else {
             let id = this.dataForEdit.id;
-            let res = await this.postEntity('/station/api/save', this.dataForEdit, 1000);
+            let res = await this.doPost('/station/api/save', this.dataForEdit);
             if (res) {
               if (id) {
                 this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
@@ -286,7 +286,7 @@
        */
       async toRemove(idx, row) {
         console.log("删除：", idx, row)
-        let data = await this.postEntity("/station/api/delete?id=" + row.id);
+        let data = await this.doPost("/station/api/delete?id=" + row.id);
         if (data == true) {
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;

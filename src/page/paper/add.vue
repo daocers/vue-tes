@@ -146,7 +146,7 @@
                         console.log("参数校验不通过，请处理");
                         return false;
                     } else {
-                        let res = await this.postEntity("/paper/v1/save", this.paper);
+                        let res = await this.doPost("/paper/api/save", this.paper);
                         if (res == true) {
                             this.$confirm('继续添加?查看列表?', '提示', {
                                 confirmButtonText: '继续添加',

@@ -191,7 +191,7 @@
       async commitPaper() {
         console.log("提交试卷！");
         let paperId = sessionStorage.getItem("paperId");
-        let res = await this.postEntity("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
+        let res = await this.doPost("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
           this.closeTimer();
           this.$notify.success({
@@ -373,7 +373,7 @@
       }
       let questionList = res.data;
       if (questionList && questionList.length > 0) {
-        this.postParam("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
+        this.doPost("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
           console.log("获取剩余时间", res);
           let leftSeconds = res;
           this.endTime = new Date(new Date().getTime() + res * 1000);
@@ -414,7 +414,7 @@
         return false;
       }
 
-      // let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
+      // let scene = await this.doPost("/scene/api/findById?id=" + sceneId);
       // if (scene) {
       //   this.scene = scene;
       //   let time = new Date();

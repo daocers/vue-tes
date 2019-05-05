@@ -52,7 +52,9 @@
         <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
                    style="margin-left: 100px;">下一题
         </el-button>
-        <el-button type="warning" style="float: right; margin-right: 10px;" @click="toReceipt" v-if="numberList.length > 0">开始翻打凭条考试</el-button>
+        <el-button type="warning" style="float: right; margin-right: 10px;" @click="toReceipt"
+                   v-if="numberList.length > 0">开始翻打凭条考试
+        </el-button>
       </el-col>
       <el-col :span="6">
         <el-table
@@ -117,36 +119,36 @@
 
       </el-row>
 
-<!--      <el-dialog title="做答结束" :visible.sync="done"-->
-<!--                 :close-on-click-modal="false"-->
-<!--                 :close-on-press-escape="false"-->
-<!--                 width="50%"-->
-<!--                 :show-close="false">-->
-<!--        <el-form label-position="left">-->
-<!--          <el-form-item label="做答时间" label-width="80px">-->
-<!--            <el-input v-model="getTimeInfo" disabled=""></el-input>-->
-<!--          </el-form-item>-->
+      <!--      <el-dialog title="做答结束" :visible.sync="done"-->
+      <!--                 :close-on-click-modal="false"-->
+      <!--                 :close-on-press-escape="false"-->
+      <!--                 width="50%"-->
+      <!--                 :show-close="false">-->
+      <!--        <el-form label-position="left">-->
+      <!--          <el-form-item label="做答时间" label-width="80px">-->
+      <!--            <el-input v-model="getTimeInfo" disabled=""></el-input>-->
+      <!--          </el-form-item>-->
 
-<!--          <el-form-item label="正确数量" label-width="80px">-->
-<!--            <el-input v-model="tCount" disabled></el-input>-->
-<!--          </el-form-item>-->
+      <!--          <el-form-item label="正确数量" label-width="80px">-->
+      <!--            <el-input v-model="tCount" disabled></el-input>-->
+      <!--          </el-form-item>-->
 
 
-<!--          <el-form-item label="错误数量" label-width="80px">-->
-<!--            <el-input v-model="fCount" disabled></el-input>-->
-<!--          </el-form-item>-->
+      <!--          <el-form-item label="错误数量" label-width="80px">-->
+      <!--            <el-input v-model="fCount" disabled></el-input>-->
+      <!--          </el-form-item>-->
 
-<!--          <el-form-item label="正确率" label-width="80px">-->
-<!--            <el-input v-model="rate" disabled>-->
-<!--              <template slot="append"> %</template>-->
-<!--            </el-input>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--          &lt;!&ndash;          <el-button @click="toOnceMore">再练一场</el-button>&ndash;&gt;-->
-<!--          <el-button type="primary" @click="">查看详情</el-button>-->
-<!--        </div>-->
-<!--      </el-dialog>-->
+      <!--          <el-form-item label="正确率" label-width="80px">-->
+      <!--            <el-input v-model="rate" disabled>-->
+      <!--              <template slot="append"> %</template>-->
+      <!--            </el-input>-->
+      <!--          </el-form-item>-->
+      <!--        </el-form>-->
+      <!--        <div slot="footer" class="dialog-footer">-->
+      <!--          &lt;!&ndash;          <el-button @click="toOnceMore">再练一场</el-button>&ndash;&gt;-->
+      <!--          <el-button type="primary" @click="">查看详情</el-button>-->
+      <!--        </div>-->
+      <!--      </el-dialog>-->
 
       <el-row>
         <el-col :span="16">
@@ -334,7 +336,7 @@
        * 开启翻打凭条试题
        */
       toReceipt() {
-        if(this.done){
+        if (this.done) {
           this.$message({
             type: 'warning',
             message: "已经提交过凭条答案",
@@ -387,7 +389,7 @@
         console.log("提交试卷！");
         this.closeTimer();
         let paperId = sessionStorage.getItem("paperId");
-        let res = await this.postEntity("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
+        let res = await this.doPost("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
           this.$notify.success({
             title: "成功",
@@ -614,7 +616,7 @@
         this.$router.replace("/exam")
         return false;
       }
-      let res = await this.doPost("/exam/api/getQuestionList?sceneId=" + this.sceneId);
+      let res = await this.doGet("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (!res.result) {
         this.$notify({
           title: '提示',
@@ -625,7 +627,7 @@
       }
       let questionList = res.data;
       if (questionList && questionList.length > 0) {
-        this.postParam("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
+        this.doGet("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
           console.log("获取剩余时间", res);
           let leftSeconds = res;
           this.endTime = new Date(new Date().getTime() + res * 1000);
@@ -674,7 +676,7 @@
         this.numberIndex = 0;
       }
 
-      let scene = await this.postEntity("/scene/api/findById?id=" + sceneId);
+      let scene = await this.doGet("/scene/api/findById?id=" + sceneId);
       if (scene) {
         this.scene = scene;
         let time = new Date();

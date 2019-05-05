@@ -123,11 +123,12 @@
     },
     methods: {
       async signIn() {
-        let _router = this.$router;
         this.$refs.loginForm.validate(async (valid) => {
           if (valid) {
-            let res = await this.postParam('/user/api/login', this.login);
+            sessionStorage.setItem("token", "nothing")
+            let res = await this.doPost('/user/api/login', this.login, "form");
             if (res) {
+              this.$notify.closeAll();
               //保存用户token
               console.log("获取到token：", res);
               //登录成功删除所有的sessionStorage
@@ -136,7 +137,7 @@
               sessionStorage.setItem("username", this.login.username);
 
               console.log("开始获取权限列表")
-              this.doGet("/permission/api/findMenuUrlList").then(res => {
+              this.doPost("/permission/api/findMenuUrlList").then(res => {
                 console.log("获取权限url列表：", res);
                 sessionStorage.setItem("urlList", res);
               })
@@ -145,7 +146,7 @@
                * 下面是通过配置生效的页面权限控制
                * */
               //获取菜单信息
-              this.postParam("/permission/api/getMenuTree").then(res => {
+              this.doGet("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
                 if(res.length == 0){
                   this.$notify({

@@ -161,7 +161,7 @@
        * @returns {Promise.<void>}
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/scene/api/myJoin?pageNum=" +
+        let data = await this.doPost("/scene/api/myJoin?pageNum=" +
           this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data:::", data);
         if (data) {

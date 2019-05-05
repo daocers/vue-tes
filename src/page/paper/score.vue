@@ -125,7 +125,7 @@
        * 查询
        */
       findByCondition: async function () {
-        let data = await this.postEntity("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
+        let data = await this.doPost("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
