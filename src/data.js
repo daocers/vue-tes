@@ -23,17 +23,17 @@ function busiTypeList() {
 //   }
 // }
 
-var busiTypeMap = {
+const busiTypeMap = {
   "1": "对公",
   "2": "对私",
   "3": "公共",
   "4": "国际",
 }
 
-var diffMap = {
-  "1": "简单",
-  "2": "中等",
-  "3": "困难"
+const diffMap = {
+  "1": "低",
+  "2": "中",
+  "3": "高"
 }
 
 export {

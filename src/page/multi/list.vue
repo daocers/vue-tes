@@ -73,14 +73,22 @@
         </template>
       </el-table-column>
 
+
       <el-table-column
         prop="attr1"
         label="业务类型">
+        <template slot-scope="scope">
+          {{busiTypeMap[scope.row.attr1]}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="attr2"
         label="难度">
+        <template slot-scope="scope">
+          {{diffMap[scope.row.attr2]}}
+        </template>
       </el-table-column>
+
       <el-table-column
         v-if="false"
         prop="attr3"
@@ -170,20 +178,18 @@
             inactive-text="私有">
           </el-switch>
         </el-form-item>
-        <el-form-item label="attr1" prop="attr1" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr1" placeholder="请输入"></el-input>
+
+
+        <el-form-item label="业务类型" prop="attr1" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.attr1">
+            <el-option v-for="(key, val) in busiTypeMap" :key="val" :label="key" :value="val"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="attr2" prop="attr2" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr2" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr3" prop="attr3" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr3" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr4" prop="attr4" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr4" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr5" prop="attr5" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr5" placeholder="请输入"></el-input>
+        <el-form-item label="难度" prop="attr2" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.attr2">
+            <el-option v-for="(key, val) in diffMap" :key="val" :value="val" :label="key"></el-option>
+          </el-select>
         </el-form-item>
 
       </el-form>
@@ -214,7 +220,6 @@
         ref="upload"
         :limit="1"
         :data="dataForBatch"
-        action="http://localhost:8080/multi/api/batchAdd"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
@@ -245,11 +250,13 @@
 
 
 <script>
-  import Vue from 'vue'
+  import {busiTypeMap, diffMap} from '../../data.js'
 
   export default {
     data() {
       return {
+        busiTypeMap: busiTypeMap,
+        diffMap: diffMap,
         /**
          * 对话框的label宽度
          */
@@ -400,8 +407,8 @@
         });
       },
       download() {
-        this.batchAddErrorMessage = '';
-        this.download("/multi/api/downloadModel");
+        // this.batchAddErrorMessage = '';
+        this.downloadFile("/multi/api/downloadModel");
       },
 
       toBatchAdd() {

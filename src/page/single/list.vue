@@ -1,5 +1,8 @@
 <template>
   <div class="table">
+    <div v-for="(key, value) in busiTypeMap">
+      {{key}}-{{value}}
+    </div>
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
@@ -77,14 +80,14 @@
         prop="attr1"
         label="业务类型">
         <template slot-scope="scope">
-           {{busiTypeMap[scope.row.attr1]}}
+          {{busiTypeMap[scope.row.attr1]}}
         </template>
       </el-table-column>
       <el-table-column
         prop="attr2"
         label="难度">
         <template slot-scope="scope">
-            {{diffMap[scope.row.attr2]}}
+          {{diffMap[scope.row.attr2]}}
         </template>
       </el-table-column>
       <el-table-column
@@ -176,20 +179,17 @@
             inactive-text="私有">
           </el-switch>
         </el-form-item>
-        <el-form-item label="attr1" prop="attr1" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr1" placeholder="请输入"></el-input>
+
+        <el-form-item label="业务类型" prop="attr1" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.attr1">
+            <el-option v-for="(key, val) in busiTypeMap" :key="val" :label="key" :value="val"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="attr2" prop="attr2" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr2" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr3" prop="attr3" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr3" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr4" prop="attr4" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr4" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="attr5" prop="attr5" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.attr5" placeholder="请输入"></el-input>
+        <el-form-item label="难度" prop="attr2" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.attr2">
+            <el-option v-for="(key, val) in diffMap" :key="val" :value="val" :label="key"></el-option>
+          </el-select>
         </el-form-item>
 
       </el-form>
@@ -252,6 +252,7 @@
 
 <script>
   import {busiTypeMap, diffMap} from '../../data.js'
+
   export default {
     data() {
       return {
