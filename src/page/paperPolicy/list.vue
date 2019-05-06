@@ -97,6 +97,7 @@
         width="90">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toDetail(scope.$index, scope.row)">查看详情</el-button>
+          <el-button type="text" size="small" @click="toCheck(scope.$index, scope.row)">检测</el-button>
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -111,6 +112,91 @@
                    layout="total, sizes, prev, pager, next, jumper"
                    :total="totalCount">
     </el-pagination>
+
+    <el-dialog title="校验策略可用性" :visible.sync="checkDialogShow" width="80%">
+      <el-form  ref="checkForm" :rules="rules" label-position="left" :model="dataOfCheck">
+        <el-form-item label="策略名称" prop="name" :label-width="labelWidth">
+          <el-input :disabled="true" v-model="dataOfCheck.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="选择题库" prop="bankId" :label-width="labelWidth">
+          <el-select v-model="dataOfCheck.bankId" @change="checkPaperPolicy">
+            <el-option v-for="item in questionBankList"
+                       :key="item.id" :value="item.id" :label="item.name"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <div v-if="!detailFlag" slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="checkPaperPolicy">校 验</el-button>
+<!--        <el-button type="warning" @click="disablePolicy">禁用策略</el-button>-->
+      </div>
+
+      <el-tag key="单选题" v-if="dataOfCheck.singles">单选题</el-tag>
+      <el-table :data="dataOfCheck.singles" :row-class-name="getCheckRowClassName">
+        <el-table-column prop="busiType" label="业务类型">
+          <template slot-scope="scope">
+            {{busiTypeMap[scope.row.busiType]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="difficulty" label="难度">
+          <template slot-scope="scope">
+            {{diffMap[scope.row.difficulty]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="count" label="需要题量"></el-table-column>
+        <el-table-column prop="realCount" label="实际数量"></el-table-column>
+        <el-table-column label="结果">
+          <template slot-scope="scope">
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-tag key="多选题">多选题</el-tag>
+      <el-table :data="dataOfCheck.multies" :row-class-name="getCheckRowClassName">
+        <el-table-column prop="busiType" label="业务类型">
+          <template slot-scope="scope">
+            {{busiTypeMap[scope.row.busiType]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="difficulty" label="难度">
+          <template slot-scope="scope">
+            {{diffMap[scope.row.difficulty]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="count" label="需要题量"></el-table-column>
+        <el-table-column prop="realCount" label="实际数量"></el-table-column>
+        <el-table-column label="结果">
+          <template slot-scope="scope">
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-tag key="判断题">判断题</el-tag>
+      <el-table :data="dataOfCheck.judges" :row-class-name="getCheckRowClassName">
+        <el-table-column prop="busiType" label="业务类型">
+          <template slot-scope="scope">
+            {{busiTypeMap[scope.row.busiType]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="difficulty" label="难度">
+          <template slot-scope="scope">
+            {{diffMap[scope.row.difficulty]}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="count" label="需要题量"></el-table-column>
+        <el-table-column prop="realCount" label="实际数量"></el-table-column>
+        <el-table-column label="结果">
+          <template slot-scope="scope">
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <el-dialog v-bind:title="detailFlag ? '查看详情': dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow"
                width="80%">
@@ -154,7 +240,7 @@
             </el-table-column>
             <el-table-column prop="score" label="分值">
               <template slot-scope="scope">
-                <el-input-number v-model="dataForEdit.singleScore" :precision="1" :step="0.5" :max="5"
+                <el-input-number size="small" v-model="dataForEdit.singleScore" :precision="1" :step="0.5" :max="5"
                                  :min="0.5"></el-input-number>
               </template>
             </el-table-column>
@@ -303,10 +389,17 @@
 
 <script>
   import Vue from 'vue'
+  import  {diffMap, busiTypeMap} from "../../data"
 
   export default {
     data() {
       return {
+        diffMap: diffMap,
+        busiTypeMap: busiTypeMap,
+        dataOfCheck: {},
+        questionBankList: [],
+        checkDialogShow: false,
+
         receiptFlag: false,
         /**
          * 对话框的label宽度
@@ -393,6 +486,13 @@
 
 
     methods: {
+      getCheckRowClassName: function(row, idx){
+        // if(row.realCount >= row.count){
+        //   return "row-valid";
+        // }else{
+        //   return "row-invalid";
+        // }
+      },
       /**
        * 查询
        */
@@ -406,6 +506,18 @@
         } else {
           this.tableData = [];
           this.totalCount = 0;
+        }
+      },
+
+
+      /**
+       * 获取全部的题库
+       *
+       */
+      findAllQuestionBank: async function(){
+        let data = await  this.doPost("/questionBank/api/findAll");
+        if(data){
+          this.questionBankList = data;
         }
       },
 
@@ -457,6 +569,32 @@
           this.receiptFlag = true;
         } else {
           this.receiptFlag = false;
+        }
+      },
+
+      /**
+       * 检查试卷策略可用性
+       */
+      toCheck(idx, row) {
+        console.log("df",this.questionBankList)
+        if(this.questionBankList.length == 0){
+          console.log("dfd")
+          this.findAllQuestionBank();
+        }
+        this.dataOfCheck = {};
+        this.dataOfCheck.name = row.name;
+        this.dataOfCheck.id = row.id;
+        this.checkDialogShow = true;
+
+      },
+
+      /**
+       * 校验策略
+       */
+      async checkPaperPolicy(){
+        let data = await this.doPost("/paperPolicy/api/checkPolicy", {"paperPolicyId": this.dataOfCheck.id, "bankId": this.dataOfCheck.bankId}, "form");
+        if(data){
+          this.dataOfCheck = data;
         }
       },
 
@@ -636,6 +774,7 @@
     created: async function () {
       console.log("created....")
       this.findByCondition();
+
     }
   }
 </script>
@@ -654,5 +793,11 @@
 
   button.btn-prev {
     border-left: 1px solid gainsboro;
+  }
+  .el-table .row-valid{
+    background: #94c293;
+  }
+  .el-table .row-invalid{
+    background: #ff9798;
   }
 </style>
