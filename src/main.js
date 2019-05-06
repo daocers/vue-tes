@@ -133,7 +133,7 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
   })
 
   console.log("响应数据：", response);
-  return await handleResponse(response, this);
+  return handleResponse(response, this);
 }
 
 
@@ -144,7 +144,7 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
  * @param vue
  * @returns {Promise<{}|boolean|*>}
  */
-async function handleResponse(response, vue) {
+function handleResponse(response, vue) {
   if (response.status == 200) {
     let data = response.data;
     let code = data.code;

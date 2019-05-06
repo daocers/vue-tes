@@ -24,7 +24,6 @@
 
 <script>
   //  import store from 'src/store.js'
-  import $ from 'jquery'
 
   export default {
     name: 'sceneIndex',

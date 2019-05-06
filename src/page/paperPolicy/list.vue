@@ -75,20 +75,20 @@
         label="数字长度">
       </el-table-column>
       <el-table-column
-        prop="branchId"
-        label="branchId">
+        prop="branchName"
+        label="机构">
       </el-table-column>
       <el-table-column
-        prop="stationId"
-        label="stationId">
+        prop="stationName"
+        label="岗位">
       </el-table-column>
       <el-table-column
-        prop="departmentId"
-        label="departmentId">
+        prop="departmentName"
+        label="部门">
       </el-table-column>
       <el-table-column
-        prop="createUserId"
-        label="createUserId">
+        prop="createUserName"
+        label="创建人">
       </el-table-column>
 
       <el-table-column
@@ -118,8 +118,8 @@
         <el-form-item label="策略名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="策略编码" prop="code" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+        <el-form-item v-if="dataForEdit.id" label="策略编码" prop="code" :label-width="labelWidth">
+          <el-input v-model="dataForEdit.code" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
@@ -369,7 +369,7 @@
         rules: {
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入名称', trigger: 'blur'},
               {max: 10, message: '长度在10个字符以内', trigger: 'blur'}
             ],
           memo:
@@ -379,12 +379,12 @@
           receiptCount:
             [
               {required: true, message: '请输入receiptCount', trigger: 'blur'},
-              {min: 3, type: 'number', max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {min: 10, type: 'number', max: 100, message: '长度在3-10个字符', trigger: 'blur'}
             ],
           numberLength:
             [
               {required: true, message: '请输入numberLength', trigger: 'blur'},
-              {min: 3, max: 10, type: 'number', message: '长度在3-10个字符', trigger: 'blur'}
+              // {min: 3, max: 10, type: 'number', message: '长度在3-10个字符', trigger: 'blur'}
             ],
         }
 
@@ -398,7 +398,6 @@
        */
       findByCondition: async function () {
         let data = await this.doPost("/paperPolicy/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
-        data = data.data;
         console.log("data: ", data);
         if (data) {
           this.tableData = data.list;
@@ -454,6 +453,11 @@
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
         this.detailFlag = false;
+        if (this.dataForEdit.receiptCount > 0) {
+          this.receiptFlag = true;
+        } else {
+          this.receiptFlag = false;
+        }
       },
 
       /**
@@ -474,6 +478,11 @@
         this.dataForEditIndex = idx;
         this.editDialogShow = true;
         this.detailFlag = true;
+        if (this.dataForEdit.receiptCount > 0) {
+          this.receiptFlag = true;
+        } else {
+          this.receiptFlag = false;
+        }
       },
 
 
@@ -551,7 +560,7 @@
                 }).catch(() => {
                   this.findByCondition();
                   //        关闭对话框
-                  this.addDialogShow = false;
+                  this.editDialogShow = false;
                 });
               }
 

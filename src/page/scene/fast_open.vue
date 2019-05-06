@@ -88,12 +88,12 @@
         <el-table-column prop="type" label="题型" width="180px"></el-table-column>
         <el-table-column prop="count" label="数量">
           <template slot-scope="scope">
-            <el-input type="number" size="small" v-model="scope.row.count"></el-input>
+            <el-input type="number" size="small" :min="1" v-model="scope.row.count"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="score" label="分值">
           <template slot-scope="scope">
-            <el-input type="text" size="small" v-model="scope.row.score"></el-input>
+            <el-input-number  size="small" v-model="scope.row.score" :precision="1" :step="0.5" :max="5"></el-input-number>
           </template>
         </el-table-column>
 
@@ -101,31 +101,31 @@
     </el-row>
 
     <el-row v-if="scene.paperModel == 2">
-      <el-table :data="paperPolicyList" size="small"
+      <el-table :data="paperPolicyList" size="small" :highlight-current-row="true"
                 style="width: 100%" @row-click="handleRowClick">
         <!--        <el-table-column type="selection"></el-table-column>-->
         <el-table-column prop="name" label="名称" width="180px"></el-table-column>
         <el-table-column prop="single" label="单选" width="180px">
           <template slot-scope="scope">
-            {{scope.row.singleCount}} {{scope.row.singleScore}}
+            {{scope.row.singleCount}}题 {{scope.row.singleScore}}分
           </template>
         </el-table-column>
 
         <el-table-column prop="multi" label="多选" width="180px">
           <template slot-scope="scope">
-            {{scope.row.multiCount}} {{scope.row.multiScore}}
+            {{scope.row.multiCount}}题 {{scope.row.multiScore}}分
           </template>
         </el-table-column>
 
         <el-table-column prop="judge" label="判断题" width="180px">
           <template slot-scope="scope">
-            {{scope.row.judgeCount}} {{scope.row.judgeScore}}
+            {{scope.row.judgeCount}}题 {{scope.row.judgeScore}}分
           </template>
         </el-table-column>
 
         <el-table-column prop="judge" label="翻打凭条" width="180px">
           <template slot-scope="scope">
-            {{scope.row.receiptCount}} {{scope.row.numberLength}}
+            {{scope.row.receiptCount}}张 {{scope.row.numberLength}}位
           </template>
         </el-table-column>
 
@@ -133,15 +133,15 @@
     </el-row>
 
 
-    <el-form-item v-if="scene.paperModel == 2" label="试卷策略" prop="paperPolicyId">
-      <el-select v-model="scene.paperPolicyId" placeholder="试卷策略模式">
-        <el-option v-for="item in paperPolicyList"
-                   :key="item.id"
-                   :label="item.name"
-                   :value="item.id">
-        </el-option>
-      </el-select>
-    </el-form-item>
+    <!--    <el-form-item v-if="scene.paperModel == 2" label="试卷策略" prop="paperPolicyId">-->
+    <!--      <el-select v-model="scene.paperPolicyId" placeholder="试卷策略模式">-->
+    <!--        <el-option v-for="item in paperPolicyList"-->
+    <!--                   :key="item.id"-->
+    <!--                   :label="item.name"-->
+    <!--                   :value="item.id">-->
+    <!--        </el-option>-->
+    <!--      </el-select>-->
+    <!--    </el-form-item>-->
 
 
     <el-form-item label="翻打凭条" prop="receiptFlag">
@@ -226,6 +226,32 @@
         } else {
           callback();
         }
+      };
+      let checkPaperPolicy = (rule, value, callback) => {
+        console.log("校验paperPolicy", value);
+        if (this.scene.paperModel == 1) {
+          //  简单方式
+          let list = this.simpleModel;
+          let totalCount = 0;
+          for (let idx in list) {
+            let item = list[idx];
+            let count = item.count;
+            let score = item.score;
+            if(count){
+              totalCount = totalCount + count;
+            }
+          }
+          console.log("totalCount:", totalCount)
+          if (totalCount < 1) {
+            callback(new Error("请指定试题数量和分值"))
+          }
+        } else {
+          //  策略方式
+          if (!this.scene.paperPolicyId || this.scene.paperPolicyId < 0) {
+            callback(new Error("请选择试卷策略"))
+          }
+        }
+        callback();
       };
       var checkAuthCode = (rule, value, callback) => {
         // if (!value || value == '' || value == undefined) {
@@ -312,9 +338,9 @@
         paperPolicy: {},
         //简单策略的信息
         simpleModel: [
-          {type: '单选题'},
-          {type: '多选题'},
-          {type: '判断题'},
+          {type: '单选题', score: 1},
+          {type: '多选题', score: 1},
+          {type: '判断题', score: 1},
         ],
         rules: {
           name: [
@@ -341,10 +367,12 @@
             {type: 'number', required: true, message: '请设置是否百分制', trigger: 'change'}
           ],
           paperGenerateType: [
-            {required: true, message: '请选择试卷生成方式', trigger: 'change'}
+            {required: true, message: '请选择试卷生成方式', trigger: 'change'},
+          ],
+          paperModel: [
+            {validator: checkPaperPolicy, trigger: 'blur'}
           ],
           authCode: [
-            // {required: true, message: '请输入场次识别码', trigger: 'blur'},
             {validator: checkAuthCode, trigger: 'blur'},
           ],
           questionBankId: [
@@ -420,12 +448,23 @@
       handlePaperModelChange(data) {
         if (data == 1) {
           this.paperPolicy = {}
+          this.scene.paperPolicyId = '';
         }
       },
       //试题策略
       handleRowClick(row, column, event) {
         console.log("table-click", row)
         this.paperPolicy = row;
+        this.scene.paperPolicyId = row.id;
+        if (row.receiptCount > 0) {
+          this.receiptFlag = true;
+          this.scene.receiptCount = row.receiptCount;
+          this.scene.numberLength = row.numberLength;
+        } else {
+          this.receiptFlag = false;
+          this.scene.receiptCount = '';
+          this.scene.numberLength = '';
+        }
       },
       //开场
       openScene: async function () {
@@ -464,9 +503,10 @@
                 }
               })
             } else {
-              this.$alert("开场失败!", "警告", {
-                confirmButtonText: '确定',
-              })
+              // this.$alert(res.message ? res.message : "开场失败!", "警告", {
+              //   confirmButtonText: '确定',
+              //   type: 'warning'
+              // })
             }
           }
         });
