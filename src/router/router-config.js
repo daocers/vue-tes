@@ -108,6 +108,8 @@ const PractiseList = () => import("../page/receipt/practiseList")
 const PaperPolicyIndex = () => import('../page/paperPolicy/list.vue')
 const PaperPolicyAdd = () => import("../page/paperPolicy/add")
 
+const Stat = () => import("../page/stat/index")
+
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
@@ -124,6 +126,7 @@ export default [
     component: Index,
     children: [
       {path: '/', component: Summary},
+      {path: '/stat', component: Stat},
       {path: '/single', component: Single},
       {path: '/multi', component: Multi},
       {path: '/judge', component: Judge},
