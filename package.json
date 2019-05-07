@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "echarts": "^4.2.1",
     "element-ui": "latest",
+    "v-charts": "^1.19.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-schart": "^1.0.0",

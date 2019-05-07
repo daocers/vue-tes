@@ -69,7 +69,7 @@
 
 
     <el-form-item label="使用题库" prop="questionBankId">
-      <el-select v-model="scene.questionBankId" placeholder="请选择本场使用的题库">
+      <el-select v-model="scene.questionBankId" placeholder="请选择本场使用的题库" @change="findAllAvailablePolicy">
         <el-option v-for="item in questionBankList" :label="item.name" :key="item.id" :value="item.id"></el-option>
       </el-select>
     </el-form-item>
@@ -93,7 +93,8 @@
         </el-table-column>
         <el-table-column prop="score" label="分值">
           <template slot-scope="scope">
-            <el-input-number  size="small" v-model="scope.row.score" :precision="1" :step="0.5" :max="5"></el-input-number>
+            <el-input-number size="small" v-model="scope.row.score" :precision="1" :step="0.5"
+                             :max="5"></el-input-number>
           </template>
         </el-table-column>
 
@@ -237,7 +238,7 @@
             let item = list[idx];
             let count = item.count;
             let score = item.score;
-            if(count){
+            if (count) {
               totalCount = totalCount + count;
             }
           }
@@ -437,11 +438,11 @@
         }
       });
 
-      await this.doPost("/paperPolicy/api/findAll").then(res => {
-        if (res) {
-          this.paperPolicyList = res;
-        }
-      })
+      // await this.doPost("/paperPolicy/api/findAll").then(res => {
+      //   if (res) {
+      //     this.paperPolicyList = res;
+      //   }
+      // })
     },
 
     methods: {
@@ -449,7 +450,30 @@
         if (data == 1) {
           this.paperPolicy = {}
           this.scene.paperPolicyId = '';
+        } else {
+          let bankId = this.scene.questionBankId;
+          if (!bankId) {
+            this.$message.warning("请选择题库以获取试题策略信息");
+            return;
+          } else {
+            this.findAllAvailablePolicy(bankId);
+          }
         }
+      },
+
+      /**
+       * 查找全部可用的策略，根据指定的题库id
+       */
+      findAllAvailablePolicy: function (bankId) {
+        let paperModel = this.scene.paperModel;
+        if (paperModel == 2) {
+          let list = this.doPost("/paperPolicy/api/findAvailable", {"bankId": bankId}, "form");
+          if (!list || list.length == 0) {
+            this.$message.warning("本题库没有满足的试卷策略")
+          }
+          this.paperPolicyList = list;
+        }
+
       },
       //试题策略
       handleRowClick(row, column, event) {
