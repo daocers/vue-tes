@@ -31,29 +31,75 @@
         <!--        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
       </div>
       <div>
-        <el-col :span="16">
+
+        <el-col :span="8">
+          <el-tag type="success">题库范围：{{bankName? bankName: "所有试题"}}</el-tag>
+
           <ve-pie :data="bankData" :events="bankEvents" :settings="chartSettings"></ve-pie>
         </el-col>
+
+        <el-col :span="8">
+          <el-tag type="primary">业务类型</el-tag>
+
+
+          <ve-ring :data="busiData"></ve-ring>
+        </el-col>
+
+        <el-col :span="8">
+          <el-tag type="primary">难度</el-tag>
+
+
+          <ve-ring :data="diffData"></ve-ring>
+        </el-col>
+
       </div>
 
-      <div>
-        <el-tag type="success">题库范围：{{bankName? bankName: "所有试题"}}</el-tag>
-      </div>
 
-      <el-col :span="12">
-        业务类型
-
-        <ve-ring :data="busiData"></ve-ring>
-      </el-col>
-
-      <el-col :span="12">
-        难度
-
-        <ve-ring :data="diffData"></ve-ring>
-      </el-col>
     </el-card>
 
     <el-row>
+
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>考场状态监控</span>
+          <!--        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+        </div>
+        <div>
+
+          <el-row>
+            <el-col :span="12">
+              提交状态<el-progress :percentage="86"></el-progress>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-tag type="danger">未交卷列表</el-tag> <br/>
+              张三 <el-progress :percentage="98"></el-progress>
+              李四 <el-progress :percentage="89"></el-progress>
+              王五<el-progress :percentage="93"></el-progress>
+              赵六<el-progress :percentage="32"></el-progress>
+              田七<el-progress :percentage="65"></el-progress>
+
+            </el-col>
+
+            <el-col :span="12">
+              <el-tag type="success">已交卷</el-tag> <br/>
+              张三 <el-progress :percentage="98"></el-progress>
+              李四 <el-progress :percentage="89"></el-progress>
+              王五<el-progress :percentage="93"></el-progress>
+              赵六<el-progress :percentage="32"></el-progress>
+              田七<el-progress :percentage="65"></el-progress>
+
+            </el-col>
+          </el-row>
+
+
+        </div>
+
+
+      </el-card>
+
 
 
     </el-row>
@@ -73,6 +119,7 @@
         'xAxis.0.axisLabel.rotate': 45
       }
       this.chartSettings = {
+        showLine: 'rightRate',
         selectedMode: 'single',
         labelMap: {
           "joinCount": '考试人数',
@@ -105,19 +152,12 @@
         busiTypeMap: busiTypeMap,
         bankName: '',
         joinUserData: {
-          columns: ['date', 'joinCount', 'loginCount'],
-          rows: [
-            {'date': '1/1', 'loginCount': 1393, 'joinCount': 1093},
-            {'date': '1/2', 'loginCount': 3530, 'joinCount': 3230},
-            {'date': '1/3', 'loginCount': 2923, 'joinCount': 2623},
-            {'date': '1/4', 'loginCount': 1723, 'joinCount': 1423},
-            {'date': '1/5', 'loginCount': 3792, 'joinCount': 3492},
-            {'date': '1/6', 'loginCount': 4593, 'joinCount': 4293}
-          ]
+          columns: ['dateStr', 'joinCount', 'loginCount'],
+          rows: []
         },
 
         sceneQuestionData: {
-          columns: ["sceneCode", "total", "wrong", "rightRate"],
+          columns: ["sceneId", "total", "wrong", "rightRate"],
           rows: [
             {"sceneCode": '1', "total": 2232, "wrong": 123, "rightRate": 90},
             {"sceneCode": '2', "total": 1232, "wrong": 198, "rightRate": 85},
@@ -202,6 +242,17 @@
       })
 
       this.getQuestionPropStat();
+
+      this.doGet("/statistics/api/getJoinUserCountByDay?size=15").then(res => {
+        console.log("考试人数", res);
+        this.joinUserData.rows = res;
+      })
+
+      this.doGet("/stat/api/getSceneQuestionStat").then(res => {
+        console.log("sceneQuestionStat: ", res);
+        this.sceneQuestionData.rows = res;
+      })
+
 
     },
     methods: {
