@@ -7,7 +7,7 @@
       </el-col>
       <el-col :span="12">
         最近场次作答情况（总答题次数，错误量，正确率，三条线）
-<!--        <ve-line :data="sceneQuestionData" :settings="chartSettings" :extend="extend"></ve-line>-->
+        <!--        <ve-line :data="sceneQuestionData" :settings="chartSettings" :extend="extend"></ve-line>-->
         <ve-histogram :data="sceneQuestionData" :settings="chartSettings" :extend="extend"></ve-histogram>
       </el-col>
     </el-row>
@@ -25,45 +25,55 @@
 
     </el-row>
 
-    <el-row>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>题库分布</span>
+        <!--        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+      </div>
+      <div>
+        <el-col :span="16">
+          <ve-pie :data="bankData" :events="bankEvents" :settings="chartSettings"></ve-pie>
+        </el-col>
+      </div>
+
+      <div>
+        <el-tag type="success">题库范围：{{bankName? bankName: "所有试题"}}</el-tag>
+      </div>
+
       <el-col :span="12">
-        题库分布
-        <ve-pie :data="bankData"></ve-pie>
-
-      </el-col>
-
-
-
-    </el-row>
-
-    <el-row>
-
-      <el-col :span="12">
-        业务类型分布
+        业务类型
 
         <ve-ring :data="busiData"></ve-ring>
       </el-col>
 
       <el-col :span="12">
-        难度分布
+        难度
 
         <ve-ring :data="diffData"></ve-ring>
       </el-col>
+    </el-card>
+
+    <el-row>
+
+
     </el-row>
 
   </div>
 </template>
 
 <script>
-  import {VCharts, VeLine, VeHistogram, VeBar, VePie, VeRing} from 'v-charts'
+  import {VCharts, VeBar, VeHistogram, VeLine, VePie, VeRing} from 'v-charts'
+  import {busiTypeMap, diffMap} from '../../data.js'
 
   export default {
     name: 'stat',
     data() {
+
       this.extend = {
         'xAxis.0.axisLabel.rotate': 45
       }
       this.chartSettings = {
+        selectedMode: 'single',
         labelMap: {
           "joinCount": '考试人数',
           "loginCount": '登录人数',
@@ -78,7 +88,22 @@
         // }
       }
 
+      var vueSelf = this
+      this.bankEvents = {
+        click(e) {
+          console.log("题库被点击：", e)
+          let row = vueSelf.bankData.rows[e.dataIndex];
+          let bankId = row.bankId;
+          vueSelf.bankName = row.name;
+          console.log("bankId:", bankId)
+          vueSelf.getQuestionPropStat(bankId);
+        }
+      }
+
       return {
+        diffMap: diffMap,
+        busiTypeMap: busiTypeMap,
+        bankName: '',
         joinUserData: {
           columns: ['date', 'joinCount', 'loginCount'],
           rows: [
@@ -118,32 +143,24 @@
           ]
         },
 
+
         bankData: {
-          columns: ["bankName", "count"],
-          rows: [
-            {"bankName": "测试题", "count":123},
-            {"bankName": "会计部", "count":233},
-            {"bankName": "三综合", "count":803},
-          ]
+          columns: ["name", "questionCount"],
+          rows: []
         },
 
 
         busiData: {
           columns: ["busiType", "count"],
           rows: [
-            {"busiType": "对公", "count":123},
-            {"busiType": "对私", "count":233},
-            {"busiType": "公共", "count":803},
-            {"busiType": "国际", "count":309},
+            {"busiType": "对公", "count": 123},
           ]
         },
 
         diffData: {
-          columns: ["diffName", "count"],
+          columns: ["difficulty", "count"],
           rows: [
-            {"diffName": "高", "count":123},
-            {"diffName": "中", "count":233},
-            {"diffName": "低", "count":200},
+            {"difficulty": "高", "count": 123},
           ]
         },
 
@@ -178,8 +195,45 @@
       }
     },
     created() {
+
+      this.doGet("/stat/api/getBankStat").then(res => {
+        console.log("bankStat:", res)
+        this.bankData.rows = res;
+      })
+
+      this.getQuestionPropStat();
+
     },
-    methods: {}
+    methods: {
+      getQuestionPropStat(bankId) {
+        let url;
+        if (!bankId) {
+          url = "/stat/api/getQuestionPropStat";
+        } else {
+          url = "/stat/api/getQuestionPropStat?bankId=" + bankId;
+
+        }
+
+        this.doGet(url).then(res => {
+          console.log("questionProp: ", res);
+          let busiList = res.busiTypeStatDtoList;
+          for (let idx in busiList) {
+            let item = busiList[idx];
+            item.busiType = this.busiTypeMap[item.busiType]
+          }
+          this.busiData.rows = busiList;
+
+          let diffList = res.difficultyStatDtoList;
+          for (let idx in diffList) {
+            let item = diffList[idx];
+            item.difficulty = this.diffMap[item.difficulty];
+          }
+          this.diffData.rows = diffList;
+          console.log("diffList", diffList);
+
+        })
+      }
+    }
   }
 
 </script>
