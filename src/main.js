@@ -24,6 +24,9 @@ const global_timeout = 60000;
 
 Vue.prototype.host = host;
 Vue.prototype.wsUrl = wsUrl;
+
+//token 过期标志
+var tokenInvalid = false;
 /**
  * get请求
  **/
@@ -156,10 +159,13 @@ function handleResponse(response, vue) {
         //  请求失败，
         if (-1 == code) {
           console.log("用户信息异常", message);
-          vue.$notify.error({
-            title: '错误',
-            message: 'Token已失效，重新登录'
-          })
+          if(tokenInvalid == false){
+            vue.$notify.error({
+              title: '错误',
+              message: 'Token已失效，重新登录'
+            })
+          }
+          tokenInvalid = true;
           vue.$router.push({path: "/login"});
           return false;
         } else if (-100 == code) {
@@ -167,6 +173,7 @@ function handleResponse(response, vue) {
         } else if (-10000 == code) {
           console.log("系统异常", message)
         }
+        tokenInvalid = false;
         vue.$notify.error({
           title: '错误',
           message: !message ? "系统异常" : message

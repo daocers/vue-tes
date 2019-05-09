@@ -126,7 +126,8 @@
 
         <el-table-column prop="judge" label="翻打凭条" width="180px">
           <template slot-scope="scope">
-            {{scope.row.receiptCount}}张 {{scope.row.numberLength}}位
+            {{scope.row.receiptCount > 0 ? scope.row.receiptCount : 0}}张
+            {{scope.row.numberLength > 0 ? scope.row.numberLength: 0}}位
           </template>
         </el-table-column>
 
@@ -166,7 +167,7 @@
       </el-col>
       <el-col :span="8">
         <el-form-item label="凭条总分" prop="numberLength">
-          <el-input-number v-model="scene.receiptScore" :precision="10" :step="5" :max="100"
+          <el-input-number v-model="scene.receiptScore" :precision="0" :step="5" :max="100"
                            :min="5"></el-input-number>
         </el-form-item>
       </el-col>
@@ -178,8 +179,7 @@
         <el-input v-model="scene.authCode" placeHolder="场次识别码"></el-input>
       </el-form-item>
 
-      <el-form-item label="参考人员" prop="joinInfo"
-      >
+      <el-form-item label="参考人员" prop="joinInfo">
         <div>
           <el-form-item label="机构" prop="">
             <el-select multiple v-model="scene.branchIds" placeholder="选择参考机构">
@@ -390,40 +390,35 @@
       }
     },
 
-    created: async function () {
+    created:  async function () {
       console.log("created...");
       let sceneId = this.$route.query.id;
       console.log("sceneId:", sceneId);
       if (sceneId) {
-        let res = await this.doPost("/scene/api/findById?id=" + sceneId);
-        if (res.result) {
-          let data = res.data;
-          console.log("data:", data);
-          data.paperModel = data.paperPolicyId < 1 ? 1 : 2
+        this.doPost("/scene/api/findById?id=" + sceneId).then(res =>{
+          console.log("场次信息:", res);
+          res.paperModel = res.paperPolicyId < 1 ? 1 : 2
           // data.branchIds = [];
           // data.stationIds = [];
           // data.departmentIds = [];
-          this.scene = data;
-          let single = {type: '单选题', count: data.singleCount, score: data.singleScore};
-          let multi = {type: '多选题', count: data.multiCount, score: data.multiScore};
-          let judge = {type: '判断题', count: data.judgeCount, score: data.judgeScore};
+          this.scene = res;
+          let single = {type: '单选题', count: res.singleCount, score: res.singleScore};
+          let multi = {type: '多选题', count: res.multiCount, score: res.multiScore};
+          let judge = {type: '判断题', count: res.judgeCount, score: res.judgeScore};
           let arr = [single, multi, judge];
           this.simpleModel = arr;
-          if (data.receiptCount > 0) {
+          if (res.receiptCount > 0) {
             this.receiptFlag = true;
           }
-        } else {
-          console.log("查询无数据")
-        }
+        });
       }
 
 
       //  获取题库列表
-      let bankList = await this.doPost("/questionBank/api/findAll");
-      console.log("bankList:", bankList);
-      if (bankList) {
-        this.questionBankList = bankList;
-      }
+      let bankList = this.doPost("/questionBank/api/findAll").then(res =>{
+        console.log("bankList:", bankList);
+        this.questionBankList = res;
+      });
 
 
       await this.doPost("/department/api/getUnderManager").then(res => {
@@ -473,11 +468,13 @@
       findAllAvailablePolicy: function (bankId) {
         let paperModel = this.scene.paperModel;
         if (paperModel == 2) {
-          let list = this.doPost("/paperPolicy/api/findAvailable", {"bankId": bankId}, "form");
-          if (!list || list.length == 0) {
-            this.$message.warning("本题库没有满足的试卷策略")
-          }
-          this.paperPolicyList = list;
+          this.doPost("/paperPolicy/api/findAvailable", {"bankId": bankId}, "form").then(res => {
+            if (!res || res.length == 0) {
+              this.$message.warning("本题库没有满足的试卷策略")
+            }
+            this.paperPolicyList = res;
+          });
+
         }
 
       },
