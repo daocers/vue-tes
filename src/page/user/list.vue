@@ -139,7 +139,7 @@
           <el-input disabled v-model="dataForAssign.username"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleList" :label-width="labelWidth">
-          <el-select v-model="dataForAssign.roleIdList" multiple placeholder="请选择" style="width: 100%;">
+          <el-select v-model="checkedRoleIds" multiple placeholder="请选择" style="width: 100%;">
             <el-option
               v-for="role in roleList"
               :key="role.id"
@@ -147,6 +147,7 @@
               :value="role.id">
             </el-option>
           </el-select>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -229,6 +230,26 @@
   export default {
     data() {
       return {
+
+        options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value: '',
+
+
         statusInfo: [
           {code: 1, name: '正常'},
           {code: 2, name: '禁用'},
@@ -295,6 +316,8 @@
 
         },
 
+        // 选择的角色id
+        checkedRoleIds: [],
 
         /**
          * 分配权限对话框是否显示
@@ -597,6 +620,9 @@
         this.dataForEditIndex = idx;
         this.assignDialogShow = true;
         this.dataForAssign.roleIdList = roleIds;
+        this.checkedRoleIds = roleIds;
+        console.log("dataForAssign:", this.dataForAssign);
+        console.log("roleList", this.roleList);
       },
       /**
        * 提交更新数据
@@ -669,6 +695,7 @@
        * 提交角色分配信息
        */
       async commitAssign() {
+        this.dataForAssign.roleIdList = this.checkedRoleIds;
         console.log("roleIdList:", this.dataForAssign.roleIdList)
         let res = await this.doPost("/user/api/assignRole?userId=" + this.dataForAssign.id, this.dataForAssign.roleIdList);
         if (res) {

@@ -33,7 +33,7 @@
           authCode: this.authCode
         }, "form")
         console.warn("校验验证码结果：", res);
-        if (res && res.result && res.data) {
+        if (res) {
           this.$router.push("/exam/notice");
           sessionStorage.setItem("authCode", this.authCode)
         }
@@ -49,7 +49,7 @@
         //校验场次状态
         let res = await this.doPost("/exam/api/canAccess", {sceneId: this.sceneId, authCode: this.authCode}, "form");
         console.log("res:", res);
-        if (res && res.result && res.code == 0) {
+        if (res) {
           console.log("准备考试生成试卷")
           let paperId = await this.doPost("/exam/api/getPaper", {
             sceneId: this.sceneId,

@@ -50,7 +50,7 @@
           authCode: this.scene.authCode
         }, "form");
         console.log("res:", res);
-        if (res && res.result && res.code == 0) {
+        if (res) {
           console.log("准备考试生成试卷")
           let paperId = await this.doPost("/exam/api/getPaper", {
             sceneId: this.scene.id,
@@ -63,15 +63,15 @@
             this.$alert("生成试卷失败，请重试");
           }
         } else {
+          this.$router.push("/exam")
 
-          this.$notify.warning(res.message, "提示", {
-            confirmButtonText: '确定',
-            callback: action => {
-              if (res.code != 0) {
-                this.$router.push("/exam")
-              }
-            }
-          });
+          // this.$notify.warning(res.message, "提示", {
+          //   confirmButtonText: '确定',
+          //   callback: action => {
+          //     if (res.code != 0) {
+          //     }
+          //   }
+          // });
           return false;
         }
 

@@ -52,7 +52,7 @@
         <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
                    style="margin-left: 100px;">下一题
         </el-button>
-        <el-button type="warning" style="float: right; margin-right: 10px;" @click="toReceipt"
+        <el-button :disabled="receiptCommitFlag" type="warning" style="float: right; margin-right: 10px;" @click="toReceipt"
                    v-if="numberList.length > 0">开始翻打凭条考试
         </el-button>
       </el-col>
@@ -273,6 +273,9 @@
         //是否显示结果
         showResult: false,
 
+        //翻打凭条是否已经提交
+        receiptCommitFlag: false,
+
 
       }
     },
@@ -364,7 +367,7 @@
         //录完了
         if (this.numberIndex == this.numberList.length - 1) {
           this.commitReceipt();
-
+          this.receiptCommitFlag = true;
           return;
         }
         this.yourInput = '';
@@ -516,6 +519,7 @@
        * 提交凭条信息
        */
       async commitReceipt() {
+        this.$alert("提交凭条", "提示");
 
         let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
           + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
@@ -564,6 +568,7 @@
       let userId = sessionStorage.getItem("userId");
       // let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
       let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId + "&sceneId=" + this.sceneId);
+      ws.
       this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {
@@ -617,15 +622,12 @@
         return false;
       }
       let res = await this.doGet("/exam/api/getQuestionList?sceneId=" + this.sceneId);
-      if (!res.result) {
-        this.$notify({
-          title: '提示',
-          message: res.message,
-        })
+      if (!res) {
         this.$router.push("/exam")
         return false;
       }
-      let questionList = res.data;
+
+      let questionList = res;
       if (questionList && questionList.length > 0) {
         this.doGet("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
           console.log("获取剩余时间", res);
