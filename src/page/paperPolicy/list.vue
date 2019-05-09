@@ -75,6 +75,10 @@
         label="数字长度">
       </el-table-column>
       <el-table-column
+        prop="receiptScore"
+        label="凭条总分">
+      </el-table-column>
+      <el-table-column
         prop="branchName"
         label="机构">
       </el-table-column>
@@ -363,6 +367,11 @@
           </el-form-item>
           <el-form-item label="数字长度" prop="numberLength">
             <el-input v-model="dataForEdit.numberLength" type="number" :max="10" :min="5"></el-input>
+          </el-form-item>
+
+          <el-form-item label="凭条总分" prop="receiptScore">
+            <el-input-number v-model="dataForEdit.receiptScore" :precision="10" :step="5" :max="100"
+                             :min="5"></el-input-number>
           </el-form-item>
         </el-col>
 

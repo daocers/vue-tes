@@ -164,6 +164,12 @@
           <el-input v-model="scene.numberLength" type="number" :max="10" :min="5"></el-input>
         </el-form-item>
       </el-col>
+      <el-col :span="8">
+        <el-form-item label="凭条总分" prop="numberLength">
+          <el-input-number v-model="scene.receiptScore" :precision="10" :step="5" :max="100"
+                           :min="5"></el-input-number>
+        </el-form-item>
+      </el-col>
     </el-row>
 
 
@@ -484,10 +490,12 @@
           this.receiptFlag = true;
           this.scene.receiptCount = row.receiptCount;
           this.scene.numberLength = row.numberLength;
+          this.scene.receiptScore = row.receiptScore;
         } else {
           this.receiptFlag = false;
           this.scene.receiptCount = '';
           this.scene.numberLength = '';
+          this.scene.receiptScore = '';
         }
       },
       //开场

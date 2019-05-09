@@ -15,13 +15,22 @@
     <el-row :gutter="20">
       <el-col :span="12">
         成绩统计
-        <ve-line :data="scoreData" :settings="chartSettings" :extend="extend"></ve-line>
+        <ve-line :data="scoreData"></ve-line>
+<!--        <ve-line :data="scoreData" :settings="chartSettings" :extend="extend"></ve-line>-->
       </el-col>
     </el-row>
 
     <el-row>
       题目错误排行（错题数量条形图，答案分布柱状图）(全部，近一个月，近一周)
-      <ve-bar :data="questionData" :settings="chartSettings" :extend="extend"></ve-bar>
+      <el-col :span="8">
+        <ve-bar :data="questionData" :settings="chartSettings" :extend="extend"></ve-bar>
+      </el-col>
+      <el-col :span="8">
+        <ve-bar :data="questionWrongData" :settings="chartSettings" :extend="extend"></ve-bar>
+      </el-col>
+      <el-col :span="8">
+        <ve-bar :data="questionWrongRateData" :settings="chartSettings" :extend="extend"></ve-bar>
+      </el-col>
 
     </el-row>
 
@@ -69,27 +78,40 @@
 
           <el-row>
             <el-col :span="12">
-              提交状态<el-progress :percentage="86"></el-progress>
+              提交状态
+              <el-progress :percentage="86"></el-progress>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-tag type="danger">未交卷列表</el-tag> <br/>
-              张三 <el-progress :percentage="98"></el-progress>
-              李四 <el-progress :percentage="89"></el-progress>
-              王五<el-progress :percentage="93"></el-progress>
-              赵六<el-progress :percentage="32"></el-progress>
-              田七<el-progress :percentage="65"></el-progress>
+              <el-tag type="danger">未交卷列表</el-tag>
+              <br/>
+              张三
+              <el-progress :percentage="98"></el-progress>
+              李四
+              <el-progress :percentage="89"></el-progress>
+              王五
+              <el-progress :percentage="93"></el-progress>
+              赵六
+              <el-progress :percentage="32"></el-progress>
+              田七
+              <el-progress :percentage="65"></el-progress>
 
             </el-col>
 
             <el-col :span="12">
-              <el-tag type="success">已交卷</el-tag> <br/>
-              张三 <el-progress :percentage="98"></el-progress>
-              李四 <el-progress :percentage="89"></el-progress>
-              王五<el-progress :percentage="93"></el-progress>
-              赵六<el-progress :percentage="32"></el-progress>
-              田七<el-progress :percentage="65"></el-progress>
+              <el-tag type="success">已交卷</el-tag>
+              <br/>
+              张三
+              <el-progress :percentage="98"></el-progress>
+              李四
+              <el-progress :percentage="89"></el-progress>
+              王五
+              <el-progress :percentage="93"></el-progress>
+              赵六
+              <el-progress :percentage="32"></el-progress>
+              田七
+              <el-progress :percentage="65"></el-progress>
 
             </el-col>
           </el-row>
@@ -99,7 +121,6 @@
 
 
       </el-card>
-
 
 
     </el-row>
@@ -127,8 +148,9 @@
           "data": '日期',
           "sceneCode": '场次',
           "total": '总题量',
-          "wrong": '错误数量',
-          "rightRate": '正确率'
+          "wrongCount": '错误数量',
+          "wrongRate": '错误率'
+
         },
         // legendName: {
         //   '访问用户': '访问用户 total: 10000'
@@ -169,18 +191,17 @@
         },
 
         questionData: {
-          columns: ['questionId', "total"],
-          rows: [
+          columns: ['questionId', "total",],
+          rows: []
+        },
 
-            {"questionId": '115', "total": 100},
-            {"questionId": '113', "total": 80},
-            {"questionId": '13', "total": 75},
-            {"questionId": '12', "total": 30},
-            {"questionId": '12', "total": 30},
-            {"questionId": '12', "total": 30},
-            {"questionId": '12', "total": 30},
-            {"questionId": '1q', "total": 123},
-          ]
+        questionWrongData: {
+          columns: ['questionId', "wrongCount"],
+          rows: []
+        },
+        questionWrongRateData: {
+          columns: ["questionId", "wrongRate"],
+          rows: []
         },
 
 
@@ -205,18 +226,13 @@
         },
 
         scoreData: {
-          columns: ["sceneId", "score"],
+          columns: ['sceneId', 'score'],
           rows: [
-            {"sceneId": 1, "score": 89},
-            {"sceneId": 2, "score": 94},
-            {"sceneId": 3, "score": 89},
-            {"sceneId": 4, "score": 81},
-            {"sceneId": 5, "score": 86},
-            {"sceneId": 6, "score": 92},
-            {"sceneId": 7, "score": 91},
-            {"sceneId": 8, "score": 80},
-            {"sceneId": 9, "score": 85},
-            {"sceneId": 10, "score": 93},
+            {"sceneId": '12', "score": 99},
+            {"sceneId": '2', "score": 90},
+            {"sceneId": '4', "score": 80},
+            {"sceneId": '1', "score": 85},
+            {"sceneId": '5', "score": 95},
           ]
         }
       }
@@ -253,9 +269,46 @@
         this.sceneQuestionData.rows = res;
       })
 
+      this.getQuestionStat(15);
+      this.getQuestionWrongStat(15);
+      this.getQuestionWrongRateStat(15);
+
+      this.doPost("/stat/api/getSceneScoreStat?size=15").then(res => {
+        console.log("成绩信息：", res)
+        if(res.length > 0){
+          for(let idx in res){
+            let item = res[idx];
+            item.sceneId = item.sceneId + "";
+          }
+        }
+        this.scoreData.rows = res;
+      })
 
     },
     methods: {
+      /**
+       * 获取错题量，错题率
+       * @param type 可选值为： wrong_count, wrong_rate, total
+       */
+      getQuestionStat(size) {
+        this.doPost("/stat/api/getQuestionStat", {type: 'total', size: size}, "form").then(res => {
+          this.questionData.rows = res;
+        })
+      },
+
+
+      getQuestionWrongStat(size) {
+        this.doPost("/stat/api/getQuestionStat", {type: 'wrong_count', size: size}, "form").then(res => {
+          this.questionWrongData.rows = res;
+        })
+      },
+
+      getQuestionWrongRateStat(size) {
+        this.doPost("/stat/api/getQuestionStat", {type: 'wrong_rate', size: size}, "form").then(res => {
+          this.questionWrongRateData.rows = res;
+        })
+      },
+
       getQuestionPropStat(bankId) {
         let url;
         if (!bankId) {
