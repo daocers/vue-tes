@@ -125,7 +125,8 @@
       async signIn() {
         this.$refs.loginForm.validate(async (valid) => {
           if (valid) {
-            sessionStorage.setItem("token", "nothing")
+            //下面这行不能删除
+            sessionStorage.setItem("token", "just has a position to put token")
             let res = await this.doPost('/user/api/login', this.login, "form");
             if (res) {
               this.$notify.closeAll();

@@ -385,20 +385,21 @@
             this.$refs.upload.clearFiles();
             this.batchAddDialogShow = false;
             if (resp) {
-              this.findByCondition();
               this.$notify({
                 title: '成功',
                 message: '批量导入单选试题成功',
                 type: 'success',
                 // duration: 0
               });
+              this.findByCondition();
+
             } else {
-              this.$notify({
-                title: '失败',
-                message: '批量导入单选试题失败',
-                type: 'error',
-                duration: 0
-              });
+              // this.$notify({
+              //   title: '失败',
+              //   message: '批量导入单选试题失败',
+              //   type: 'error',
+              //   duration: 0
+              // });
             }
           }
         });

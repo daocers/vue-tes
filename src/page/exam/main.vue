@@ -52,7 +52,8 @@
         <el-button type="primary" @click="toNext()" :disabled="this.currentQuestionIdx == this.questionList.length - 1"
                    style="margin-left: 100px;">下一题
         </el-button>
-        <el-button :disabled="receiptCommitFlag" type="warning" style="float: right; margin-right: 10px;" @click="toReceipt"
+        <el-button :disabled="receiptCommitFlag" type="warning" style="float: right; margin-right: 10px;"
+                   @click="toReceipt"
                    v-if="numberList.length > 0">开始翻打凭条考试
         </el-button>
       </el-col>
@@ -394,6 +395,7 @@
         let paperId = sessionStorage.getItem("paperId");
         let res = await this.doPost("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
         if (res) {
+          this.$notify.closeAll();
           this.$notify.success({
             title: "成功",
             message: '交卷成功',
@@ -559,17 +561,24 @@
 
     //加载之后执行
     mounted: function () {
-      sessionStorage.setItem("userId", 1);
-      // sessionStorage.setItem("userId", 1);
-
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
-      let userId = sessionStorage.getItem("userId");
+      // let userId = sessionStorage.getItem("userId");
+      let token = sessionStorage.getItem("token");
+      if (!token) {
+        this.$notify.info({
+          title: "title",
+          message: "登录信息超时，重新登录",
+          duration: 3,
+        })
+        this.$router.push("/login");
+        return;
+      }
+
       // let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
-      let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId + "&sceneId=" + this.sceneId);
-      ws.
-      this.ws = ws;
+      let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?sceneId=" + this.sceneId + "&token=" + token);
+      ws.this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {
         console.log("open。。。")
@@ -587,8 +596,13 @@
           console.log("解析消息失败: ", err);
         }
         if (res != '') {
-          var type = res.type;
+          let type = res.type;
           if (type == "3") {
+            this.$notify.error({
+              title: '* 警告 *',
+              message: "您已经被强制提交试卷",
+              duration: 0
+            })
             console.log("教师强制提交试卷");
             this.commitPaper();
           }
@@ -609,7 +623,8 @@
       this.ws.send(JSON.stringify(info));
       this.ws.onclose();
       console.log("ws关闭了")
-    },
+    }
+    ,
     created: async function () {
       console.log("created");
 

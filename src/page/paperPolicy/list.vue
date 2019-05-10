@@ -118,7 +118,7 @@
     </el-pagination>
 
     <el-dialog title="校验策略可用性" :visible.sync="checkDialogShow" width="80%">
-      <el-form  ref="checkForm" :rules="rules" label-position="left" :model="dataOfCheck">
+      <el-form ref="checkForm" :rules="rules" label-position="left" :model="dataOfCheck">
         <el-form-item label="策略名称" prop="name" :label-width="labelWidth">
           <el-input :disabled="true" v-model="dataOfCheck.name" placeholder="请输入"></el-input>
         </el-form-item>
@@ -131,8 +131,9 @@
       </el-form>
 
       <div v-if="!detailFlag" slot="footer" class="dialog-footer">
+        <span> 选择题库校验可用性</span>
         <el-button type="primary" @click="checkPaperPolicy">校 验</el-button>
-<!--        <el-button type="warning" @click="disablePolicy">禁用策略</el-button>-->
+        <!--        <el-button type="warning" @click="disablePolicy">禁用策略</el-button>-->
       </div>
 
       <el-tag key="单选题" v-if="dataOfCheck.singles">单选题</el-tag>
@@ -151,8 +152,10 @@
         <el-table-column prop="realCount" label="实际数量"></el-table-column>
         <el-table-column label="结果">
           <template slot-scope="scope">
-            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
-            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check"
+                       circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close"
+                       circle></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -173,8 +176,10 @@
         <el-table-column prop="realCount" label="实际数量"></el-table-column>
         <el-table-column label="结果">
           <template slot-scope="scope">
-            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
-            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check"
+                       circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close"
+                       circle></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -195,8 +200,10 @@
         <el-table-column prop="realCount" label="实际数量"></el-table-column>
         <el-table-column label="结果">
           <template slot-scope="scope">
-            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check" circle></el-button>
-            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close" circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount >= scope.row.count" type="success" icon="el-icon-check"
+                       circle></el-button>
+            <el-button size="mini" v-if="scope.row.realCount < scope.row.count" type="danger" icon="el-icon-close"
+                       circle></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -370,7 +377,7 @@
           </el-form-item>
 
           <el-form-item label="凭条总分" prop="receiptScore">
-            <el-input-number v-model="dataForEdit.receiptScore" :precision="10" :step="5" :max="100"
+            <el-input-number v-model="dataForEdit.receiptScore" :precision="0" :step="5" :max="100"
                              :min="5"></el-input-number>
           </el-form-item>
         </el-col>
@@ -398,7 +405,7 @@
 
 <script>
   import Vue from 'vue'
-  import  {diffMap, busiTypeMap} from "../../data"
+  import {busiTypeMap, diffMap} from "../../data"
 
   export default {
     data() {
@@ -488,6 +495,10 @@
               {required: true, message: '请输入numberLength', trigger: 'blur'},
               // {min: 3, max: 10, type: 'number', message: '长度在3-10个字符', trigger: 'blur'}
             ],
+          bankId: [
+            {required: true, message: '请选择题库', trigger: 'blur'},
+
+          ]
         }
 
       }
@@ -495,7 +506,7 @@
 
 
     methods: {
-      getCheckRowClassName: function(row, idx){
+      getCheckRowClassName: function (row, idx) {
         // if(row.realCount >= row.count){
         //   return "row-valid";
         // }else{
@@ -523,9 +534,9 @@
        * 获取全部的题库
        *
        */
-      findAllQuestionBank: async function(){
-        let data = await  this.doPost("/questionBank/api/findAll");
-        if(data){
+      findAllQuestionBank: async function () {
+        let data = await this.doPost("/questionBank/api/findAll");
+        if (data) {
           this.questionBankList = data;
         }
       },
@@ -585,9 +596,7 @@
        * 检查试卷策略可用性
        */
       toCheck(idx, row) {
-        console.log("df",this.questionBankList)
-        if(this.questionBankList.length == 0){
-          console.log("dfd")
+        if (this.questionBankList.length == 0) {
           this.findAllQuestionBank();
         }
         this.dataOfCheck = {};
@@ -600,9 +609,12 @@
       /**
        * 校验策略
        */
-      async checkPaperPolicy(){
-        let data = await this.doPost("/paperPolicy/api/checkPolicy", {"paperPolicyId": this.dataOfCheck.id, "bankId": this.dataOfCheck.bankId}, "form");
-        if(data){
+      async checkPaperPolicy() {
+        let data = await this.doPost("/paperPolicy/api/checkPolicy", {
+          "paperPolicyId": this.dataOfCheck.id,
+          "bankId": this.dataOfCheck.bankId
+        }, "form");
+        if (data) {
           this.dataOfCheck = data;
         }
       },
@@ -803,10 +815,12 @@
   button.btn-prev {
     border-left: 1px solid gainsboro;
   }
-  .el-table .row-valid{
+
+  .el-table .row-valid {
     background: #94c293;
   }
-  .el-table .row-invalid{
+
+  .el-table .row-invalid {
     background: #ff9798;
   }
 </style>

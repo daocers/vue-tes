@@ -363,7 +363,7 @@
         return false;
       }
       let res = await this.doPost("/exam/api/getQuestionList?sceneId=" + this.sceneId);
-      if (!res.result) {
+      if (!res || res.length == 0) {
         this.$notify({
           title: '提示',
           message: res.message,
@@ -371,7 +371,7 @@
         this.$router.push("/exam")
         return false;
       }
-      let questionList = res.data;
+      let questionList = res;
       if (questionList && questionList.length > 0) {
         this.doPost("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
           console.log("获取剩余时间", res);
