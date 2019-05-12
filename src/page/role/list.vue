@@ -9,7 +9,7 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toAdd()">添加</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -31,6 +31,14 @@
       <el-table-column
         prop="code"
         label="角色编码">
+      </el-table-column>
+      <el-table-column
+        prop="type"
+        label="类型">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.type == 1">预设</el-tag>
+          <el-tag type="primary" v-if="scope.row.type == 2">自定义</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="memo"
@@ -61,7 +69,8 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toAuth(scope.$index, scope.row)">授权</el-button>
-          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button v-if="scope.row.type != 1" type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,10 +88,10 @@
     <el-dialog title="编辑" :visible.sync="dialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="角色名称" prop="name" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
+          <el-input :disabled="dataForEdit.type == 1" v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="角色编码" prop="code" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
+          <el-input :disabled="dataForEdit.type == 1" v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
@@ -91,7 +100,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" plain @click="cancelCommit()">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button type="primary" @click="commitData()"></i> </el-button>
       </div>
     </el-dialog>
 
@@ -111,8 +120,10 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" plain @click="cancelAuth()">取 消</el-button>
-        <el-button type="primary" @click="commitAuth()">确 定</el-button>
+        <el-button :disabled="dataForEdit.type == 1" type="primary" @click="commitAuth()">确 定</el-button>
       </div>
+      <span v-if="dataForEdit.type == 1"
+        style="display: block; color: red;">预设角色不允许修改</span>
     </el-dialog>
 
   </div>
@@ -268,21 +279,28 @@
       },
 
       commitAuth: async function () {
-        let checkedIds = this.$refs.tree.getCheckedKeys();
-        if (!checkedIds || checkedIds.length == 0) {
+        let checkedNodes = this.$refs.tree.getCheckedNodes(false, true);
+        console.log("checkedNodes", checkedNodes);
+        if (!checkedNodes || checkedNodes.length == 0) {
           this.$message.warning("请选择权限菜单");
-        } else {
-          let res = await this.doPost("/role/api/authorize?roleId=" + this.authRoleId, checkedIds);
-          if (res) {
-            this.dataForEdit.permissionIdList = checkedIds;
-            this.$message.success("授权成功");
-          } else {
-            this.$message.error("授权失败");
-          }
-          //            设置勾选，清空所有已选
-          this.$refs.tree.setCheckedKeys([], false);
-          this.authDialogShow = false;
+          return false;
         }
+        let checkedIds = new Array();
+        for (let idx in checkedNodes) {
+          let node = checkedNodes[idx];
+          checkedIds.push(node.id);
+        }
+        console.log("checkedIds", checkedIds);
+        let res = await this.doPost("/role/api/authorize?roleId=" + this.authRoleId, checkedIds);
+        if (res) {
+          this.dataForEdit.permissionIdList = checkedIds;
+          this.$message.success("授权成功");
+        } else {
+          this.$message.error("授权失败");
+        }
+        //            设置勾选，清空所有已选
+        this.$refs.tree.setCheckedKeys([], false);
+        this.authDialogShow = false;
       },
       /**
        * 取消提交

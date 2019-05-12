@@ -291,12 +291,12 @@
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
         } else if (data == false) {
-          console.log("删除失败");
-          this.$notify({
-            title: '警告',
-            message: "删除失败",
-            type: 'warning'
-          });
+          // console.log("删除失败");
+          // this.$notify({
+          //   title: '警告',
+          //   message: "删除失败",
+          //   type: 'warning'
+          // });
         }
       },
 

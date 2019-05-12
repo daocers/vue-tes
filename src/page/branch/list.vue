@@ -154,7 +154,7 @@
         :file-list="fileList"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="primary"  icon="el-icon-upload"  @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
           没有模板？<a type="success" href="http://localhost:8090/branch/downloadModel">下载模板</a>
           <!--<el-button  size="small" type="success" plain @click=wnloadModel">下载模板</el-button>-->
@@ -356,12 +356,12 @@
           this.tableData.splice(idx, 1);
           this.tableData = this.tableData;
         } else if (data == false) {
-          console.log("删除失败");
-          this.$notify({
-            title: '警告',
-            message: "删除失败",
-            type: 'warning'
-          });
+          // console.log("删除失败");
+          // this.$notify({
+          //   title: '警告',
+          //   message: "删除失败",
+          //   type: 'warning'
+          // });
         }
       },
 

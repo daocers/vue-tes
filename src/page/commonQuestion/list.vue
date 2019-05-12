@@ -300,7 +300,7 @@
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="#" @click=wnload">下载模板</a>
+          没有模板？<a type="success" href="#" @click=downloadFile>下载模板</a>
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>

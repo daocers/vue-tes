@@ -45,16 +45,16 @@
       </el-table-column>
       <el-table-column
         prop="controller"
-        label="controller"
+        label="控制器"
         width="100px">
       </el-table-column>
       <el-table-column
         prop="action"
-        label="action">
+        label="操作">
       </el-table-column>
       <el-table-column
         prop="httpMethod"
-        label="httpMethod">
+        label="请求方法">
       </el-table-column>
       <el-table-column
         prop="status"
@@ -105,30 +105,38 @@
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="code" prop="code" :label-width="labelWidth">
+        <el-form-item label="编码" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="name" prop="name" :label-width="labelWidth">
+        <el-form-item label="名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="controller" prop="controller" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.controller" placeholder="请输入"></el-input>
+        <el-form-item label="类型" prop="type" :label-width="labelWidth">
+          <el-select v-model="dataForEdit.type" placeholder="请选择菜单类型" type="number">
+            <el-option label="菜单" :value="1"></el-option>
+            <el-option label="页面" :value="2"></el-option>
+            <el-option label="API" :value="3"></el-option>
+          </el-select>
+
         </el-form-item>
-        <el-form-item label="action" prop="action" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.action" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="httpMethod" prop="httpMethod" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.httpMethod" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="no" prop="no" :label-width="labelWidth">
+        <el-form-item label="序号" prop="no" :label-width="labelWidth">
           <el-input v-model="dataForEdit.no" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="memo" prop="memo" :label-width="labelWidth">
+        <el-form-item label="简介" prop="memo" :label-width="labelWidth">
           <el-input v-model="dataForEdit.memo" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="type" prop="type" :label-width="labelWidth">
-          <el-input v-model="dataForEdit.type" placeholder="请输入"></el-input>
+
+        <el-form-item v-if="false" label="控制器" prop="controller" :label-width="labelWidth">
+          <el-input v-model="dataForEdit.controller" placeholder="请输入"></el-input>
         </el-form-item>
+        <el-form-item v-if="false" label="动作" prop="action" :label-width="labelWidth">
+          <el-input v-model="dataForEdit.action" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item v-if="false" label="请求方法" prop="httpMethod" :label-width="labelWidth">
+          <el-input v-model="dataForEdit.httpMethod" placeholder="请输入"></el-input>
+        </el-form-item>
+
+
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -190,12 +198,12 @@
         rules: {
           code:
             [
-              {required: true, message: '请输入code', trigger: 'blur'},
-              {min: 2, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
+              {required: true, message: '请输入编码', trigger: 'blur'},
+              {min: 2, max: 10, message: '长度在2-10个字符', trigger: 'blur'}
             ],
           name:
             [
-              {required: true, message: '请输入name', trigger: 'blur'},
+              {required: true, message: '请输入名称', trigger: 'blur'},
               {min: 1, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
             ],
           controller:
@@ -220,7 +228,7 @@
             ],
           type:
             [
-//              {required: true, message: '请输入type', trigger: 'blur'},
+             {required: true, message: '请输入type', trigger: 'blur'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
           ],
         }

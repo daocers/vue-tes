@@ -95,8 +95,9 @@
         label="操作"
         width="90">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+<!--          <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
+<!--          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
+          <el-button type="text" size="small" @click="toAnswer(scope.row.id)">查看答题详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -391,6 +392,13 @@
           this.findByCondition();
         }
         this.editDialogShow = false;
+      },
+
+      /**
+       * 查看详细信息
+       */
+      toAnswer: function(id){
+        this.$router.push("/answer?id=" + id);
       },
 
       /**

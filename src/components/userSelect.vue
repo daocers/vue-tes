@@ -177,7 +177,7 @@
           let resp = await this.doPost(this.targetUrl,
             {"targetId": this.targetId, "userIds": JSON.stringify(ids)}, "form")
           console.log("resp::", resp);
-          if (resp.result && resp.data) {
+          if (resp) {
             this.$emit("done", this.checkedUser);
           }
         } else {

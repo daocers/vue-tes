@@ -1,20 +1,20 @@
 <template>
   <div class="myJoin">
     <!--<el-tabs type="border-card" @tab-click="handleTabClick">-->
-      <!--<el-tab-pane label="全部" tab-click="getSceneList()">-->
+    <!--<el-tab-pane label="全部" tab-click="getSceneList()">-->
 
-      <!--</el-tab-pane>-->
-      <!--<el-tab-pane label="已开场" tab-click="getSceneList(2)"></el-tab-pane>-->
-      <!--<el-tab-pane label="未开场" tab-click="getSceneList(3)"></el-tab-pane>-->
-      <!--<el-form :inline="true" ref="queryForm" :model="queryForm" size="small">-->
-        <!--<el-form-item label="名称" prop="name">-->
-          <!--<el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item>-->
-          <!--<el-button type="primary" plain @click="findByCondition()">查询</el-button>-->
-          <!--<el-button type="default" plain @click="reset()">重置</el-button>-->
-        <!--</el-form-item>-->
-      <!--</el-form>-->
+    <!--</el-tab-pane>-->
+    <!--<el-tab-pane label="已开场" tab-click="getSceneList(2)"></el-tab-pane>-->
+    <!--<el-tab-pane label="未开场" tab-click="getSceneList(3)"></el-tab-pane>-->
+    <!--<el-form :inline="true" ref="queryForm" :model="queryForm" size="small">-->
+    <!--<el-form-item label="名称" prop="name">-->
+    <!--<el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item>-->
+    <!--<el-button type="primary" plain @click="findByCondition()">查询</el-button>-->
+    <!--<el-button type="default" plain @click="reset()">重置</el-button>-->
+    <!--</el-form-item>-->
+    <!--</el-form>-->
     <el-tag type="primary" style="margin-bottom: 15px;">提示： 按照考试时间倒序排列</el-tag>
     <el-table
       :data="tableData"
@@ -46,6 +46,14 @@
       <el-table-column
         prop="originalScore"
         label="原始分数">
+      </el-table-column>
+      <el-table-column
+        prop="commonScore"
+        label="知识类得分">
+      </el-table-column>
+      <el-table-column
+        prop="receiptScore"
+        label="凭条得分">
       </el-table-column>
       <el-table-column
         prop="sceneStatus"
@@ -93,19 +101,25 @@
             <el-form-item label="分值">
               <span>{{ props.row.scene.judgeScore }}</span>
             </el-form-item>
+            <el-form-item label="凭条张数">
+              <span>{{ props.row.scene.receiptCount }}</span>
+            </el-form-item>
+            <el-form-item label="分值">
+              <span>{{ props.row.scene.receiptScore }}</span>
+            </el-form-item>
           </el-form>
         </template>
       </el-table-column>
 
       <!--<el-table-column-->
-        <!--v-show="false"-->
-        <!--fixed="right"-->
-        <!--label="操作"-->
-        <!--width="90">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
-          <!--<el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
-        <!--</template>-->
+      <!--v-show="false"-->
+      <!--fixed="right"-->
+      <!--label="操作"-->
+      <!--width="90">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
+      <!--<el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
+      <!--</template>-->
       <!--</el-table-column>-->
     </el-table>
 
@@ -196,20 +210,24 @@
   .demo-table-expand {
     font-size: 0;
   }
+
   .demo-table-expand label {
     width: 120px;
     color: #99a9bf;
     font-weight: 900;
   }
-  .demo-table-expand span{
+
+  .demo-table-expand span {
     color: #409eff;
   }
+
   .demo-table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
   }
-  el-form el-form-item > label{
+
+  el-form el-form-item > label {
     width: 100px;
   }
 </style>

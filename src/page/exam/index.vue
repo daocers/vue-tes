@@ -22,7 +22,7 @@
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
 <!--            <el-button type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>-->
-            <el-button type="text" @click="nextStep(scope.row)">{{scope.row.name}}</el-button>
+            <el-button  type="text" @click="nextStep(scope.row)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -40,7 +40,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="examStatus" label="考试情况">
+        <el-table-column v-if="false" prop="examStatus" label="考试情况">
           <template slot-scope="scope">
             <el-tag size="mini" type="primary">占位</el-tag>
           </template>
@@ -123,6 +123,7 @@
 
       findByCondition: async function () {
         let data = await this.doPost("/exam/api/findReadyScene?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize);
+        console.log("场次信息", data)
         if (data) {
           this.tableData = data.list;
           this.totalCount = data.total;//总记录数目

@@ -124,6 +124,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="toDisable(scope.$index, scope.row)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -231,6 +232,7 @@
 
           <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
           <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
+                     icon="el-icon-upload"
                      @click="batchAdd">上传到服务器
           </el-button>
           <div style="display: inline-block; margin-left: 20px;">
@@ -637,6 +639,30 @@
         }).catch(() => {
           //  解决uncaught cancel的异常
         });
+      },
+
+
+
+      /**
+       * 禁用
+       */
+      toDisable(idx, row){
+        this.$confirm("禁用后考试不再使用该试题，是否继续?", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then( () => {
+          this.doPost("/single/api/disable?id=" + row.id).then(res => {
+            if(res){
+              this.$message({
+                type: 'success',
+                message: '试题禁用成功!'
+              });
+              row.status = 2;
+              this.$set(this.tableData, idx, row);
+            }
+          })
+        }).catch()
       },
 
       handleSizeChange(val) {

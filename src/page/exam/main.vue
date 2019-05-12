@@ -521,11 +521,12 @@
        * 提交凭条信息
        */
       async commitReceipt() {
-        this.$alert("提交凭条", "提示");
-
+        this.$alert("凭条录入结束，提交", "提示");
+        console.log("this.yourInputList", this.yourInputList)
         let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
           + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
           this.yourInputList);
+
         console.log("提交凭条结果：", data);
         // 结束定时器
         this.closeReceiptTimer();
@@ -564,7 +565,7 @@
       /**
        * 以下是websocket处理，用来处理强制交卷信息
        * */
-      // let userId = sessionStorage.getItem("userId");
+        // let userId = sessionStorage.getItem("userId");
       let token = sessionStorage.getItem("token");
       if (!token) {
         this.$notify.info({
@@ -578,7 +579,7 @@
 
       // let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?userId=" + userId);
       let ws = new WebSocket(this.wsUrl + "/ws/hn.ws?sceneId=" + this.sceneId + "&token=" + token);
-      ws.this.ws = ws;
+      this.ws = ws;
       console.log("初始化");
       ws.onopen = function () {
         console.log("open。。。")
@@ -597,14 +598,13 @@
         }
         if (res != '') {
           let type = res.type;
-          if (type == "3") {
-            this.$notify.error({
-              title: '* 警告 *',
-              message: "您已经被强制提交试卷",
-              duration: 0
-            })
-            console.log("教师强制提交试卷");
+          if (type == 3) {
+            this.$alert('您已经被强制提交试卷', '*重要提示*', {
+              type: 'warning'
+            });
+
             this.commitPaper();
+
           }
         }
       }

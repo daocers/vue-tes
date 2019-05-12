@@ -109,7 +109,10 @@ const PaperPolicyIndex = () => import('../page/paperPolicy/list.vue')
 const PaperPolicyAdd = () => import("../page/paperPolicy/add")
 
 const Stat = () => import("../page/stat/index")
+const SceneMonitor = () => import("../page/scene/monitor")
 
+
+const Answer = () => import("../page/answer/list")
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
@@ -148,6 +151,8 @@ export default [
       {path: '/practise', component: Practise},
       {path: '/practise/main', component: PractiseMain},
       {path: '/practise/list', component: PractiseList},
+      {path: '/scene/monitor', component: SceneMonitor},
+      {path: "/answer", component: Answer},
 
       {
         path: '/scene',

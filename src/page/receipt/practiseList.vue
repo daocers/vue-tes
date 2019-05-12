@@ -24,8 +24,14 @@
         width="10">
       </el-table-column>
 
+      <el-table-column label="类型">
+        <template slot-scope="scope">
+          {{scope.row.sceneId > 0 ? "考试": "练习"}}
+        </template>
+      </el-table-column>
+
       <el-table-column
-        prop="size"
+        prop="count"
         label="凭条张数">
       </el-table-column>
       <el-table-column

@@ -128,6 +128,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="small" @click="toDisable(scope.$index, scope.row)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -226,6 +227,7 @@
         class="upload-demo"
         ref="upload"
         :limit="1"
+        action=""
         :data="dataForBatch"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
@@ -237,6 +239,7 @@
 
         <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
+                   icon="el-icon-upload"
                    @click="batchAdd">上传到服务器
         </el-button>
         <div style="display: inline-block; margin-left: 20px;">
@@ -658,6 +661,28 @@
         });
       },
 
+
+      /**
+       * 禁用
+       */
+      toDisable(idx, row) {
+        this.$confirm("禁用后考试不再使用该试题，是否继续?", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.doPost("/multi/api/disable?id=" + row.id).then(res => {
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '试题禁用成功!'
+              });
+              row.status = 2;
+              this.$set(this.tableData, idx, row);
+            }
+          })
+        }).catch()
+      },
       handleSizeChange(val) {
         this.queryForm.pageSize = val;
         console.log(`每页 ${val} 条`);

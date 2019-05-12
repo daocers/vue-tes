@@ -38,6 +38,32 @@
           label="场次名称">
         </el-table-column>
         <el-table-column
+          prop="openTime"
+          label="开场时间">
+        </el-table-column>
+        <el-table-column
+          prop="closeTime"
+          label="封场时间">
+        </el-table-column>
+        <el-table-column
+          prop="duration"
+          label="作答时间">
+        </el-table-column>
+
+        <el-table-column
+          label="总分">
+          <template slot-scope="scope">
+            {{scope.row.singleCount * scope.row.singleScore + scope.row.multiCount * scope.row.multiScore + scope.row.judgeCount * scope.row.judgeScore + scope.row.receiptScore}}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="知识题总分">
+          <template slot-scope="scope">
+            {{scope.row.singleCount * scope.row.singleScore + scope.row.multiCount * scope.row.multiScore + scope.row.judgeCount * scope.row.judgeScore}}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="authCode"
           label="授权码">
         </el-table-column>
@@ -50,21 +76,17 @@
         </el-table-column>
         <el-table-column
           prop="delayMinute"
-          label="迟到不准入场时间">
-        </el-table-column>
-        <el-table-column
-          prop="duration"
-          label="作答时间">
+          label="拒绝入场(分钟)">
         </el-table-column>
         <el-table-column
           prop="questionBankName"
           label="题库信息">
         </el-table-column>
+
         <el-table-column
-          label="总分">
-          <template slot-scope="scope">
-            {{scope.row.singleCount * scope.row.singleScore + scope.row.multiCount * scope.row.multiScore + scope.row.judgeCount * scope.row.judgeScore}}
-          </template>
+          prop="receiptScore"
+          label="凭条分数">
+
         </el-table-column>
         <el-table-column
           label="选题方式">
@@ -116,14 +138,7 @@
             <el-tag size="mini" type="info" v-if="scope.row.status == 4">取消/作废</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="openTime"
-          label="开场时间">
-        </el-table-column>
-        <el-table-column
-          prop="closeTime"
-          label="封场时间">
-        </el-table-column>
+
         <el-table-column
           prop="createTime"
           label="创建时间">

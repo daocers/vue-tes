@@ -12,8 +12,9 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toEdit('add')">添加</el-button>
-        <el-button type="primary" @click="toBatchAdd()">批量添加</el-button>
+        <el-button type="primary"  icon="el-icon-edit"  @click="toEdit('add')">添加</el-button>
+
+        <el-button type="primary" icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -183,6 +184,7 @@
 
           <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
           <el-button style="margin-left: 10px;" size="small" :disabled="uploadFlag == false" type="primary"
+                     icon="el-icon-upload"
                      @click="batchAdd">上传到服务器
           </el-button>
           <div style="display: inline-block; margin-left: 20px;">

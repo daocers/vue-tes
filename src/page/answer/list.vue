@@ -15,7 +15,7 @@
 
     <el-table
       :data="tableData"
-      border
+      :row-class-name="tableRowClassName"
       style="width: 100%">
       <el-table-column
         v-if="false"
@@ -25,52 +25,44 @@
       </el-table-column>
 
       <el-table-column
-        prop="paperId"
-        label="paperId">
-      </el-table-column>
-      <el-table-column
         prop="questionId"
-        label="questionId">
+        label="试题id">
       </el-table-column>
       <el-table-column
-        prop="questionTypeId"
-        label="questionTypeId">
+        prop="questionType"
+        label="题型">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.questionType == 1">单选</el-tag>
+          <el-tag type="info" v-if="scope.row.questionType == 2">多选</el-tag>
+          <el-tag type="danger" v-if="scope.row.questionType == 3">判断</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="sceneId"
-        label="sceneId">
+        label="场次id">
+      </el-table-column>
+
+      <el-table-column
+        prop="sceneName"
+        label="场次名称">
+      </el-table-column>
+
+      <el-table-column
+        prop="rightAnswer"
+        label="正确答案">
       </el-table-column>
       <el-table-column
         prop="answer"
-        label="answer">
+        label="答案">
       </el-table-column>
+
       <el-table-column
         prop="timeUsed"
-        label="timeUsed">
+        label="用时">
       </el-table-column>
       <el-table-column
         prop="timeLeft"
-        label="timeLeft">
-      </el-table-column>
-      <el-table-column
-        prop="isDel"
-        label="isDel">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
-        label="createUserId">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="createTime">
-      </el-table-column>
-      <el-table-column
-        prop="updateUserId"
-        label="updateUserId">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="updateTime">
+        label="剩余时间">
       </el-table-column>
 
       <el-table-column
@@ -96,7 +88,7 @@
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
       <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
-        <el-form-item label="paperId" prop="paperId" >
+        <el-form-item label="paperId" prop="paperId">
           <el-input v-model="dataForEdit.paperId" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="questionId" prop="questionId">
@@ -152,6 +144,17 @@
   export default {
     data() {
       return {
+        tableRowClassName({row, rowIndex}) {
+          if (row.answer == row.rightAnswer) {
+            return 'success-row';
+          } else if (row.answer.indexOf(row.rightAnswer) > -1) {
+            return 'warning-row';
+          } else if (row.answer != row.rightAnswer) {
+            return "danger-row";
+          }
+          return '';
+        },
+
         labelWidth: '80px',
         /**
          * 表格数据
@@ -169,6 +172,7 @@
          * 查询参数
          **/
         queryForm: {
+          paperId: null,
           name: null,
           pageSize: 10,
           pageNum: 1,
@@ -265,13 +269,13 @@
       findByCondition: async function () {
         let data = await this.doPost("/answer/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
-          if (data) {
-            this.tableData = data.list;
-            this.totalCount = data.total;//总记录数目
-          } else {
-            this.tableData = [];
-            this.totalCount = 0;
-          }
+        if (data) {
+          this.tableData = data.list;
+          this.totalCount = data.total;//总记录数目
+        } else {
+          this.tableData = [];
+          this.totalCount = 0;
+        }
       },
 
       /**
@@ -404,6 +408,11 @@
      * 页面初始化时候执行
      **/
     created: async function () {
+      let paperId = this.$route.query.id;
+      console.log("paperId", paperId);
+      if (paperId) {
+        this.queryForm.paperId = paperId;
+      }
       console.log("created....")
       this.findByCondition();
     }
