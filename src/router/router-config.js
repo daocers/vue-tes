@@ -1,54 +1,3 @@
-// // import activePublic from './page/activePublic/index.vue'
-// import leftMenu from '../components/left-menu.vue'
-// import SceneList from '../page/scene/list.vue'
-// import Scene from '../page/scene/index.vue'
-// import SceneSetting from '../page/scene/scene_setting.vue'
-// import ScenePaper from '../page/scene/scene_generatePaper.vue'
-// import SceneUser from '../page/scene/scene_choiceUser.vue'
-// import SceneReview from '../page/scene/scene_review.vue'
-// import QuestionPolicyEdit from '../page/questionPolicy/edit.vue'
-// import QuestionPolicyIndex from '../page/questionPolicy/list.vue'
-// import RoleIndex from '../page/role/list.vue'
-// import RoleAdd from '../page/role/add.vue'
-// import CommonQuestionIndex from '../page/commonQuestion/list.vue'
-// import CommonQuestionAdd from '../page/commonQuestion/add.vue'
-// import DepartmentIndex from '../page/department/list.vue'
-// import DepartmentAdd from '../page/department/add.vue'
-// import BranchIndex from '../page/branch/list.vue'
-// import BranchManage from '../page/branch/manage.vue'
-// import StationIndex from '../page/station/list.vue'
-// import PropertyIndex from '../page/property/list.vue'
-// import Test from '../page/test.vue'
-// import PaperPolicyIndex from '../page/paperPolicy/list.vue'
-//
-// import QuestionTypeIndex from '../page/questionType/list.vue'
-// import QuestionBankIndex from '../page/questionBank/list.vue'
-//
-// import PermissionIndex from '../page/permission/list.vue'
-// import PermissionManage from '../page/permission/manage.vue'
-//
-// import ExamIndex from '../page/exam/index.vue'
-// import ExamEntrance from '../page/exam/entrance.vue'
-// import ExamNotice from '../page/exam/notice.vue'
-// import ExamMain from '../page/exam/main.vue'
-//
-// import SceneMyJoin from '../page/scene/myJoin.vue'
-// import SceneMyOpen from '../page/scene/myOpen.vue'
-// import SceneLive from '../page/scene/sceneLive'
-// import UserIndex from '../page/user/list.vue'
-// import FastOpen from '../page/scene/fast_open'
-// import Index from '../page/index/index.vue'
-// import Paper from '../page/paper/list'
-//
-//
-// import Login from '../page/index/login.vue'
-// import Single from '../page/single/list'
-// import Multi from '../page/multi/list'
-// import Judge from '../page/judge/list'
-
-// import Summary from '../page/index/summary'
-// import Help from '../page/help/index';
-
 
 const leftMenu = () => import('../components/left-menu.vue')
 const SceneList = () => import('../page/scene/list.vue')
@@ -116,14 +65,8 @@ const Answer = () => import("../page/answer/list")
 // const Login = (r) => require(['../page/index/login.vue'])
 
 export default [
-  {
-    path: '/login',
-    component: Login,
-  },
+  {path: '/login', component: Login},
   {path: '/about', component: About},
-  // {
-  //   path: '/leftMenu', component: leftMenu,
-  // },
   {
     path: '/',
     component: Index,

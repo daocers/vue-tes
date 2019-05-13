@@ -27,6 +27,7 @@ Vue.prototype.wsUrl = wsUrl;
 
 //token 过期标志
 var tokenInvalid = false;
+
 /**
  * get请求
  **/
@@ -140,7 +141,6 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
 }
 
 
-
 /**
  * 处理请求响应
  * @param response
@@ -159,7 +159,7 @@ function handleResponse(response, vue) {
         //  请求失败，
         if (-1 == code) {
           console.log("用户信息异常", message);
-          if(tokenInvalid == false){
+          if (tokenInvalid == false) {
             vue.$notify.error({
               title: '错误',
               message: 'Token已失效，重新登录'
@@ -198,7 +198,7 @@ function handleResponse(response, vue) {
 }
 
 
-Vue.prototype.loading = function(){
+Vue.prototype.loading = function () {
   const loading = this.$loading({
     lock: true,
     text: 'Loading',
@@ -207,12 +207,47 @@ Vue.prototype.loading = function(){
   });
   return loading;
 }
+
+let urlList = [];
+
 //加载路由中间件
 Vue.use(VueRouter)
 
 //定义路由
 const router = new VueRouter({
   routes: routeConfig
+})
+
+router.beforeEach((to, from, next) => {
+  let vue = router.app;
+  let toPath = to.path;
+  if(toPath == '/' || toPath == '/login'){
+    next();
+    return;
+  }
+  if(!urlList || urlList.length == 0){
+    console.log("处理一遍urlList  ******")
+    urlList = JSON.parse(sessionStorage.getItem("urlList"));
+  }
+  if(!urlList){
+    console.log("还没有权限，先登录")
+    next({path: '/login'});
+    return;
+  }
+  if (urlList.indexOf(toPath) > -1) {
+    next();
+  } else {
+    console.log("没有跳转的页面权限，toPath: ", toPath);
+
+    // todo 没有权限先提示然后登录到首页，  后续修改为跳转到错误提示页面
+    vue.$notify.warning({
+      title: '警告',
+      message: '您没有页面访问权限，请联系管理员'
+    })
+
+    next({path: '/'})
+    return;
+  }
 })
 
 const app = new Vue({

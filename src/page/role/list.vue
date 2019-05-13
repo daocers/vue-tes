@@ -120,10 +120,11 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" plain @click="cancelAuth()">取 消</el-button>
-        <el-button :disabled="dataForEdit.type == 1" type="primary" @click="commitAuth()">确 定</el-button>
+<!--        <el-button :disabled="dataForEdit.type == 1" type="primary" @click="commitAuth()">确 定</el-button>-->
+        <el-button type="primary" @click="commitAuth()">确 定</el-button>
       </div>
-      <span v-if="dataForEdit.type == 1"
-        style="display: block; color: red;">预设角色不允许修改</span>
+      <span style="display: block; color: red;">预设角色不允许修改</span>
+<!--      <span v-if="dataForEdit.type == 1"  style="display: block; color: red;">预设角色不允许修改</span>-->
     </el-dialog>
 
   </div>

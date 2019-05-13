@@ -14,9 +14,9 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toAdd()">添加</el-button>
+        <el-button type="primary" el-icon="el-icon-edit"  @click="toAdd()">添加</el-button>
 
-        <el-button type="primary" @click="toBatchAdd()">批量添加</el-button>
+        <el-button type="primary" el-icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
 

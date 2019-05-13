@@ -54,7 +54,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="add">添加</el-button>
+            <el-button icon="el-icon-edit"  type="primary" @click="add">添加</el-button>
             <el-button type="info" plain @click="cancel">取消</el-button>
           </el-form-item>
 

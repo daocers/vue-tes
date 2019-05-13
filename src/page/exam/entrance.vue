@@ -2,7 +2,7 @@
   <div class="entrance">
     <el-row>
       <el-col :span="20">
-        <el-card class="box-card" style="margin-bottom: 10px;">
+        <el-card class="box-card auth-card" style="margin-bottom: 10px;">
           <div class="clearfix">
             <el-input placeholder="请输入场次授权码" v-model="authCode" class="input-with-select">
               <!--              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toExam()">进入考试-->
@@ -94,7 +94,7 @@
 
 
 <style scoped>
-  .entrance .box-card {
+  .entrance .box-card.auth-card {
     margin: 80px;
     padding: 80px;
   }

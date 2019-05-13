@@ -140,7 +140,7 @@
               console.log("开始获取权限列表")
               this.doPost("/permission/api/findMenuUrlList").then(res => {
                 console.log("获取权限url列表：", res);
-                sessionStorage.setItem("urlList", res);
+                sessionStorage.setItem("urlList", JSON.stringify(res));
               })
 
               /**
@@ -149,7 +149,7 @@
               //获取菜单信息
               this.doGet("/permission/api/getMenuTree").then(res => {
                 console.log("获取用户菜单信息", res);
-                if(res.length == 0){
+                if (res.length == 0) {
                   this.$notify({
                     title: '提示',
                     message: '尚未分配角色，请联系管理员',
