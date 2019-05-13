@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 // import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/iconfont/iconfont.css'
 import VueRouter from 'vue-router'
 import routeConfig from './router/router-config' //引入router-config.js文件
 import axios from 'axios'

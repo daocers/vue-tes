@@ -4,24 +4,24 @@
     <!--<div class="msg"><em id="warning"></em>最近有不法分子冒充布谷科技，让用户提供账户和密码。在此声明，我们绝不会通过电话、邮件或短信等形式询问用户名和密码。请用户提高警惕，增强自我保护意识。-->
     <!--</div>-->
     <!--</div>-->
-    <div class="header">
-      <div class="nag">
-        <div class="in">
-          <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"
-                                alt="布谷培训"></a>
-          <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">
+<!--    <div class="header">-->
+<!--      <div class="nag">-->
+<!--        <div class="in">-->
+<!--          <a href="/index"><img class="logo" width="40" height="40" src="../../assets/img/logo.png"-->
+<!--                                alt="布谷培训"></a>-->
+<!--          <img class="slogen" width="180" height="25" src="../../assets/img/slogen.png" alt="在线考试就到布谷培训">-->
 
-          <span class="gp" style="display:"></span>
-          <span class="tl" style="display:">欢迎登录</span>
-          <p class="nlink n2">
-            <!--<a href="/index">首页</a>-->
-            <!--<a href="/help/index" target="_blank">帮助中心</a>-->
-            <router-link to="/login">登录</router-link>
+<!--          <span class="gp" style="display:"></span>-->
+<!--          <span class="tl" style="display:">欢迎登录</span>-->
+<!--          <p class="nlink n2">-->
+<!--            &lt;!&ndash;<a href="/index">首页</a>&ndash;&gt;-->
+<!--            &lt;!&ndash;<a href="/help/index" target="_blank">帮助中心</a>&ndash;&gt;-->
+<!--            <router-link to="/login">登录</router-link>-->
 
-          </p>
-        </div>
-      </div>
-    </div>
+<!--          </p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div>
       <el-row>
 

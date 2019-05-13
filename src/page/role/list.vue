@@ -5,7 +5,7 @@
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-query" plain @click="findByCondition">查询</el-button>
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">

@@ -66,7 +66,6 @@ const Answer = () => import("../page/answer/list")
 
 export default [
   {path: '/login', component: Login},
-  {path: '/about', component: About},
   {
     path: '/',
     component: Index,
@@ -138,6 +137,8 @@ export default [
       {path: '/user/select', component: ManagerSelect},
       {path: '/scene/live/:sceneId', component: SceneLive},
       {path: '/help', component: Help},
+      {path: '/about', component: About},
+
     ]
   },
   {path: '/test', component: Test},
