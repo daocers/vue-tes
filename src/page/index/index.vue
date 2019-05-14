@@ -53,10 +53,12 @@
             <div v-for="menu in menuList">
               <el-submenu v-if="menu.children != null && menu.children.length > 0" :index="menu.url" :key="menu.id">
                 <template slot="title">
-                  <i class="iconfont tes-icon-scene"></i>
+                  <i :class="menu.icon ? menu.icon : el-icon-menu"></i>
                   <span>{{menu.name}}</span>
                 </template>
-                <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url"  v-if="subItem.status == 1">{{subItem.name}}
+                <el-menu-item v-for="subItem in menu.children" :key="subItem.id" :index="subItem.url"  v-if="subItem.status == 1">
+                  <i :class="subItem.icon ? subItem.icon : el-icon-menu"></i>
+                  <span>{{subItem.name}}</span>
                 </el-menu-item>
               </el-submenu>
 <!--              <el-submenu v-for="menu in menuList" :key="menu.id" :index="menu.url">-->
