@@ -102,6 +102,7 @@
           pageSize: 10,
           sceneId: '',
         },
+        queryRules: {},
         /**
          * 对话框的label宽度
          */
@@ -137,7 +138,7 @@
       },
 
       downloadScore() {
-        this.download("/paper/api/downloadScore?sceneId=" + this.queryForm.sceneId);
+        this.downloadFile("/paper/api/downloadScore?sceneId=" + this.queryForm.sceneId);
       },
 
       handleSizeChange(val) {

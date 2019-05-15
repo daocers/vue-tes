@@ -1,8 +1,8 @@
 <template>
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
+      <el-form-item label="题干" prop="name">
+        <el-input v-model="queryForm.title" placeholder="支持模糊查询"></el-input>
       </el-form-item>
       <el-form-item label="题库" prop="bankId">
         <el-select v-model="queryForm.bankId">
@@ -285,7 +285,7 @@
          **/
         queryForm: {
           bankId: '',
-          name: null,
+          title: null,
           pageSize: 10,
           pageNum: 1,
         },

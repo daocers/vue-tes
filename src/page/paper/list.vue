@@ -4,9 +4,9 @@
       <el-form-item label="考生号" prop="userName">
         <el-input v-model="queryForm.userName" placeholder="请输入"></el-input>
       </el-form-item>
-<!--      <el-form-item label="姓名" prop="name">-->
-<!--        <el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="姓名" prop="name">-->
+      <!--        <el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
+      <!--      </el-form-item>-->
       <el-form-item label="场次编码" prop="sceneCode">
         <el-input :disabled="queryForm.sceneId > 0" v-model="queryForm.sceneCode" placeholder="请输入"></el-input>
       </el-form-item>
@@ -15,7 +15,7 @@
         <el-button type="default" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <!--<el-button type="primary" @click="toAdd()">添加</el-button>-->
+        <el-button type="primary" @click="downloadScore">下载成绩表</el-button>
       </el-form-item>
     </el-form>
 
@@ -46,14 +46,21 @@
         label="场次名称">
       </el-table-column>
 
-      <el-table-column
-        prop="originalScore"
-        label="得分">
-      </el-table-column>
+
       <el-table-column
         prop="score"
         label="百分制得分">
       </el-table-column>
+
+      <el-table-column
+        prop="originalScore"
+        label="得分">
+      </el-table-column>
+      <el-table-column prop="commonScore"
+                       label="知识类得分"></el-table-column>
+      <el-table-column prop="receiptScore" label="凭条得分"></el-table-column>
+      <el-table-column prop="receiptCount" label="凭条数量"></el-table-column>
+      <el-table-column prop="receiptRate" label="凭条正确率"></el-table-column>
 
       <el-table-column
         prop="code"
@@ -78,7 +85,6 @@
       </el-table-column>
 
 
-
       <el-table-column
         prop="status"
         label="状态">
@@ -95,8 +101,8 @@
         label="操作"
         width="90">
         <template slot-scope="scope">
-<!--          <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
-<!--          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
+          <!--          <el-button type="text" size="small" @click="toEdit(scope.$index, scope.row)">编辑</el-button>-->
+          <!--          <el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
           <el-button type="text" size="small" @click="toAnswer(scope.row.id)">查看答题详情</el-button>
         </template>
       </el-table-column>
@@ -286,6 +292,13 @@
 
     methods: {
       /**
+       * 下载成绩表
+       */
+      downloadScore() {
+        this.downloadFile("/paper/api/downloadScore?sceneId=" + this.queryForm.sceneId);
+      },
+
+      /**
        * 查询
        */
       findByCondition: async function () {
@@ -397,7 +410,7 @@
       /**
        * 查看详细信息
        */
-      toAnswer: function(id){
+      toAnswer: function (id) {
         this.$router.push("/answer?id=" + id);
       },
 

@@ -67,7 +67,33 @@ Vue.prototype.downloadFile = async function (url) {
   } else {
     url = url + "?token=" + token;
   }
-  window.location.href = host + url;
+
+   await axios({
+    headers: {"Content-Type": "text/plain", "token": token,
+      "Access-Control-Expose-Headers": 'filename',
+      "access-control-allow-headers": 'filename, content-type,Content-Disposition'
+    },
+    url: host + url,
+    method: 'post',
+    data: {},
+    timeout: 60000,
+    responseType: 'arraybuffer'
+  }).then((res) =>{
+      let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'});
+     var downloadElement = document.createElement('a');
+     var href = window.URL.createObjectURL(blob); //创建下载的链接
+     downloadElement.href = href;
+     console.log("res:::", res);
+     downloadElement.download = res.headers['filename']; //下载后文件名
+     document.body.appendChild(downloadElement);
+     downloadElement.click(); //点击下载
+     document.body.removeChild(downloadElement); //下载完成移除元素
+     window.URL.revokeObjectURL(href); //释放掉blob对象
+     return res.data
+   }).catch(reason => {
+     console.log("reason", reason)
+   })
+  // window.location.href = host + url;
 }
 
 
