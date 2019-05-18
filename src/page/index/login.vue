@@ -72,7 +72,7 @@
               <!--<a type="success" href="http://localhost:8090/branch/">忘记密码?</a>-->
             </el-form-item>
             <el-form-item label="">
-              <el-button type="primary" style="width: 100%;" @click="signIn">登录</el-button>
+              <el-button type="primary" style="width: 100%;" @click="signIn">登&nbsp;&nbsp;&nbsp;录</el-button>
             </el-form-item>
           </el-form>
 

@@ -7,7 +7,7 @@
             <el-input placeholder="凭条页数" type="number" min="10" max="100" v-model="count" class="input-with-select">
               <!--<el-button type="primary" slot="prepend" icon="el-icon-arrow-right" class="enter">开始练习-->
               <template slot="prepend">凭条页数</template>
-              <el-button type="primary" slot="append" icon="el-icon-arrow-right" class="enter" @click="toInput()">开始练习
+              <el-button type="primary" slot="append" icon="iconfont tes-icon-next1" class="enter" @click="toInput()">开始练习
               </el-button>
             </el-input>
           </div>

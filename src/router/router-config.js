@@ -33,7 +33,7 @@ const ExamMain = () => import('../page/exam/main.vue');
 
 const SceneMyJoin = () => import('../page/scene/myJoin.vue')
 const SceneMyOpen = () => import('../page/scene/myOpen.vue')
-const SceneLive = () => import('../page/scene/sceneLive');
+const SceneLive = () => import('../page/scene/live');
 const UserIndex = () => import('../page/user/list.vue');
 const ManagerSelect = () => import('../page/user/select.vue');
 const ChangePass = () => import("../page/user/changePass.vue")
@@ -52,7 +52,7 @@ const Help = () => import("../page/help/index");
 const Summary = () => import("../page/index/summary");
 const Practise = () => import("../page/number/index")
 const PractiseMain = () => import("../page/number/practise")
-const PractiseList = () => import("../page/receipt/practiseList")
+const PractiseList = () => import("../page/number/practiseList")
 
 const PaperPolicyIndex = () => import('../page/paperPolicy/list.vue')
 const PaperPolicyAdd = () => import("../page/paperPolicy/add")
@@ -135,7 +135,7 @@ export default [
       {path: '/user/', component: UserIndex},
       {path: '/user/changePass', component: ChangePass},
       {path: '/user/select', component: ManagerSelect},
-      {path: '/scene/live/:sceneId', component: SceneLive},
+      {path: '/scene/live', component: SceneLive},
       {path: '/help', component: Help},
       {path: '/about', component: About},
 

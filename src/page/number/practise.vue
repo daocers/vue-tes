@@ -260,6 +260,15 @@
     created: async function () {
       console.log("created");
       let count = this.$route.query.count;
+      if(!count || count < 0){
+        this.$alert("请指定凭条数量", "提示");
+        this.$router.push("/practise");
+        return false;
+      }
+      if(count > 500){
+        this.$alert("请指定合理的凭条数量", "提示");
+        return false;
+      }
       let nums = [];
       for (let i = 0; i < count; i++) {
         let len = Math.abs(Math.random() * 100000);

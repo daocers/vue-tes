@@ -13,8 +13,8 @@
           <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-          <el-button type="default" plain @click="reset()">重置</el-button>
+          <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+          <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
         </el-form-item>
       </el-form>
 
@@ -210,7 +210,7 @@
 
       // 查看本场考试成绩
       showScore(idx, row) {
-        this.$router.push({path: '/paper?sceneId=' + row.id});
+        this.$router.push({path: '/paper?sceneId=' + row.id + "&name=" + row.name});
       },
 
       /**
@@ -220,7 +220,7 @@
         console.log("idx::", idx);
         console.log("row.id::", row.id);
 
-        this.$router.push({path: `/scene/live/${row.id}`})
+        this.$router.push({path: `/scene/live?sceneId=${row.id}`})
       },
       /**
        * tab页点击事件

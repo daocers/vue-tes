@@ -11,13 +11,43 @@
         <el-input :disabled="queryForm.sceneId > 0" v-model="queryForm.sceneCode" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="downloadScore">下载成绩表</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-download" :disabled="!queryForm.sceneId" @click="downloadScore">下载成绩表</el-button>
       </el-form-item>
     </el-form>
+
+    <el-alert v-if="queryForm.sceneId"
+      :title="sceneInfo"
+      type="success"
+      :closable="false">
+    </el-alert>
+    <el-row>
+
+      <el-badge :value="allCount" class="item">
+        <el-button size="small" icon="el-icon-edit" type="primary" @click="getAll">全部</el-button>
+      </el-badge>
+
+      <el-badge :value="fullCount" class="item">
+        <el-button size="small" icon="iconfont tes-icon-good" type="success" @click="getFull">满分</el-button>
+      </el-badge>
+
+      <el-badge :value="goodCount" class="item">
+        <el-button size="small" icon="iconfont tes-icon-good" type="success" plain @click="getGood">优秀</el-button>
+      </el-badge>
+
+
+      <el-badge :value="passCount" class="item">
+        <el-button size="small" icon="iconfont tes-icon-pass" type="primary" plain @click="getPass">及格</el-button>
+
+      </el-badge>
+
+      <el-badge :value="unPassCount" class="item">
+        <el-button size="small" icon="iconfont tes-icon-nopass" type="danger" @click="getUnPass">不及格</el-button>
+      </el-badge>
+    </el-row>
 
     <el-table
       :data="tableData"
@@ -167,6 +197,12 @@
   export default {
     data() {
       return {
+        sceneInfo: '',
+        allCount: 0,
+        fullCount: 0,
+        goodCount: 0,
+        passCount: 0,
+        unPassCount: 0,
         /**
          * 对话框的label宽度
          */
@@ -194,6 +230,9 @@
           userName: null,
           pageSize: 10,
           pageNum: 1,
+          score: '',
+          minScore: '',
+          maxScore: '',
         },
         /**
          * 修改对话框是否显示
@@ -295,13 +334,17 @@
        * 下载成绩表
        */
       downloadScore() {
+        if(!this.queryForm.sceneId){
+          this.$alert('请指定场次',"提示");
+          return false;
+        }
         this.downloadFile("/paper/api/downloadScore?sceneId=" + this.queryForm.sceneId);
       },
 
       /**
        * 查询
        */
-      findByCondition: async function () {
+      findByCondition: async function (processCount) {
         let data = await this.doPost("/paper/api/findByCondition?pageNum=" + this.queryForm.pageNum + "&pageSize=" + this.queryForm.pageSize, this.queryForm);
         console.log("data: ", data);
         if (data) {
@@ -311,6 +354,34 @@
           this.tableData = [];
           this.totalCount = 0;
         }
+
+        if(processCount != false){
+          this.processData();
+        }
+      },
+
+      processData: function(){
+        this.allCount = this.tableData.length;
+        let fullCount = 0;
+        let goodCount = 0;
+        let passedCount = 0;
+        let unPassedCount = 0;
+        for (let idx in this.tableData) {
+          let item = this.tableData[idx];
+          if (item.score > 99) {
+            fullCount++;
+          } else if (item.score > 80) {
+            goodCount++;
+          } else if (item.score > 60) {
+            passedCount++;
+          } else {
+            unPassedCount++;
+          }
+        }
+        this.fullCount = fullCount;
+        this.goodCount = goodCount;
+        this.passCount = passedCount;
+        this.unPassCount = unPassedCount;
       },
 
       /**
@@ -456,6 +527,32 @@
         this.queryForm.pageNum = val;
         console.log(`当前页: ${val}`);
         this.findByCondition();
+      },
+      getAll(){
+        this.queryForm.minScore = '';
+        this.queryForm.maxScore = '';
+          this.findByCondition(false);
+      },
+
+      getFull() {
+        this.queryForm.minScore = '100';
+        this.queryForm.maxScore = '';
+        this.findByCondition(false);
+      },
+      getGood() {
+        this.queryForm.minScore = '80';
+        this.queryForm.maxScore = '100';
+        this.findByCondition(false);
+      },
+      getPass() {
+        this.queryForm.minScore = '60';
+        this.queryForm.maxScore = '80';
+        this.findByCondition(false);
+      },
+      getUnPass() {
+        this.queryForm.minScore = '';
+        this.queryForm.maxScore = '60';
+        this.findByCondition(false);
       }
     },
     /**
@@ -466,8 +563,11 @@
       if (sceneId) {
         this.queryForm.sceneId = sceneId;
       }
+      let sceneName = this.$route.query.name
+      this.sceneInfo = "场次ID: " + sceneId + "   名称: " + sceneName;
+      this.$route.query.name = '';
       console.log("created....")
-      this.findByCondition();
+      this.findByCondition(true);
     }
   }
 </script>
@@ -486,5 +586,11 @@
 
   button.btn-prev {
     border-left: 1px solid gainsboro;
+  }
+
+  .item {
+    margin-top: 10px;
+    margin-right: 40px;
+    margin-bottom: 10px;
   }
 </style>

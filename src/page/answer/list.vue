@@ -5,8 +5,8 @@
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
         <el-button  icon="el-icon-edit" type="primary" @click="toAdd()">添加</el-button>
@@ -59,6 +59,9 @@
       <el-table-column
         prop="timeUsed"
         label="用时">
+        <template slot-scope="scope">
+          {{scope.row.timeUsed > 0 ? scope.row.timeUsed: ''}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="timeLeft"
@@ -66,6 +69,7 @@
       </el-table-column>
 
       <el-table-column
+        v-if="false"
         fixed="right"
         label="操作"
         width="90">
@@ -127,8 +131,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button icon="iconfont tes-icon-cancel" @click="cancelCommit">取 消</el-button>
+        <el-button icon="iconfont tes-icon-commit" type="primary" @click="commitData()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -412,6 +416,10 @@
       console.log("paperId", paperId);
       if (paperId) {
         this.queryForm.paperId = paperId;
+      }else{
+        console.log("没有试卷id")
+        console.log("history", this.$router.history)
+        this.$router.push("/");
       }
       console.log("created....")
       this.findByCondition();

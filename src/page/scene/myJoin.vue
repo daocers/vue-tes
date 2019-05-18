@@ -11,8 +11,8 @@
     <!--<el-input v-model="queryForm.name" placeholder="请输入"></el-input>-->
     <!--</el-form-item>-->
     <!--<el-form-item>-->
-    <!--<el-button type="primary" plain @click="findByCondition()">查询</el-button>-->
-    <!--<el-button type="default" plain @click="reset()">重置</el-button>-->
+    <!--<el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>-->
+    <!--<el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>-->
     <!--</el-form-item>-->
     <!--</el-form>-->
     <el-tag type="primary" style="margin-bottom: 15px;">提示： 按照考试时间倒序排列</el-tag>

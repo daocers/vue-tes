@@ -19,8 +19,8 @@
 
 
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
         <el-button type="primary" @click="toAdd()">添加</el-button>
@@ -297,7 +297,7 @@
         :file-list="fileList"
         :auto-upload="false">
 
-        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+        <el-button slot="trigger" icon="iconfont tes-icon-folder2" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="primary" @click="batchAdd">上传到服务器</el-button>
         <div style="display: inline-block; margin-left: 20px;">
           没有模板？<a type="success" href="#" @click=downloadFile>下载模板</a>

@@ -5,11 +5,11 @@
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toPractise()">凭条练习</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-receipt" @click="toPractise()">凭条练习</el-button>
       </el-form-item>
     </el-form>
 
@@ -129,8 +129,6 @@
 
 
 <script>
-  import Vue from 'vue'
-
   export default {
     data() {
       return {
@@ -354,13 +352,16 @@
        * 删除数据
        */
       async toRemove(idx, row) {
+        if(row.sceneId > 0){
+          this.$alert("考试记录不能删除", "提示");
+          return false;
+        }
 
         this.$confirm('数据删除后无法找回, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async () => {
-
           console.log("删除：", idx, row)
           let resp = await this.doPost("/receiptRecord/api/delete?id=" + row.id);
           if (resp.result && resp.data) {

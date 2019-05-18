@@ -2,7 +2,7 @@
   <div class="table">
     <el-form :inline="true" ref="queryForm" :model="queryForm" :rules="queryRules" size="small">
       <el-form-item style="float: right">
-        <el-button type="primary" @click="downloadScore">下载成绩表</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-download" @click="downloadScore">下载成绩表</el-button>
       </el-form-item>
     </el-form>
 

@@ -12,13 +12,13 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
         <el-button  icon="el-icon-edit" type="primary" @click="toAdd()">添加</el-button>
 
-        <el-button type="primary"  el-icon="el-icon-upload"  @click="toBatchAdd()">批量添加</el-button>
+        <el-button type="primary"  icon="el-icon-upload"  @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -237,7 +237,7 @@
         :file-list="fileList"
         :auto-upload="false">
 
-        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+        <el-button slot="trigger" icon="iconfont tes-icon-folder2" size="small" type="primary" plain>选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
                    icon="el-icon-upload"
                    @click="batchAdd">上传到服务器

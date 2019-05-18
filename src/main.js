@@ -67,33 +67,10 @@ Vue.prototype.downloadFile = async function (url) {
   } else {
     url = url + "?token=" + token;
   }
-
-   await axios({
-    headers: {"Content-Type": "text/plain", "token": token,
-      "Access-Control-Expose-Headers": 'filename',
-      "access-control-allow-headers": 'filename, content-type,Content-Disposition'
-    },
-    url: host + url,
-    method: 'post',
-    data: {},
-    timeout: 60000,
-    responseType: 'arraybuffer'
-  }).then((res) =>{
-      let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=utf-8'});
-     var downloadElement = document.createElement('a');
-     var href = window.URL.createObjectURL(blob); //创建下载的链接
-     downloadElement.href = href;
-     console.log("res:::", res);
-     downloadElement.download = res.headers['filename']; //下载后文件名
-     document.body.appendChild(downloadElement);
-     downloadElement.click(); //点击下载
-     document.body.removeChild(downloadElement); //下载完成移除元素
-     window.URL.revokeObjectURL(href); //释放掉blob对象
-     return res.data
-   }).catch(reason => {
-     console.log("reason", reason)
-   })
-  // window.location.href = host + url;
+  this.doGet("/index/api/checkToken").then(res => {
+    console.log("校验token:", res);
+    window.location.href = host + url;
+  })
 }
 
 
@@ -248,15 +225,15 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let vue = router.app;
   let toPath = to.path;
-  if(toPath == '/' || toPath == '/login'){
+  if (toPath == '/' || toPath == '/login') {
     next();
     return;
   }
-  if(!urlList || urlList.length == 0){
+  if (!urlList || urlList.length == 0) {
     console.log("处理一遍urlList  ******")
     urlList = JSON.parse(sessionStorage.getItem("urlList"));
   }
-  if(!urlList){
+  if (!urlList) {
     console.log("还没有权限，先登录")
     next({path: '/login'});
     return;
@@ -264,7 +241,7 @@ router.beforeEach((to, from, next) => {
   if (urlList.indexOf(toPath) > -1) {
     next();
   } else {
-    console.log("没有跳转的页面权限，toPath: ", toPath);
+    console.log("没有跳转的页面权限，toPath:", toPath);
 
     // todo 没有权限先提示然后登录到首页，  后续修改为跳转到错误提示页面
     vue.$notify.warning({

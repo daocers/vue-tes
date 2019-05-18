@@ -37,7 +37,7 @@
         label="操作"
         width="90">
         <template slot-scope="scope">
-          <el-button type="warning" size="small" :disabled="scope.row.userStatus == 2"  @click="forceCommit(scope.row.userId)"> 强制交卷</el-button>
+          <el-button type="warning" size="small" icon="iconfont tes-icon-force" :disabled="scope.row.userStatus == 2"  @click="forceCommit(scope.row.userId)">强制交卷</el-button>
           <!--<el-button type="text" size="small" @click="toRemove(scope.$index, scope.row)">删除</el-button>-->
         </template>
       </el-table-column>
@@ -120,9 +120,13 @@
       }
     },
     created: function () {
-      this.sceneId = this.$route.params.sceneId;
+      this.sceneId = this.$route.query.sceneId;
+      if(this.sceneId > 0){
+        this.findByCondition();
+      }else{
+        this.$router.push("/")
+      }
       console.log("sceneId::: ", this.$route.params);
-      this.findByCondition();
     }
 
   }

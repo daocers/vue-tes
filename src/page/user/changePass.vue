@@ -17,7 +17,7 @@
 
           <el-form-item>
             <el-button type="primary" plain @click="confirm">确认</el-button>
-            <el-button type="default" plain @click="reset()">重置</el-button>
+            <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
           </el-form-item>
         </el-form>
 

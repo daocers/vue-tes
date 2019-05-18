@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="iconfont tes-icon-query" plain @click="findByCondition">查询</el-button>
-        <el-button type="default" plain @click="reset()">重置</el-button>
+        <el-button type="default" icon="iconfont tes-icon-reset" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
         <el-button type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
@@ -100,7 +100,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" plain @click="cancelCommit()">取 消</el-button>
-        <el-button type="primary" @click="commitData()"></i> </el-button>
+        <el-button type="primary" @click="commitData()">确 定 </el-button>
       </div>
     </el-dialog>
 
