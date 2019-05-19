@@ -27,7 +27,7 @@
 
         <el-card class="box-card">
           <div slot="header">
-            <span>关于我们</span>
+            <span  v-check-auth="`/scene/open1`">关于我们</span>
             <span style="float: right; padding: 3px 0; color: #66b1ff;" type="text">>></span>
           </div>
           <div class="about">
@@ -322,7 +322,7 @@
     color: #999;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1 pxtted #ddd
+    border-top: 1px pxtted #dddddd;
   }
 
   .en .lrcon .lr_lf {

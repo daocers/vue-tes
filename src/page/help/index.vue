@@ -7,24 +7,38 @@
           <span style="float: right; padding: 3px 0; color: #66b1ff;" type="text">>></span>
         </div>
         <el-row>
-          <el-col :span="6">
-            <div class="fast-item item-1" >
-              <span @click="forgetPassword">忘记密码</span>
-            </div>
-          </el-col>
+
           <el-col :span="6">
             <div class="fast-item item-2">
               <span @click="fastOpen">快速开场</span>
             </div>
           </el-col>
-          <el-col :span="6">
+          <el-col v-has-role="root" :span="6">
             <div class="fast-item item-3">
-              <span @click="questionTypeManage">题型管理</span>
+              <span @click="sceneMonitor">考试监控</span>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="fast-item item-4">
               <span @click="queryMark">成绩查询</span>
+            </div>
+          </el-col>
+
+          <el-col :span="6">
+            <div class="fast-item item-1" >
+              <span @click="forgetPassword">忘记密码</span>
+            </div>
+          </el-col>
+
+          <el-col :span="6">
+            <div class="fast-item item-1">
+              <span @click="joinExam">我要考试</span>
+            </div>
+          </el-col>
+
+          <el-col :span="6">
+            <div class="fast-item item-1">
+              <span @click="queryMyScore">我的成绩</span>
             </div>
           </el-col>
         </el-row>
@@ -115,12 +129,20 @@
       fastOpen(){
         this.$router.push({path:'/scene/open'})
       },
-      questionTypeManage(){
-        this.$router.push({path:'/questionType/manage'})
+
+      sceneMonitor(){
+        this.$router.push({path: '/scene/monitor'})
       },
       queryMark(){
         this.$router.push({path: '/paper'})
+      },
+      joinExam(){
+        this.$router.push({path: '/exam'})
+      },
+      queryMyScore(){
+        this.$router.push({path: '/scene/myJoin'})
       }
+
     }
   }
 </script>

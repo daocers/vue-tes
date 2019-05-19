@@ -44,7 +44,7 @@
 </script>
 
 
-<style>
+<style scoped>
   .box-card {
     margin: 80px;
     padding: 80px;

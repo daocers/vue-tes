@@ -124,54 +124,71 @@
     methods: {
       async signIn() {
         this.$refs.loginForm.validate(async (valid) => {
-          if (valid) {
-            //下面这行不能删除
-            sessionStorage.setItem("token", "just has a position to put token")
-            let res = await this.doPost('/user/api/login', this.login, "form");
-            if (res) {
-              this.$notify.closeAll();
-              //保存用户token
-              console.log("获取到token：", res);
-              //登录成功删除所有的sessionStorage
-              sessionStorage.clear();
-              sessionStorage.setItem("token", res);
-              sessionStorage.setItem("username", this.login.username);
+            if (valid) {
+              //下面这行不能删除
+              sessionStorage.setItem("token", "just has a position to put token")
+              this.doPost('/user/api/login', this.login, "form").then(async res => {
+                  if (res) {
+                    let token = res.token;
+                    let menuUrlList = res.menuUrlList;
+                    this.$notify.closeAll();
+                    //保存用户token
+                    console.log("获取到token：", token);
+                    //登录成功删除所有的sessionStorage
+                    sessionStorage.clear();
+                    sessionStorage.setItem("token", token);
+                    sessionStorage.setItem("username", this.login.username);
+                    console.log("获取权限url列表：", res);
+                    sessionStorage.setItem("urlList", JSON.stringify(menuUrlList));
 
-              console.log("开始获取权限列表")
-              this.doPost("/permission/api/findMenuUrlList").then(res => {
-                console.log("获取权限url列表：", res);
-                sessionStorage.setItem("urlList", JSON.stringify(res));
-              })
+                    /**
+                     * 下面是通过配置生效的页面权限控制
+                     * */
+                      //获取菜单信息
+                    let menuTree = await this.doGet("/permission/api/getMenuTree");
+                    if (menuTree) {
+                      console.log("获取用户菜单信息", menuTree);
+                      if (menuTree.length == 0) {
+                        this.$notify({
+                          title: '提示',
+                          message: '尚未分配角色，请联系管理员',
+                          type: 'warning'
+                        })
+                      }
+                      sessionStorage.setItem("menuList", JSON.stringify(menuTree));
+                    }
 
-              /**
-               * 下面是通过配置生效的页面权限控制
-               * */
-              //获取菜单信息
-              this.doGet("/permission/api/getMenuTree").then(res => {
-                console.log("获取用户菜单信息", res);
-                if (res.length == 0) {
-                  this.$notify({
-                    title: '提示',
-                    message: '尚未分配角色，请联系管理员',
-                    type: 'warning'
-                  })
+
+                    let roleList = await this.doGet("/role/api/findMyRoleList");
+                    console.log("获取用户角色列表：", res);
+                    sessionStorage.setItem("roleList", JSON.stringify(res));
+                    let isRoot = false;
+                    let isAdmin = false;
+                    if (roleList && roleList.length > 0) {
+                      for (let idx in roleList) {
+                        let name = roleList[idx];
+                        if (name == "root") {
+                          isRoot = true;
+                        } else if (name == "admin") {
+                          isAdmin = true;
+                        } else {
+
+                        }
+                      }
+                    }
+                    sessionStorage.setItem("isRoot", isRoot + "");
+                    sessionStorage.setItem("isAdmin", isAdmin + "");
+
+                    this.$router.replace("/about");
+                  } else {
+                    this.$message.error("用户名/密码错误");
+                  }
                 }
-                let menuList = JSON.stringify(res);
-                console.log("菜单列表：", menuList);
+              )
 
-                sessionStorage.setItem("menuList", JSON.stringify(res));
-                this.$router.replace("/help");
-              }).catch(e => {
-                console.log("获取权限失败", e)
-              })
-              sessionStorage.setItem("token", res);
-              /** ===============*/
-
-            } else {
-              this.$message.error("用户名/密码错误");
             }
           }
-        })
+        )
       }
     }
   }
