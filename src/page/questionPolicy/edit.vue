@@ -2,7 +2,7 @@
   <div id="edit">
     <el-row>
       <el-col :span="16">
-        <el-form ref="editForm" :model="questionPolicy" :rules="rules" label-width="80px">
+        <el-form size="small" ref="editForm" :model="questionPolicy" :rules="rules" label-width="80px">
           <el-form-item label="策略名称" prop="name">
             <el-input v-model="questionPolicy.name" placeholder="请输入"></el-input>
           </el-form-item>

@@ -171,7 +171,7 @@
        * 选择管理员
        *
        */
-      select: async function(index, user){
+      select: async function (index, user) {
         console.log("index::", index);
         console.log("user::", user);
         let userId = user.id;

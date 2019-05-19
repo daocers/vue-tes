@@ -11,8 +11,8 @@ import axios from 'axios'
 
 Vue.config.productionTip = false
 //测试使用
-const host = "http://localhost:80/hn";
-const wsUrl = "ws://localhost:80/hn";
+const host = "http://localhost:9999/hn";
+const wsUrl = "ws://localhost:9999/hn";
 
 //线上使用
 // const host = "http://www.bugu.co/hn";

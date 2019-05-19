@@ -91,7 +91,7 @@
 
 
     <el-dialog v-bind:title="this.dataForEdit.id > 0 ? '编辑':'添加'" :visible.sync="dialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="题型" prop="questionTypeId" :label-width="labelWidth">
           <el-select v-model="dataForEdit.questionTypeId" clearable placeholder="请选择">
             <el-option

@@ -8,13 +8,13 @@
         <el-input v-model="queryForm.username" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
+        <el-button size="small"  type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
+        <el-button size="small"  type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary"  icon="el-icon-edit"  @click="toEdit('add')">添加</el-button>
+        <el-button size="small"  type="primary"  icon="el-icon-edit"  @click="toEdit('add')">添加</el-button>
 
-        <el-button type="primary" icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
+        <el-button size="small"  type="primary" icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -89,7 +89,7 @@
 
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
         <el-form-item label="用户名" prop="username" :label-width="labelWidth">
           <el-input :disabled="dataForEdit.id > 0" v-model="dataForEdit.username" placeholder="请输入"></el-input>
         </el-form-item>
@@ -129,8 +129,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button size="small"  @click="editDialogShow = false">取 消</el-button>
+        <el-button size="small"  type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -152,8 +152,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleAssignClose">取 消</el-button>
-        <el-button type="primary" @click="commitAssign">确 定</el-button>
+        <el-button size="small"  @click="handleAssignClose">取 消</el-button>
+        <el-button size="small"  type="primary" @click="commitAssign">确 定</el-button>
       </div>
     </el-dialog>
 

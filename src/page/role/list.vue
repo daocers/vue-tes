@@ -5,11 +5,12 @@
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="iconfont tes-icon-query" plain @click="findByCondition">查询</el-button>
+        <el-button size="small" type="primary" icon="iconfont tes-icon-query" plain @click="findByCondition">查询
+        </el-button>
         <el-button type="default" icon="iconfont tes-icon-reset" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
+        <el-button size="small" type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -86,7 +87,7 @@
 
 
     <el-dialog title="编辑" :visible.sync="dialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="角色名称" prop="name" :label-width="labelWidth">
           <el-input :disabled="dataForEdit.type == 1" v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
@@ -99,8 +100,9 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" plain @click="cancelCommit()">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定 </el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" type="primary" plain @click="cancelCommit()">取 消
+        </el-button>
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="commitData()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -119,12 +121,13 @@
       </el-tree>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" plain @click="cancelAuth()">取 消</el-button>
-<!--        <el-button :disabled="dataForEdit.type == 1" type="primary" @click="commitAuth()">确 定</el-button>-->
-        <el-button type="primary" @click="commitAuth()">确 定</el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" type="primary" plain @click="cancelAuth()">取 消
+        </el-button>
+        <!--        <el-button :disabled="dataForEdit.type == 1" type="primary" @click="commitAuth()">确 定</el-button>-->
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="commitAuth()">确 定</el-button>
       </div>
       <span style="display: block; color: red;">预设角色不允许修改</span>
-<!--      <span v-if="dataForEdit.type == 1"  style="display: block; color: red;">预设角色不允许修改</span>-->
+      <!--      <span v-if="dataForEdit.type == 1"  style="display: block; color: red;">预设角色不允许修改</span>-->
     </el-dialog>
 
   </div>

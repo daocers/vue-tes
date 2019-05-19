@@ -62,6 +62,22 @@
         label="创建时间">
       </el-table-column>
 
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="单选题">
+              <span>{{ props.row.stat.name }}</span>
+            </el-form-item>
+            <el-form-item label="多选题">
+              <span>{{ props.row.scene.code }}</span>
+            </el-form-item>
+            <el-form-item label="判断题">
+              <span>{{ props.row.scene.singleCount}}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
       <el-table-column
         fixed="right"
         label="操作"
@@ -84,7 +100,7 @@
 
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="题库名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>

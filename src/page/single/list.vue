@@ -10,13 +10,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询</el-button>
-        <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
+        <el-button size="small" type="primary" plain icon="iconfont tes-icon-query" @click="findByCondition()">查询
+        </el-button>
+        <el-button size="small" type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" icon="el-icon-edit"  @click="toAdd()">添加</el-button>
+        <el-button size="small" type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
 
-        <el-button type="primary" icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
+        <el-button size="small" type="primary" icon="el-icon-upload" @click="toBatchAdd()">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -32,9 +33,26 @@
         width="10">
       </el-table-column>
 
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <span></span>
+          <el-form label-position="left" class="demo-table-expand">
+            <el-form-item label="题干">
+              <span>{{ props.row.title }}</span>
+            </el-form-item>
+            <el-form-item label="选项">
+              <span v-for="item, idx in JSON.parse(props.row.content)">{{ String.fromCharCode(65 + parseInt(idx)) + ": " + item + ";"}}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="title"
         label="题干">
+
+        <template slot-scope="scope">
+          {{scope.row.title.length > 15? scope.row.title.substr(1, 15) + " ...": scope.row.title}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="answer"
@@ -92,30 +110,6 @@
           {{diffMap[scope.row.attr2]}}
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="false"
-        prop="attr3"
-        label="attr3">
-      </el-table-column>
-      <el-table-column
-        v-if="false"
-        prop="attr4"
-        label="attr4">
-      </el-table-column>
-      <el-table-column
-        v-if="false"
-        prop="attr5"
-        label="attr5">
-      </el-table-column>
-      <el-table-column
-        prop="createUserId"
-        label="创建人">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="创建时间">
-      </el-table-column>
-
 
       <el-table-column
         fixed="right"
@@ -139,7 +133,7 @@
     </el-pagination>
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="题干" prop="title" :label-width="labelWidth">
           <el-input v-model="dataForEdit.title" placeholder="请输入"></el-input>
         </el-form-item>
@@ -198,8 +192,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button size="small" @click="cancelCommit">取 消</el-button>
+        <el-button size="small" type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -642,18 +636,17 @@
       },
 
 
-
       /**
        * 禁用
        */
-      toDisable(idx, row){
+      toDisable(idx, row) {
         this.$confirm("禁用后考试不再使用该试题，是否继续?", "提示", {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then( () => {
+        }).then(() => {
           this.doPost("/single/api/disable?id=" + row.id).then(res => {
-            if(res){
+            if (res) {
               this.$message({
                 type: 'success',
                 message: '试题禁用成功!'

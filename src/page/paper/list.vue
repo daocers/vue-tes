@@ -148,7 +148,7 @@
     </el-pagination>
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="code" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>

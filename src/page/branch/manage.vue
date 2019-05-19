@@ -27,16 +27,14 @@
         </el-button>
       </el-col>
       <el-col :span="10" :offset="2">
-        <el-card class="box-card" style="margin-bottom: 10px;">
-          <div class="clearfix">
-            <span style="font-weight: 600;">操作提示: </span>
-            <span style="display: block;">双击节点,添加下级机构；</span>
-            <span style="display: block">点击节点,编辑当前机构；</span>
-            <!--<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
-
-
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>操作提示</span>
           </div>
+          <div class="text item">双击节点，添加下级机构；</div>
+          <div class="text item">点击节点,编辑当前机构；</div>
         </el-card>
+
         <div style="margin-bottom: 5px;">
           <el-tag v-if="editFormShow" type="warning">当前操作：编辑</el-tag>
           <el-tag v-if="addFormShow" type="primary">当前操作：添加下级分行</el-tag>
@@ -44,7 +42,7 @@
         <!--<el-button v-show="addBtnShow" type="primary" plain @click="toAdd()">添加机构</el-button>-->
         <!--<el-button v-show="addBtnShow" type="primary" plain @click="toEdit">编辑</el-button>-->
 
-        <el-form v-show="addFormShow" label-position="left" :model="dataForAdd" :rules="rules" ref="addForm"
+        <el-form size="small" v-show="addFormShow" label-position="left" :model="dataForAdd" :rules="rules" ref="addForm"
                  label-width="80px">
           <el-form-item label="机构名称" prop="name">
             <el-input v-model="dataForAdd.name" placeholder="请输入"></el-input>
@@ -68,12 +66,12 @@
 
 
           <el-form-item>
-            <el-button type="primary" @click="add">添加</el-button>
-            <el-button type="info" plain @click="cancel">取消</el-button>
+            <el-button type="primary" @click="add"  icon="iconfont tes-icon-commit">添加</el-button>
+            <el-button type="info" plain @click="cancel"  icon="iconfont tes-icon-cancel">取消</el-button>
           </el-form-item>
         </el-form>
 
-        <el-form v-show="editFormShow" label-position="left" :model="dataForEdit" :rules="rules" ref="editForm"
+        <el-form size="small" v-show="editFormShow" label-position="left" :model="dataForEdit" :rules="rules" ref="editForm"
                  label-width="80px">
           <el-form-item label="机构名称" prop="name">
             <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
@@ -89,8 +87,8 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="save">保存</el-button>
-            <el-button type="info" plain @click="cancel">取消</el-button>
+            <el-button type="primary" @click="save" icon="iconfont tes-icon-commit">保存</el-button>
+            <el-button type="info" plain @click="cancel" icon="iconfont tes-icon-cancel">取消</el-button>
           </el-form-item>
         </el-form>
       </el-col>

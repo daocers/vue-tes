@@ -31,9 +31,25 @@
         width="10">
       </el-table-column>
 
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <span></span>
+          <el-form label-position="left" class="demo-table-expand">
+            <el-form-item label="题干">
+              <span>{{ props.row.title }}</span>
+            </el-form-item>
+<!--            <el-form-item label="选项">-->
+<!--              <span v-for="item, idx in JSON.parse(props.row.content)">{{ String.fromCharCode(65 + parseInt(idx)) + ": " + item + ";"}}</span>-->
+<!--            </el-form-item>-->
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="title"
         label="题干">
+        <template slot-scope="scope">
+          {{scope.row.title.length > 15? scope.row.title.substr(1, 15) + " ...": scope.row.title}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="answer"
@@ -136,7 +152,7 @@
 
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="题干" prop="title" :label-width="labelWidth">
           <el-input v-model="dataForEdit.title" placeholder="请输入"></el-input>
         </el-form-item>
@@ -178,8 +194,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" @click="cancelCommit">取 消</el-button>
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 

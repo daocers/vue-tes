@@ -9,8 +9,8 @@
         <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary" @click="toManage">层级管理</el-button>
-        <el-button type="primary"  icon="el-icon-upload"  @click="toBatchAdd">批量添加</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-station2" @click="toManage">层级管理</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="toBatchAdd">批量添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -113,7 +113,7 @@
                  :target-name="dataForEdit.name"></user-select>
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="机构名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
@@ -135,8 +135,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" @click="editDialogShow = false">取 消</el-button>
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="save()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -145,19 +145,21 @@
         class="upload-demo"
         ref="upload"
         :limit="1"
-        action="http://localhost:8090/branch/api/batchAdd"
+        action=""
+        :data="dataForBatch"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-change="handleChange"
-        :on-success="handleSuccess"
-        :on-error="handleError"
         :file-list="fileList"
         :auto-upload="false">
+
         <el-button slot="trigger" icon="iconfont tes-icon-folder2" size="small" type="primary" plain>选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="primary"  icon="el-icon-upload"  @click="batchAdd">上传到服务器</el-button>
+        <el-button style="margin-left: 10px;" size="small" v-bind:disabled="uploadFlag == false" type="primary"
+                   icon="el-icon-upload"
+                   @click="batchAdd">上传到服务器
+        </el-button>
         <div style="display: inline-block; margin-left: 20px;">
-          没有模板？<a type="success" href="http://localhost:8090/branch/downloadModel">下载模板</a>
-          <!--<el-button  size="small" type="success" plain @click=wnloadModel">下载模板</el-button>-->
+          没有模板？<a type="success" href="#" @click="download">下载模板</a>
         </div>
         <div slot="tip" class="el-upload__tip">只能上传下载的模板文件</div>
       </el-upload>
@@ -254,6 +256,11 @@
         },
 
         fileList: [],
+
+        uploadUrl: '',
+        //是否可以上传
+        uploadFlag: false,
+        dataForBatch: {},
 
       }
     },
@@ -461,7 +468,11 @@
         this.dataForEdit.userList = obj;
         this.$set(this.tableData, this.dataForEditIndex, this.dataForEdit);
         this.selectShow = false;
-      }
+      },
+      download() {
+        this.batchAddErrorMessage = '';
+        this.downloadFile("/branch/api/downloadModel");
+      },
 
     },
     /**

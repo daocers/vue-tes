@@ -21,7 +21,7 @@
           <template  slot-scope="scope">
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
             <!--<router-link v-bind:to="'/exam/notice?id=' + scope.row.id"> {{scope.row.name}} </router-link>-->
-<!--            <el-button type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>-->
+<!--            <el-button size="small"  type="text" @click="toNotice(scope.row)">{{scope.row.name}}</el-button>-->
             <el-button  type="text" @click="nextStep(scope.row)">{{scope.row.name}}</el-button>
           </template>
         </el-table-column>

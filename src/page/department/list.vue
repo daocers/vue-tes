@@ -93,7 +93,7 @@
                  :target-name="departmentName"></user-select>
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="部门名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
         </el-form-item>
@@ -108,8 +108,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" @click="editDialogShow = false">取 消</el-button>
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="updateData">确 定</el-button>
       </div>
     </el-dialog>
 

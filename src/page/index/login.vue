@@ -164,6 +164,8 @@
                     sessionStorage.setItem("roleList", JSON.stringify(res));
                     let isRoot = false;
                     let isAdmin = false;
+                    let isTeacher = false;
+                    let isUser = false;
                     if (roleList && roleList.length > 0) {
                       for (let idx in roleList) {
                         let name = roleList[idx];
@@ -171,6 +173,10 @@
                           isRoot = true;
                         } else if (name == "admin") {
                           isAdmin = true;
+                        } else if (name == "teacher") {
+                          isTeacher = true;
+                        } else if (name == "user") {
+                          isUser = true;
                         } else {
 
                         }
@@ -178,8 +184,10 @@
                     }
                     sessionStorage.setItem("isRoot", isRoot + "");
                     sessionStorage.setItem("isAdmin", isAdmin + "");
+                    sessionStorage.setItem("isTeacher", isTeacher + "");
+                    sessionStorage.setItem("isUser", isUser + "");
 
-                    this.$router.replace("/about");
+                    this.$router.replace("/help");
                   } else {
                     this.$message.error("用户名/密码错误");
                   }

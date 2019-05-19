@@ -9,8 +9,8 @@
         <el-button type="default" plain icon="iconfont tes-icon-reset" @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary"  icon="el-icon-edit"  @click="toAdd()">添加</el-button>
-        <el-button type="primary" @click="toManage()">权限管理</el-button>
+        <el-button type="primary" icon="el-icon-edit" @click="toAdd()">添加</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-station2" @click="toManage()">权限管理</el-button>
       </el-form-item>
     </el-form>
 
@@ -104,7 +104,7 @@
 
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="编码" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
@@ -140,8 +140,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editDialogShow = false">取 消</el-button>
-        <el-button type="primary" @click="updateData()">确 定</el-button>
+        <el-button size="small" icon="iconfont tes-icon-cancel" @click="editDialogShow = false">取 消</el-button>
+        <el-button size="small" icon="iconfont tes-icon-commit" type="primary" @click="updateData()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -228,7 +228,7 @@
             ],
           type:
             [
-             {required: true, message: '请输入type', trigger: 'blur'},
+              {required: true, message: '请输入type', trigger: 'blur'},
 //              {min: 3, max: 10, message: '长度在3-10个字符', trigger: 'blur'}
           ],
         }
