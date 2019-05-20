@@ -126,6 +126,7 @@
         this.$refs.loginForm.validate(async (valid) => {
             if (valid) {
               //下面这行不能删除
+              this.loading();
               sessionStorage.setItem("token", "just has a position to put token")
               this.doPost('/user/api/login', this.login, "form").then(async res => {
                   if (res) {
@@ -191,6 +192,7 @@
                   } else {
                     this.$message.error("用户名/密码错误");
                   }
+                  this.clearLoading();
                 }
               )
 

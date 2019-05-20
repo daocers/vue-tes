@@ -27,7 +27,7 @@
     <el-row>
 
       <el-badge :value="allCount" class="item">
-        <el-button size="small" icon="el-icon-edit" type="primary" @click="getAll">全部</el-button>
+        <el-button size="small" icon="iconfont tes-icon-all" type="primary" @click="getAll">全部</el-button>
       </el-badge>
 
       <el-badge :value="fullCount" class="item">
@@ -564,7 +564,7 @@
         this.queryForm.sceneId = sceneId;
       }
       let sceneName = this.$route.query.name
-      this.sceneInfo = "场次ID: " + sceneId + "   名称: " + sceneName;
+      this.sceneInfo = "场次ID: " + sceneId ? sceneId: '' + "   名称: " + sceneName? sceneName: '';
       this.$route.query.name = '';
       console.log("created....")
       this.findByCondition(true);

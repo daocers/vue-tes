@@ -25,7 +25,27 @@ Vue.prototype.host = host;
 Vue.prototype.wsUrl = wsUrl;
 
 //token 过期标志
-var tokenInvalid = false;
+let tokenInvalid = false;
+
+let loading;
+
+Vue.prototype.loading = function () {
+  loading = this.$loading({
+    lock: true,
+    // text: '加载中',
+    // spinner: 'iconfont tes-icon-jiazai',
+    // background: 'rgba(188,215,232,0.95)'
+  });
+  return loading;
+}
+
+Vue.prototype.clearLoading = function () {
+  if (loading) {
+    loading.close();
+    loading = null;
+  }
+}
+
 
 /**
  * get请求
@@ -100,6 +120,7 @@ Vue.prototype.uploadFile = async function (url, formData, timeout) {
  * @returns {Promise<{}|boolean|*>}
  */
 Vue.prototype.doPost = async function (url, data, type, timeout) {
+  this.loading();
   let token = sessionStorage.getItem("token");
   if (!token) {
     this.$notify({
@@ -139,6 +160,7 @@ Vue.prototype.doPost = async function (url, data, type, timeout) {
   })
 
   console.log("响应数据：", response);
+  this.clearLoading();
   return handleResponse(response, this);
 }
 
@@ -200,15 +222,7 @@ function handleResponse(response, vue) {
 }
 
 
-Vue.prototype.loading = function () {
-  const loading = this.$loading({
-    lock: true,
-    text: 'Loading',
-    spinner: 'el-icon-loading',
-    background: 'rgba(0, 0, 0, 0.7)'
-  });
-  return loading;
-}
+
 
 let urlList = [];
 
