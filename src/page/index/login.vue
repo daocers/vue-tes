@@ -72,7 +72,7 @@
               <!--<a type="success" href="http://localhost:8090/branch/">忘记密码?</a>-->
             </el-form-item>
             <el-form-item label="">
-              <el-button type="primary" style="width: 100%;" @click="signIn">登&nbsp;&nbsp;&nbsp;录</el-button>
+              <el-button type="primary" :disabled="disabledFlag" style="width: 100%;" @click="signIn">登&nbsp;&nbsp;&nbsp;录</el-button>
             </el-form-item>
           </el-form>
 
@@ -104,6 +104,7 @@
   export default {
     data() {
       return {
+        disabledFlag: false,
         login: {
           username: '',
           password: '',
@@ -125,6 +126,7 @@
       async signIn() {
         this.$refs.loginForm.validate(async (valid) => {
             if (valid) {
+              this.disabledFlag = true;
               //下面这行不能删除
               sessionStorage.setItem("token", "just has a position to put token")
               this.doPost('/user/api/login', this.login, "form").then(async res => {
@@ -183,6 +185,7 @@
                   } else {
                     this.$message.error("用户名/密码错误");
                   }
+                  this.disabledFlag = false;
                 }
               )
 

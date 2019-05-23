@@ -14,7 +14,7 @@
             </el-input>
           </el-form-item>
 
-          <el-button type="primary" @click="commitPaper()">提交试卷</el-button>
+          <el-button type="primary" :disabled="disabledPaper" @click="commitPaper()">提交试卷</el-button>
         </div>
 
       </el-form>
@@ -31,19 +31,19 @@
 
           <div class="answer">
             <el-radio-group @change="handleAnswer" v-show="currentQuestion.questionType == '1'" v-model="checkedItems">
-              <el-radio v-for="value in currentChoiceItems" :label="value" :key="value">{{value}}</el-radio>
+              <el-radio border v-for="value in currentChoiceItems" :label="value" :key="value">{{value}}</el-radio>
             </el-radio-group>
 
             <el-checkbox-group @change="handleAnswer" v-show="currentQuestion.questionType == '2'"
                                v-model="checkedItems">
-              <el-checkbox v-for="item in currentChoiceItems" :label="item" :key="item">{{item}}</el-checkbox>
+              <el-checkbox border v-for="item in currentChoiceItems" :label="item" :key="item">{{item}}</el-checkbox>
             </el-checkbox-group>
 
             <el-radio-group @change="handleAnswer" v-show="currentQuestion.questionType == '3'"
                             :max="1"
                             v-model="checkedItems">
-              <el-radio label="T">正确</el-radio>
-              <el-radio label="F">错误</el-radio>
+              <el-radio border label="T">正确</el-radio>
+              <el-radio border label="F">错误</el-radio>
             </el-radio-group>
 
           </div>
@@ -113,7 +113,8 @@
               </el-input>
             </el-form-item>
 
-            <el-button :disabled="done" type="primary" @click="commitReceipt">提交凭条</el-button>
+            <el-button :disabled="disabledReceipt" :disabled="done" type="primary" @click="commitReceipt">提交凭条
+            </el-button>
           </div>
 
         </el-form>
@@ -212,10 +213,13 @@
 
 
 <script>
+
   export default {
     ws: null,
     data() {
       return {
+        disabledPaper: false,
+        disabledReceipt: false,
         //普通试题框展示，凭条暂时不展示
         showCommon: true,
         showReceipt: false,
@@ -391,6 +395,7 @@
        */
       async commitPaper() {
         console.log("提交试卷！");
+        this.disabledPaper = true;
         this.closeTimer();
         let paperId = sessionStorage.getItem("paperId");
         let res = await this.doPost("/exam/api/commitPaper?paperId=" + paperId, this.questionList);
@@ -424,6 +429,7 @@
         }
 
         this.endTime = new Date(new Date().getTime() + this.timeLeft);
+        this.disabledPaper = false;
       },
 
       /*处理答案*/
@@ -522,6 +528,7 @@
        */
       async commitReceipt() {
         this.$alert("凭条录入结束，提交", "提示");
+        this.disabledReceipt = true;
         console.log("this.yourInputList", this.yourInputList)
         let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
           + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
@@ -536,6 +543,7 @@
         //关闭凭条考试面板，回到普通考试
         this.showReceipt = false;
         this.showCommon = true;
+        this.disabledReceipt = false;
       }
 
     },

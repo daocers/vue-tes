@@ -25,7 +25,7 @@ Vue.prototype.host = host;
 Vue.prototype.wsUrl = wsUrl;
 
 //token 过期标志
-var tokenInvalid = false;
+let tokenInvalid = false;
 
 /**
  * get请求
@@ -223,7 +223,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let vue = router.app;
   let toPath = to.path;
-  if (toPath == '/' || toPath == '/login') {
+  if (toPath == '/login') {
     next();
     return;
   }
