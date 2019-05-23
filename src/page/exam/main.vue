@@ -9,7 +9,7 @@
         </el-form-item>
         <div style="float: right">
           <el-form-item>
-            <el-input v-model="timerInfo" disabled style="width: 230px; color: red;">
+            <el-input v-model="timerInfo" type="danger" disabled style="width: 230px; color: red !important;">
               <template slot="prepend"><i class="iconfont tes-icon-clock"></i> 剩余时间</template>
             </el-input>
           </el-form-item>
@@ -113,7 +113,7 @@
               </el-input>
             </el-form-item>
 
-            <el-button :disabled="disabledReceipt" :disabled="done" type="primary" @click="commitReceipt">提交凭条
+            <el-button :disabled="done && disabledReceipt" type="primary" @click="commitReceipt">提交凭条
             </el-button>
           </div>
 
@@ -290,6 +290,7 @@
 //        还没有截止
         if (this.endTime.getTime() > new Date().getTime()) {
           let t = this.endTime.getTime() - new Date().getTime();
+          console.log("t::", t);
           h = Math.floor(t / 1000 / 60 / 60 % 24);
           m = Math.floor(t / 1000 / 60 % 60);
           s = Math.floor(t / 1000 % 60);
@@ -304,6 +305,7 @@
             s = '0' + s;
           }
           this.timerInfo = h + ':' + m + ':' + s;
+          console.log("timeInfo:", this.timerInfo)
 
         }
 
@@ -644,41 +646,16 @@
         this.$router.replace("/exam")
         return false;
       }
+
+
+      // 找题目，包含答题记录
       let res = await this.doGet("/exam/api/getQuestionList?sceneId=" + this.sceneId);
       if (!res) {
         this.$router.push("/exam")
         return false;
       }
-
       let questionList = res;
       if (questionList && questionList.length > 0) {
-        this.doGet("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
-          console.log("获取剩余时间", res);
-          let leftSeconds = res;
-          this.endTime = new Date(new Date().getTime() + res * 1000);
-
-          console.log("endTime::", this.endTime)
-          //      定时器
-          let _this = this;
-          this.timer = setInterval(() => {
-            if (_this.endTime.getTime() > new Date().getTime()) {
-              _this.changeTime();
-            } else {
-//          清除定时器
-              this.timerInfo = "00:00:00"
-              this.closeTimer();
-//          提交试卷
-              _this.$alert('考试时间用完，提交试卷', '时间到！', {
-                confirmButtonText: '确定',
-                callback: action => {
-
-                  this.$router.push("/scene/myJoin");
-                }
-              });
-            }
-          }, 1000);
-        })
-        console.log("questionList:", questionList)
         // 获取列表，设置初始化的数据
         this.questionList = questionList;
         // this.currentQuestionIdx = 0;
@@ -704,8 +681,39 @@
       let scene = await this.doGet("/scene/api/findById?id=" + sceneId);
       if (scene) {
         this.scene = scene;
-        let time = new Date();
-        this.endTime = new Date(time.getTime() + scene.duration * 60000);
+
+        this.doGet("/exam/api/getTimeLeft?sceneId=" + this.sceneId).then(res => {
+          if (!res) {
+            let time = new Date();
+            this.endTime = new Date(time.getTime() + scene.duration * 60000);
+          } else {
+            console.log("获取剩余时间", res);
+            let now = new Date();
+            now.setTime(now.getTime() + res * 1000);
+            this.endTime = now;
+          }
+          console.log("endTime::", this.endTime)
+          //      定时器
+          // let _this = this;
+          this.timer = setInterval(() => {
+            if (this.endTime.getTime() > new Date().getTime()) {
+              this.changeTime();
+            } else {
+//          清除定时器
+              this.timerInfo = "00:00:00"
+              this.closeTimer();
+//          提交试卷
+              this.$alert('考试时间用完，提交试卷', '时间到！', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$router.push("/scene/myJoin");
+                }
+              });
+            }
+          }, 1000);
+
+        })
+
       } else {
         this.$notify.error(({
           title: '错误',
