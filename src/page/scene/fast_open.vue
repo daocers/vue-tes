@@ -211,7 +211,7 @@
 
     <el-form-item style="margin-top: 30px">
       <!--<el-button type="warning" plain="">取消</el-button>-->
-      <el-button type="primary" @click="openScene()">确定，开场</el-button>
+      <el-button type="primary" icon="iconfont tes-icon-commit" @click="openScene()">确定，开场</el-button>
     </el-form-item>
   </el-form>
 

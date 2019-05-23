@@ -5,11 +5,11 @@
         <el-input v-model="queryForm.name" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary"  icon="iconfont tes-icon-query"  plain @click="findByCondition()">查询</el-button>
-        <el-button type="default" icon="iconfont tes-icon-refresh" plain @click="reset()">重置</el-button>
+        <el-button size="small"  type="primary"  icon="iconfont tes-icon-query"  plain @click="findByCondition()">查询</el-button>
+        <el-button size="small"  type="default" icon="iconfont tes-icon-refresh" plain @click="reset()">重置</el-button>
       </el-form-item>
       <el-form-item style="float: right">
-        <el-button type="primary"  icon="el-icon-edit"  @click="toAdd()">添加</el-button>
+        <el-button size="small"  type="primary"  icon="el-icon-edit"  @click="toAdd()">添加</el-button>
       </el-form-item>
     </el-form>
 
@@ -103,7 +103,7 @@
 
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
 
         <el-form-item label="策略名称" prop="name">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>
@@ -120,8 +120,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelCommit">取 消</el-button>
-        <el-button type="primary" @click="commitData()">确 定</el-button>
+        <el-button size="small"  @click="cancelCommit">取 消</el-button>
+        <el-button size="small"  type="primary" @click="commitData()">确 定</el-button>
       </div>
     </el-dialog>
 

@@ -95,7 +95,7 @@
                  :target-name="dataForEdit.name"></user-select>
 
     <el-dialog title="编辑" :visible.sync="editDialogShow">
-      <el-form ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="right" :model="dataForEdit">
 
         <el-form-item label="岗位名称" prop="name" :label-width="labelWidth">
           <el-input v-model="dataForEdit.name" placeholder="请输入"></el-input>

@@ -27,7 +27,7 @@
     <el-row>
 
       <el-badge :value="allCount" class="item">
-        <el-button size="small" icon="el-icon-edit" type="primary" @click="getAll">全部</el-button>
+        <el-button size="small" icon="iconfont tes-icon-all" type="primary" @click="getAll">全部</el-button>
       </el-badge>
 
       <el-badge :value="fullCount" class="item">
@@ -148,7 +148,7 @@
     </el-pagination>
 
     <el-dialog v-bind:title="dataForEdit.id ? '编辑': '添加'" :visible.sync="editDialogShow" width="60%">
-      <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+      <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
         <el-form-item label="code" prop="code" :label-width="labelWidth">
           <el-input v-model="dataForEdit.code" placeholder="请输入"></el-input>
         </el-form-item>
@@ -564,7 +564,7 @@
         this.queryForm.sceneId = sceneId;
       }
       let sceneName = this.$route.query.name
-      this.sceneInfo = "场次ID: " + sceneId + "   名称: " + sceneName;
+      this.sceneInfo = "场次ID: " + sceneId ? sceneId: '' + "   名称: " + sceneName? sceneName: '';
       this.$route.query.name = '';
       console.log("created....")
       this.findByCondition(true);

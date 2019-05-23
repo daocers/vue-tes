@@ -70,7 +70,7 @@ export default [
     path: '/',
     component: Index,
     children: [
-      {path: '/', component: Summary},
+      // {path: '/', component: Summary},
       {path: '/stat', component: Stat},
       {path: '/single', component: Single},
       {path: '/multi', component: Multi},

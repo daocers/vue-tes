@@ -8,37 +8,37 @@
         </div>
         <el-row>
 
-          <el-col :span="6">
-            <div class="fast-item item-2">
-              <span @click="fastOpen">快速开场</span>
+          <el-col v-check-auth="`/scene/open`" :span="6">
+            <div @click="fastOpen" class="fast-item item-2">
+              <span>快速开场</span>
             </div>
           </el-col>
-          <el-col v-has-role="root" :span="6">
-            <div class="fast-item item-3">
-              <span @click="sceneMonitor">考试监控</span>
+          <el-col v-check-auth="`/scene/monitor`" :span="6">
+            <div @click="sceneMonitor" class="fast-item item-3">
+              <span>考试监控</span>
             </div>
           </el-col>
-          <el-col :span="6">
-            <div class="fast-item item-4">
-              <span @click="queryMark">成绩查询</span>
-            </div>
-          </el-col>
-
-          <el-col :span="6">
-            <div class="fast-item item-1" >
-              <span @click="forgetPassword">忘记密码</span>
+          <el-col v-check-auth="`/paper`" :span="6">
+            <div @click="queryMark" class="fast-item item-4">
+              <span>成绩查询</span>
             </div>
           </el-col>
 
           <el-col :span="6">
-            <div class="fast-item item-1">
-              <span @click="joinExam">我要考试</span>
+            <div @click="forgetPassword" class="fast-item item-1">
+              <span>忘记密码</span>
             </div>
           </el-col>
 
-          <el-col :span="6">
-            <div class="fast-item item-1">
-              <span @click="queryMyScore">我的成绩</span>
+          <el-col v-check-auth="`/exam`" :span="6">
+            <div @click="joinExam" class="fast-item item-1">
+              <span>我要考试</span>
+            </div>
+          </el-col>
+
+          <el-col v-check-auth="`/scene/myJoin`" :span="6">
+            <div @click="queryMyScore" class="fast-item item-1">
+              <span>我的成绩</span>
             </div>
           </el-col>
         </el-row>
@@ -91,7 +91,7 @@
         <div class="item"></div>
       </el-collapse-item>
 
-      <el-collapse-item >
+      <el-collapse-item>
         <template slot="title">
           <div class="title">出卷模式<i class="header-icon el-icon-info"></i></div>
         </template>
@@ -116,30 +116,28 @@
 <script>
   export default {
     name: "index",
-    data(){
-      return {
-
-      }
+    data() {
+      return {}
     },
-    methods:{
-      forgetPassword(){
+    methods: {
+      forgetPassword() {
         console.log("ddf")
-        this.$router.push({path:"/user"})
+        this.$router.push({path: "/user"})
       },
-      fastOpen(){
-        this.$router.push({path:'/scene/open'})
+      fastOpen() {
+        this.$router.push({path: '/scene/open'})
       },
 
-      sceneMonitor(){
+      sceneMonitor() {
         this.$router.push({path: '/scene/monitor'})
       },
-      queryMark(){
+      queryMark() {
         this.$router.push({path: '/paper'})
       },
-      joinExam(){
+      joinExam() {
         this.$router.push({path: '/exam'})
       },
-      queryMyScore(){
+      queryMyScore() {
         this.$router.push({path: '/scene/myJoin'})
       }
 
@@ -148,15 +146,16 @@
 </script>
 
 <style scoped>
-  .box-card{
+  .box-card {
     margin-bottom: 20px;
   }
+
   /*.box-card .header{*/
-    /*font-size: 16px;*/
-    /*color: #606266;*/
+  /*font-size: 16px;*/
+  /*color: #606266;*/
   /*}*/
 
-  .fast-item{
+  .fast-item {
     border-radius: 8px;
     height: 80px;
     width: 80%;
@@ -165,28 +164,34 @@
     align-content: center;
     text-align: center;
   }
-  .fast-item:hover{
+
+  .fast-item:hover {
     cursor: pointer;
   }
-  .fast-item span{
+
+  .fast-item span {
     line-height: 80px;
     /*vertical-align: middle;*/
     color: white;
     font-size: 20px;
   }
 
-  .item-1{
+  .item-1 {
     background-color: #F56C6C;
   }
-  .item-2{
+
+  .item-2 {
     background-color: #E6A23C;
   }
-  .item-3{
+
+  .item-3 {
     background-color: #409EFF;
   }
-  .item-4{
+
+  .item-4 {
     background-color: #67C23A;
   }
+
   .title {
     font-size: 16px;
     color: #606266;

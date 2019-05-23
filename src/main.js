@@ -11,8 +11,8 @@ import axios from 'axios'
 
 Vue.config.productionTip = false
 //测试使用
-const host = "http://localhost:80/hn";
-const wsUrl = "ws://localhost:80/hn";
+const host = "http://localhost:9999/hn";
+const wsUrl = "ws://localhost:9999/hn";
 
 //线上使用
 // const host = "http://www.bugu.co/hn";
@@ -26,6 +26,26 @@ Vue.prototype.wsUrl = wsUrl;
 
 //token 过期标志
 let tokenInvalid = false;
+
+let loading;
+
+Vue.prototype.loading = function () {
+  loading = this.$loading({
+    lock: true,
+    // text: '加载中',
+    // spinner: 'iconfont tes-icon-jiazai',
+    // background: 'rgba(188,215,232,0.95)'
+  });
+  return loading;
+}
+
+Vue.prototype.clearLoading = function () {
+  if (loading) {
+    loading.close();
+    loading = null;
+  }
+}
+
 
 /**
  * get请求

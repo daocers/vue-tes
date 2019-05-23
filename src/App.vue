@@ -41,9 +41,11 @@
 
       if (flag) {
         //  有权限
-        el.style.visibility = "visible";
+        // el.style.visibility = "visible";
+        el.style.display = "inline";
       } else {
-        el.style.visibility = "hidden";
+        // el.style.visibility = "hidden";
+        el.style.display = "none";
       }
     },
     update: function (el, bindings) {
@@ -57,9 +59,11 @@
     bind: function (el, bindings) {
       let isAdmin = sessionStorage.getItem("idAdmin");
       if (isAdmin == 'true') {
-        el.style.visibility = "visible";
+        // el.style.visibility = "visible";
+        el.style.display = "inline";
       } else {
-        el.style.visibility = "hidden";
+        // el.style.visibility = "hidden";
+        el.style.display = "none";
       }
     }
   });
@@ -67,9 +71,11 @@
     bind: function (el, bindings) {
       let isRoot = sessionStorage.getItem("isRoot");
       if (isRoot == 'true') {
-        el.style.visibility = "visible";
+        // el.style.visibility = "visible";
+        el.style.display = "inline";
       } else {
-        el.style.visibility = "hidden";
+        // el.style.visibility = "hidden";
+        el.style.display = "none";
       }
     }
   });
@@ -77,9 +83,11 @@
   Vue.directive("checkAuth", {
     bind: function (el, bindings) {
       let url = bindings.expression;
+      console.log("url:::",url)
       if (!url) {
         throw new Error("check-auth需要指定url")
       }
+      url = url.substr(1, url.length - 2);
 
       let urlListInfo = sessionStorage.getItem("urlList");
       let urls;
@@ -94,9 +102,11 @@
 
       if (showFlag) {
         //  有权限
-        el.style.visibility = "visible";
+        // el.style.visibility = "visible";
+        el.style.display = "inline";
       } else {
-        el.style.visibility = "hidden";
+        // el.style.visibility = "hidden";
+        el.style.display = "none";
       }
     }
   })
@@ -161,6 +171,22 @@
 
   .el-table .danger-row {
     background: #f5dbe5;
+  }
+
+
+  /*  表格扩展 */
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    /*width: 50%;*/
+    width: 650px;
   }
 </style>
 

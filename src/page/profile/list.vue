@@ -75,7 +75,7 @@
 
 
         <el-dialog title="编辑" :visible.sync="editDialogShow">
-            <el-form ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
+            <el-form size="small" ref="editForm" :rules="rules" label-position="left" :model="dataForEdit">
                                     <el-form-item label="userId" prop="userId">
                         <el-input v-model="dataForEdit.userId" placeholder="请输入"></el-input>
                     </el-form-item>

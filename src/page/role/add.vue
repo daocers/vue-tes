@@ -33,8 +33,8 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="add">保存</el-button>
-            <el-button type="info" plain @click="goBack">取消</el-button>
+            <el-button size="small"  type="primary" @click="add">保存</el-button>
+            <el-button size="small"  type="info" plain @click="goBack">取消</el-button>
           </el-form-item>
         </el-form>
       </el-col>
