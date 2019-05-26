@@ -200,13 +200,13 @@ function handleResponse(response, vue) {
           title: '错误',
           message: !message ? "系统异常" : message
         })
-        return false;
+        return null;
       } else {
         vue.$notify.error({
           title: "错误",
           message: !message ? "系统异常" : message
         })
-        return false;
+        return null;
       }
     }
     return data.data;
@@ -266,8 +266,8 @@ router.beforeEach((to, from, next) => {
       title: '警告',
       message: '您没有页面访问权限，请联系管理员'
     })
-
-    next({path: '/'})
+    // 没有权限，直接跳转到帮助页面
+    next({path: '/help'})
     return;
   }
 })

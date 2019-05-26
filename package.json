@@ -2,7 +2,7 @@
   "name": "vue-tes",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "leiyang <lei890627>",
+  "author": "leiyang <>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

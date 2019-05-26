@@ -9,14 +9,14 @@
           <h5 v-if="scene.singleCount > 0"> 单选{{scene.singleCount}}题, 每题 {{scene.singleScore}}分;</h5>
           <h5 v-if="scene.multiCount > 0"> 多选{{scene.multiCount}}题, 每题 {{scene.multiScore}}分;</h5>
           <h5 v-if="scene.judgeCount > 0"> 判断{{scene.judgeCount}}题, 每题 {{scene.judgeScore}}分;</h5>
-          <h5 v-if="scene.receiptCount > 0"> 凭条{{scene.receiptCount}}张, 数字长度 {{scene.numberLength}};</h5>
+          <h5 v-if="scene.receiptCount > 0"> 凭条{{scene.receiptCount}}张, 数字长度 {{scene.numberLength}}, {{scene.receiptScore}}分;</h5>
           <h4 v-if="scene.changePaper == 1">三、本场考试允许更换试卷一次，更换后第一份试卷作废，所答成绩作废;</h4>
           <h4 v-if="scene.changePaper == 2">三、本场考试不允许更换试卷;</h4>
           <h4>四、考试规则，请遵守考试纪律;</h4>
         </div>
 
-        <el-button type="danger" plain @click="exit()">退出咨询</el-button>
-        <el-button type="primary" @click="toExam()">开始考试</el-button>
+        <el-button type="danger" icon="iconfont tes-icon-prev" plain @click="exit()">退出咨询</el-button>
+        <el-button type="primary" icon="iconfont tes-icon-next1" @click="toExam()">开始考试</el-button>
       </el-card>
     </el-col>
   </div>

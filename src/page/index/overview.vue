@@ -1,5 +1,9 @@
 <template>
   <div>
+    <el-row>
+      欢迎您， {{name}}
+
+    </el-row>
     <el-row :gutter="20">
       <el-col :span="8">
         <el-card shadow="hover" class="mgb20" style="height:252px;">

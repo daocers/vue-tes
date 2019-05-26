@@ -1,4 +1,3 @@
-
 const leftMenu = () => import('../components/left-menu.vue')
 const SceneList = () => import('../page/scene/list.vue')
 const Scene = () => import('../page/scene/index.vue')
@@ -71,6 +70,7 @@ export default [
     component: Index,
     children: [
       // {path: '/', component: Summary},
+      {path: '/summary', component: Summary},
       {path: '/stat', component: Stat},
       {path: '/single', component: Single},
       {path: '/multi', component: Multi},

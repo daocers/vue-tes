@@ -108,7 +108,7 @@
           </el-form-item>
           <div style="float: right">
             <el-form-item>
-              <el-input class="timer" v-model="getTimeInfo" disabled style="width: 200px; color: red;">
+              <el-input class="timer" v-model="getReceiptTimeInfo" disabled style="width: 200px; color: red;">
                 <template slot="prepend">已用时间</template>
               </el-input>
             </el-form-item>
@@ -263,6 +263,7 @@
         yourInputList: [],
 
         timeUsed: 0,
+        receiptTimeUsed: 0,
 
         //定时器引用
         receiptTimer: null,
@@ -290,7 +291,7 @@
 //        还没有截止
         if (this.endTime.getTime() > new Date().getTime()) {
           let t = this.endTime.getTime() - new Date().getTime();
-          console.log("t::", t);
+          // console.log("t::", t);
           h = Math.floor(t / 1000 / 60 / 60 % 24);
           m = Math.floor(t / 1000 / 60 % 60);
           s = Math.floor(t / 1000 % 60);
@@ -305,8 +306,8 @@
             s = '0' + s;
           }
           this.timerInfo = h + ':' + m + ':' + s;
-          console.log("timeInfo:", this.timerInfo)
-
+          // console.log("timeInfo:", this.timerInfo)
+          this.timeUsed = 1 + this.timeUsed
         }
 
 
@@ -361,7 +362,7 @@
         this.showResult = true;
         //定时器
         this.receiptTimer = setInterval(() => {
-          this.timeUsed++;
+          this.receiptTimeUsed++;
         }, 1000)
       },
 
@@ -475,6 +476,8 @@
             let msg = {};
             msg.type = 1;
             msg.content = this.currentQuestion;
+            msg.timeUsed = this.timeUsed;
+            console.log("timeUsed::", this.timeUsed)
             this.ws.send(JSON.stringify(msg))
           }
         }
@@ -489,7 +492,7 @@
           let items = JSON.parse(content);
           let chars = 'ABCDEFG'
           let choiceItems = [];
-          for (var idx = 0; idx < items.length; idx++) {
+          for (let idx = 0; idx < items.length; idx++) {
             console.log("idx:", idx);
             choiceItems.push(chars.charAt(idx));
           }
@@ -533,7 +536,7 @@
         this.disabledReceipt = true;
         console.log("this.yourInputList", this.yourInputList)
         let data = await this.doPost("/exam/api/commitReceiptPaper?sceneId=" + this.sceneId
-          + "&seconds=" + this.timeUsed + "&receiptCount=" + this.scene.receiptCount,
+          + "&seconds=" + this.receiptTimeUsed + "&receiptCount=" + this.scene.receiptCount,
           this.yourInputList);
 
         console.log("提交凭条结果：", data);
@@ -551,8 +554,8 @@
     },
 
     computed: {
-      getTimeInfo() {
-        let timeUsed = this.timeUsed;
+      getReceiptTimeInfo() {
+        let timeUsed = this.receiptTimeUsed;
         let s = timeUsed % 60;
         let m = Math.floor(timeUsed / 60);
         let h = Math.floor(timeUsed / 3600);
@@ -691,6 +694,7 @@
             let now = new Date();
             now.setTime(now.getTime() + res * 1000);
             this.endTime = now;
+            this.timeUsed = scene.duration * 60 - res;
           }
           console.log("endTime::", this.endTime)
           //      定时器

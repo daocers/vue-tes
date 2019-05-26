@@ -116,6 +116,7 @@
         :default-checked-keys="defaultChecked"
         node-key="id"
         ref="tree"
+        :check-strictly="true"
         highlight-current
         :props="defaultProps">
       </el-tree>

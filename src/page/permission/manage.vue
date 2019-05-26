@@ -64,6 +64,9 @@
           <el-form-item label="描述" prop="memo">
             <el-input v-model="nodeData.memo" placeholder="请输入"></el-input>
           </el-form-item>
+          <el-form-item label="显示" prop="status">
+            <el-input v-model="nodeData.status" placeholder="是否显示"></el-input>
+          </el-form-item>
           <el-form-item label="序号" prop="no">
             <el-input v-model="nodeData.no" placeholder="请输入"></el-input>
           </el-form-item>
